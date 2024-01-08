@@ -1,0 +1,36 @@
+name: Update Algolia Index
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  update_algolia_index:
+    name: Update Algolia Index
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: 'latest'
+          extended: true
+
+      - name: Build
+        run: hugo --gc --minify
+
+      - name: Update Algolia Index
+        uses: tilburgsciencehub/algolia-uploader@v1
+        with:
+          app_id: EQKXDMZYXP
+          admin_key: ${{ secrets.ALGOLIA_ADMIN_KEY }}
+          index_name: index
+          index_file_path: ./public/index.json
