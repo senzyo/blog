@@ -380,7 +380,11 @@ Start-Sleep -Seconds 1
 
 几个用于脚本快捷方式的自制图标:
 
-{{< image src="Off.svg" caption="Off.svg" height="auto" width="30%">}}
-{{< image src="Restart.svg" caption="Restart.svg" height="auto" width="30%">}}
-{{< image src="Switch.svg" caption="Switch.svg" height="auto" width="30%">}}
-{{< image src="Update.svg" caption="Update.svg" height="auto" width="30%">}}
+<table>
+  <tr>
+    <td align="center"><img src="./Update.svg" width="100px" /></td>
+    <td align="center"><img src="./Off.svg" width="100px" /></td>
+    <td align="center"><img src="./Restart.svg" width="100px" /></td>
+    <td align="center"><img src="./Switch.svg" width="100px" /></td>
+  </tr>
+</table>

@@ -1087,7 +1087,11 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
 
 几个用于脚本快捷方式的自制图标:
 
-{{< image src="Clash Backup Core.svg" caption="Clash Backup Core.svg" height="auto" width="30%">}}
-{{< image src="Clash Off.svg" caption="Clash Off.svg" height="auto" width="30%">}}
-{{< image src="Clash Restart.svg" caption="Clash Restart.svg" height="auto" width="30%">}}
-{{< image src="Clash Switch.svg" caption="Clash Switch.svg" height="auto" width="30%">}}
+<table>
+  <tr>
+    <td align="center"><img src="./Clash Backup Core.svg" width="100px" /></td>
+    <td align="center"><img src="./Clash Off.svg" width="100px" /></td>
+    <td align="center"><img src="./Clash Restart.svg" width="100px" /></td>
+    <td align="center"><img src="./Clash Switch.svg" width="100px" /></td>
+  </tr>
+</table>
