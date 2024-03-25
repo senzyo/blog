@@ -18,7 +18,7 @@ git submodule update --remote --merge
 克隆本 Git 仓库 (含有子模块的 Git 仓库) 时, 运行: 
 
 ```bash
-git clone --recurse-submodules https://github.com/senzyo/blog.git
+git clone --recurse-submodules git@github.com:senzyo/blog.git
 ```
 
 会自动初始化并更新 Git 仓库中的每一个子模块,  包括可能存在的嵌套子模块。
