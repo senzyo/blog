@@ -25,7 +25,7 @@ Fork [Toperlock/sing-box-subscribe](https://github.com/Toperlock/sing-box-subscr
 --------------------
 
 <p align="center">
-    <img width="100px" src="https://sing-box.sagernet.org/assets/icon.svg" align="center" />
+    <img src="https://sing-box.sagernet.org/assets/icon.svg" width="100px" align="center" />
     <h2 align="center">sing-box-templates</h2>
     <p align="center">
         自己用的一些 <a href="https://sing-box.sagernet.org/zh/">sing-box</a> 配置文件模板, 支持 <a href="https://github.com/Toperlock/sing-box-subscribe">Toperlock/sing-box-subscribe</a> 远程调用。
@@ -37,9 +37,9 @@ Fork [Toperlock/sing-box-subscribe](https://github.com/Toperlock/sing-box-subscr
 ```bash
 #!/bin/bash
 
-url_gene="https://sing-box.senzyo.net"
-url_sub="https://example.com/xxx"
-url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-template/normal/tun/doh/8.8.8.8/ghproxy.net/config.json"
+url_gene="https://example.com"  # 生成配置的后端地址
+url_sub="https://example.com"   # 来自机场的订阅链接
+url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-template/normal/tun/doh/8.8.8.8/ghproxy.net/config.json"  # 配置所用模板的地址
 url_dl="$url_gene/config/url=$url_sub/&emoji=1&UA=clashmeta&file=$url_tpl"
 
 curl -L -o config.json "$url_dl"

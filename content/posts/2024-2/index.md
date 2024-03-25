@@ -174,10 +174,10 @@ vim /home/<UserName>/.config/sing-box/update.sh
 service="sing-box.service"
 ping_site="ntp.aliyun.com"
 dir_config="/home/<UserName>/.config/sing-box"
-url_gene="https://sing-box.senzyo.net"
-url_sub="https://example.com/xxx"
-inbound="mixed" # mixed or tun
-url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-template/normal/$inbound/doh/8.8.8.8/ghproxy.net/config.json"
+url_gene="https://example.com"  # 生成配置的后端地址
+url_sub="https://example.com"   # 来自机场的订阅链接
+inbound="mixed"                 # mixed or tun
+url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-template/normal/$inbound/doh/8.8.8.8/ghproxy.net/config.json"  # 配置所用模板的地址
 url_dl="$url_gene/config/url=$url_sub/&emoji=1&UA=clashmeta&file=$url_tpl"
 kioslaverc="/home/<UserName>/.config/kioslaverc"
 proxy_port="7890"
@@ -246,9 +246,9 @@ vim /home/<UserName>/.config/sing-box/update.sh
 service="sing-box.service"
 ping_site="ntp.aliyun.com"
 dir_config="/home/<UserName>/.config/sing-box"
-url_gene="https://sing-box.senzyo.net"
-url_sub="https://example.com/xxx"
-inbound_prefer="mixed" # mixed or tun
+url_gene="https://example.com"  # 生成配置的后端地址
+url_sub="https://example.com"   # 来自机场的订阅链接
+inbound_prefer="mixed"          # mixed or tun
 kioslaverc="/home/<UserName>/.config/kioslaverc"
 proxy_port="7890"
 
@@ -260,7 +260,7 @@ done
 cd $dir_config
 inbound_list=(mixed tun)
 for inbound in "${inbound_list[@]}"; do
-    url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-template/normal/$inbound/doh/8.8.8.8/ghproxy.net/config.json"
+    url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-template/normal/$inbound/doh/8.8.8.8/ghproxy.net/config.json"  # 配置所用模板的地址
     url_dl="$url_gene/config/url=$url_sub/&emoji=1&UA=clashmeta&file=$url_tpl"
     count=0
     while [ $count -lt 3 ]; do
