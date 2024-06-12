@@ -46,13 +46,13 @@ GLFW_IM_MODULE=ibus
 yay -S rime-ice-git
 ```
 
-自定义 [default.yaml](https://raw.githubusercontent.com/iDvel/rime-ice/main/default.yaml) 和 [custom_phrase.txt](https://raw.githubusercontent.com/iDvel/rime-ice/main/custom_phrase.txt) 文件中的内容, 存放到 rime 的个人配置文件夹 `~/.local/share/fcitx5/rime/` 中。
+自定义 [default.yaml](https://ghproxy.net/https://raw.githubusercontent.com/iDvel/rime-ice/main/default.yaml) 和 [custom_phrase.txt](https://ghproxy.net/https://raw.githubusercontent.com/iDvel/rime-ice/main/custom_phrase.txt) 文件中的内容, 存放到 rime 的个人配置文件夹 `~/.local/share/fcitx5/rime/` 中。
 
 右击托盘中的 Rime 图标, 重新启动以使配置生效。
 
 #### Windows
 
-将 [雾凇拼音](https://github.com/iDvel/rime-ice) 的所有文件复制到个人配置文件夹 `C:/Users/<UserName>/AppData/Roaming/Rime/` 中, 自定义 [default.yaml](https://raw.githubusercontent.com/iDvel/rime-ice/main/default.yaml) 和 [custom_phrase.txt](https://raw.githubusercontent.com/iDvel/rime-ice/main/custom_phrase.txt) 文件中的内容。
+将 [雾凇拼音](https://github.com/iDvel/rime-ice) 的所有文件复制到个人配置文件夹 `C:/Users/<UserName>/AppData/Roaming/Rime/` 中, 自定义 [default.yaml](https://ghproxy.net/https://raw.githubusercontent.com/iDvel/rime-ice/main/default.yaml) 和 [custom_phrase.txt](https://ghproxy.net/https://raw.githubusercontent.com/iDvel/rime-ice/main/custom_phrase.txt) 文件中的内容。
 
 右击托盘中的 Rime 图标, 重新部署以使配置生效。
 

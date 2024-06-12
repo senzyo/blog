@@ -24,14 +24,8 @@ summary: Arch 安装完成之后的一些零散配置。
 
 ```
 [Time]
-NTP=ntp.aliyun.com ntp1.aliyun.com ntp2.aliyun.com ntp3.aliyun.com ntp4.aliyun.com ntp5.aliyun.com ntp6.aliyun.com ntp7.aliyun.com
-FallbackNTP=0.cn.pool.ntp.org 1.cn.pool.ntp.org 2.cn.pool.ntp.org 3.cn.pool.ntp.org
-```
-
-检查配置: 
-
-```bash
-timedatectl show-timesync --all
+NTP=0.cn.pool.ntp.org 1.cn.pool.ntp.org 2.cn.pool.ntp.org 3.cn.pool.ntp.org
+FallbackNTP=0.arch.pool.ntp.org 1.arch.pool.ntp.org 2.arch.pool.ntp.org 3.arch.pool.ntp.org
 ```
 
 启用时间同步: 
@@ -40,10 +34,16 @@ timedatectl show-timesync --all
 sudo timedatectl set-ntp true
 ```
 
-检查服务状态: 
+重启服务: 
 
 ```bash
-timedatectl
+sudo systemctl restart systemd-timesyncd.service
+```
+
+检查配置: 
+
+```bash
+timedatectl show-timesync --all
 ```
 
 检查同步状态: 
@@ -172,7 +172,7 @@ sudo pacman -S yay
 ```
 
 ```bash
-yay -S 7-zip-full aria2 firefox git joplin-desktop kclock lunacy-bin ntfs-3g pot-translation telegram-desktop ttf-wps-fonts unrar visual-studio-code-bin vlc wps-office wps-office-mui-zh-cn
+yay -S 7-zip-full aria2 firefox git joplin-appimage kclock lunacy-bin ntfs-3g pot-translation telegram-desktop ttf-wps-fonts unrar visual-studio-code-bin vlc wps-office wps-office-mui-zh-cn
 ```
 
 | 包名                   | 简介                                  |
@@ -181,7 +181,7 @@ yay -S 7-zip-full aria2 firefox git joplin-desktop kclock lunacy-bin ntfs-3g pot
 | aria2                  | 下载器                                |
 | firefox                | 浏览器                                |
 | git                    | 版本控制                              |
-| joplin-desktop         | 笔记软件                              |
+| joplin-appimage        | 笔记软件                              |
 | kclock                 | 多时钟、计时器、秒表和闹钟            |
 | lunacy-bin             | 矢量图编辑器                          |
 | ntfs-3g                | 挂载 NTFS 硬盘                        |
@@ -1061,7 +1061,7 @@ sudo systemctl restart sddm
 编辑 [环境变量配置文件](../2021-6/), 添加以下行, 将 vim 设置为默认编辑器: 
 
 ```
-export EDITOR='/usr/bin/vim'
+export EDITOR="/usr/bin/vim"
 ```
 
 ## 音频

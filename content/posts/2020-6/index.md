@@ -175,8 +175,19 @@ Note: root's PATH should usually contain /usr/local/sbin, /usr/sbin and /sbin.
 
 编辑 [环境变量配置文件](../2021-6/), 添加以下内容: 
 
-```
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+```bash
+if [ "$(id -u)" -eq 0 ]; then
+    PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+else
+    PATH="/usr/local/bin:/usr/bin:/bin"
+fi
+if [ -d "$HOME/bin" ]; then
+    PATH="$HOME/bin:$PATH"
+fi
+if [ -d "$HOME/.local/bin" ]; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+export PATH
 ```
 
 ## 软件无法启动

@@ -18,7 +18,7 @@ https://ibotpeaches.github.io/Apktool/install/
 
 ### Windows
 
-1. 下载脚本 [wrapper script](https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/windows/apktool.bat) 重命名为 `apktool.bat`
+1. 下载脚本 [wrapper script](https://ghproxy.net/https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/windows/apktool.bat) 重命名为 `apktool.bat`
 2. 下载 jar 包 [find newest here](https://bitbucket.org/iBotPeaches/apktool/downloads/)
 3. 重命名 jar 包为 `apktool.jar`
 4. 将 `apktool.jar` 和 `apktool.bat` 移动至某一文件夹下, 比如 `D:\Apktool`
@@ -27,7 +27,7 @@ https://ibotpeaches.github.io/Apktool/install/
 
 ### Linux
 
-1. 下载脚本 [wrapper script](https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool) 重命名为 `apktool`
+1. 下载脚本 [wrapper script](https://ghproxy.net/https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool) 重命名为 `apktool`
 2. 下载 jar 包 [find newest here](https://bitbucket.org/iBotPeaches/apktool/downloads/)
 3. 重命名 jar 包为 `apktool.jar`
 4. 将 `apktool.jar` 和 `apktool` 移动至某一文件夹下, 比如 `/usr/local/bin` (此路径需要 `root` 用户)

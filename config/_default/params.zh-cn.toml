@@ -114,7 +114,7 @@ keywords = ["senzyo"]
   Behance = ""
   Bilibili = ""
   Bitbucket = ""
-  BuyMeACoffee = ""
+  BuyMeACoffee = "senzyo"
   Codepen = ""
   Deviantart = ""
   Devto = ""
@@ -164,7 +164,7 @@ keywords = ["senzyo"]
   Stackoverflow = ""
   Steam = ""
   Strava = ""
-  Telegram = "senzyo_sama"
+  Telegram = "senzyo"
   Thingiverse = ""
   Tumblr = ""
   Twitch = ""
@@ -188,5 +188,5 @@ keywords = ["senzyo"]
 [sponsor]
   enable = false
   bio = "如果你觉得这篇文章对你有所帮助, 欢迎赞赏~"
-  link = "https://github.com/sponsors/HEIGE-PCloud"
+  link = "https://github.com/sponsors/senzyo"
   custom = "<a href=\"https://www.buymeacoffee.com/senzyo\" target=\"_blank\"><img src=\"https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png\" alt=\"Buy Me A Coffee\" style=\"height: 40px !important;width: 145 !important;\" ></a>"

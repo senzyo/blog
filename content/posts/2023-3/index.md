@@ -548,7 +548,7 @@ Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
 # Server = https://mirrors.cqu.edu.cn/archlinuxcn/$arch
 ```
 
-{{< version 2023-12-18 >}} 根据 Arch Linux CN [消息](https://www.archlinuxcn.org/archlinuxcn-keyring-manually-trust-farseerfc-key/), 新系统中安装 `archlinuxcn-keyring` 包前需要手动信任 **farseerfc** 的 key。
+根据 Arch Linux CN 于 2023-12-18 发布的 [公告](https://www.archlinuxcn.org/archlinuxcn-keyring-manually-trust-farseerfc-key/), 新系统中安装 `archlinuxcn-keyring` 包前需要手动信任 **farseerfc** 的 key。
 
 {{< admonition type=quote title="原因" open=true >}}
 archlinuxcn 社区源的 keyring 包 archlinuxcn-keyring 由 farseerfc 的 key 签署验证, 而 Arch Linux 官方 keyring 中包含了 farseerfc 的 key。

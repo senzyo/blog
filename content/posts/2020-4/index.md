@@ -12,6 +12,10 @@ summary: 备忘, 用于系统重装后进行自定义设置。
 
 > 用于系统重装后的快速设置。
 
+{{< admonition type=example title="官方文档" open=true >}}
+https://www.debian.org/doc/manuals/debian-reference/ch01.zh-cn.html
+{{< /admonition >}}
+
 ## 用户
 
 参考[Users and groups](https://wiki.archlinux.org/title/Users_and_groups)。
@@ -64,36 +68,24 @@ sudo passwd root
 在 [环境变量配置文件](../2021-6/) 中添加以下内容: 
 
 ```bash
-alias ls='ls -F --color=auto'
-alias la='ls -aF --color=auto'
-alias ll='ls -alF --color=auto'
-alias grep='grep --color=auto'
-alias diff='diff --color=auto'
-alias ch='> ~/.bash_history;history -c;clear'
+alias ls="ls -F --color=auto"
+alias la="ls -aF --color=auto"
+alias ll="ls -alF --color=auto"
+alias grep="grep --color=auto"
+alias diff="diff --color=auto"
+alias ch="> $HOME/.bash_history;history -c;clear"
 ```
 
 ### bash提示符颜色
 
-参考[自定义bash提示符颜色](../2020-11/)。效果如下: 
-
-普通用户:
-
-<div style="background-color:black;font-weight:bold;">
-    <span style="color:white;">20:34:50</span> <span style="color:red;">UserName</span><span style="color:white;">@</span><span style="color:red;">Debian</span> <span style="color:cyan;">/home/UserName</span><div></div><span style="color:red;">$</span>
-</div>
-
-root用户:
-
-<div style="background-color:black;font-weight:bold;">
-    <span style="color:white;">20:34:50</span> <span style="color:red;">root</span><span style="color:white;">@</span><span style="color:red;">Debian</span> <span style="color:cyan;">/root</span><div></div><span style="color:red;">#</span>
-</div>
+参考[自定义bash提示符颜色](../2020-11/)。
 
 ### ls -l时间格式
 
 在 [环境变量配置文件](../2021-6/) 中添加: 
 
 ```bash
-export TIME_STYLE='+%Y-%m-%d %H:%M:%S'
+export TIME_STYLE="+%Y-%m-%d %H:%M:%S"
 ```
 
 输出示例: 
@@ -104,11 +96,12 @@ export TIME_STYLE='+%Y-%m-%d %H:%M:%S'
 
 ## 修改SSH设置
 
-{{< admonition type=info title="注意" open=true >}}
-如果不使用SSH连接到设备, 可以不设置, `sudo systemctl status ssh.service`确定设备的SSH服务没有运行即可。
+{{< admonition type=tip title="提示" open=true >}}
+- `/etc/ssh/ssh_config`是本机作为SSH客户端的配置, `/etc/ssh/sshd_config`是本机作为SSH服务器的配置。
+- 更多信息参考 https://man.openbsd.org/sshd_config
 {{< /admonition >}}
 
-1. 参考[设置 SSH 通过密钥登录](https://www.runoob.com/w3cnote/set-ssh-login-key.html), 将客户机的公钥内容追加到服务器`~/.ssh/authorized_keys`文件中, 再更改权限: 
+1. 在`~/.ssh/authorized_keys`文件中追加客户端的公钥内容, 然后更改权限: 
 
    ```bash
    chmod 700 ~/.ssh
@@ -118,41 +111,37 @@ export TIME_STYLE='+%Y-%m-%d %H:%M:%S'
 2. 更改`/etc/ssh/sshd_config`文件内容: 
 
    ```
-   Include /etc/ssh/sshd_config.d/*.conf
-   Port 12345                                   # SSH端口号
-   LoginGraceTime 3s                            # 若用户未成功登录, 服务器将在此时间后断开连接
-   MaxAuthTries 4                               # 每个连接最大允许的认证次数
-   MaxSessions 4                                # 最大允许保持多少个未认证的连接
-   PermitRootLogin yes                          # 允许root用户登录
-   AuthenticationMethods publickey              # 指定登录方式为使用公钥验证
-   PubkeyAuthentication yes                     # 允许使用公钥验证登录
-   PasswordAuthentication no                    # 禁用密码登录
-   PermitEmptyPasswords no                      # 禁用空密码登录
-   ChallengeResponseAuthentication no           # 双重认证需要
-   UsePAM no                                    # 插入式验证模块, 比如双重认证
+   Include /etc/ssh/sshd_config.d/*.conf        # 包含指定的配置文件, 可指定多个
+   Port 50022                                   # 指定 SSH 的端口号
+   LoginGraceTime 3s                            # 服务器在用户未成功登录后的一段时间内断开连接
+   PermitRootLogin prohibit-password            # 禁用 root 用户的密码和键盘交互式身份验证
+   MaxAuthTries 4                               # 每个连接允许的最大认证尝试次数。一旦失败次数达到该值的一半, 将记录额外的失败次数
+   MaxSessions 10                               # 指定每个网络连接允许的最大开放的 shell, login 或 subsystem 会话数
+   PubkeyAuthentication yes                     # 启用公钥身份验证
+   AuthenticationMethods publickey              # 指定必须成功通过公钥身份验证
+   PasswordAuthentication no                    # 禁用密码身份验证
+   PermitEmptyPasswords no                      # 禁用使用空密码字符串登录
+   KbdInteractiveAuthentication no              # 禁用键盘交互式认证
+   UsePAM no                                    # 禁用插入式验证模块, 比如双重认证
+   X11Forwarding no                             # 禁用 X11 转发
+   PrintMotd no                                 # 禁止打印登录后的提示信息
    PrintLastLog yes                             # 显示上次登录的信息
-   TCPKeepAlive yes                             # 确保联机正常, server和client中的任何一端离线, 马上断开
-   X11Forwarding no                             # 禁用远程执行GUI程序支持
-   PrintMotd no                                 # 禁用登录后提示信息
-   Banner none                                  # 禁用远程登录后提示信息
-   Compression no                               # 网速快, 没必要压缩
-   ClientAliveInterval 60                       # 服务器没有从客户端收到消息后的超时时间
-   ClientAliveCountMax 3                        # 客户端超时次数
-   UseDNS no                                    # 禁用反向DNS解析
+   TCPKeepAlive yes                             # 指定系统应向对方发送 TCP keepalive 消息, 避免会话无限期挂起
+   Compression no                               # 不压缩服务器与客户端之间传输的数据
+   ClientAliveInterval 60                       # 服务器发送消息来请求客户端的响应的超时时间间隔
+   ClientAliveCountMax 3                        # 如果服务器发送客户端活动消息达到此阈值, 将断开与客户端的连接
+   MaxStartups 5:20:10                          # 指定最大并发未经身份验证的连接数
    AcceptEnv LANG LC_*                          # 允许客户端传递区域设置环境变量
-   Subsystem sftp /usr/lib/openssh/sftp-server  # sftp
-   AllowUsers root <UserName>                     # 允许登录的用户名
+   Subsystem sftp /usr/lib/openssh/sftp-server  # 配置外部子系统 (例如文件传输守护程序)
+   AllowUsers root admin                        # 允许登录的用户名
    ```
 
-   - `ClientAliveInterval`乘以`ClientAliveCountMax`, 即超时60s*3=180s后ssh断开连接。
    - 如果仍然有登录后提示, 可以清空相应文件`> /etc/motd`。
 
 3. 重启SSH服务: 
 
    ```bash
    sudo systemctl restart ssh.service
-   或者
-   /etc/init.d/ssh restart
    ```
 
 4. 在防火墙关闭22端口, 放行自定义的SSH端口号。
@@ -167,79 +156,13 @@ sudo apt install apt-transport-https ca-certificates
 
 之后再使用https源。
 
-### Debian(bullseye)
+### Debian
 
-参考[Debian 全球镜像站](https://www.debian.org/mirror/list), 选择相应镜像源, 比如: 
+参考 [Debian 全球镜像站](https://www.debian.org/mirror/list) 和 [清华大学开源软件镜像站使用帮助-Debian](https://mirrors.tuna.tsinghua.edu.cn/help/debian/)
 
-[清华大学开源软件镜像站使用帮助-Debian](https://mirrors.tuna.tsinghua.edu.cn/help/debian/)
+### Ubuntu
 
-{{< admonition type=quote title="点此展开镜像源" open=false >}}
-#默认注释了源码镜像以提高 apt update 速度, 如有需要可自行取消注释
-
-deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye main contrib non-free
-
-#deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye main contrib non-free
-
-deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye-updates main contrib non-free
-
-#deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye-updates main contrib non-free
-
-deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye-backports main contrib non-free
-
-#deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye-backports main contrib non-free
-
-deb https://mirrors.tuna.tsinghua.edu.cn/debian-security bullseye-security main contrib non-free
-
-#deb-src https://mirrors.tuna.tsinghua.edu.cn/debian-security bullseye-security main contrib non-free
-{{< /admonition >}}
-
-不太推荐使用[官方源](https://wiki.debian.org/SourcesList): 
-
-{{< admonition type=quote title="点此展开官方源" open=false >}}
-#默认注释了源码镜像以提高 apt update 速度, 如有需要可自行取消注释
-
-deb https://deb.debian.org/debian bullseye main contrib non-free
-
-#deb-src https://deb.debian.org/debian bullseye main contrib non-free
-
-deb https://deb.debian.org/debian-security/ bullseye-security main contrib non-free
-
-#deb-src https://deb.debian.org/debian-security/ bullseye-security main contrib non-free
-
-deb https://deb.debian.org/debian bullseye-updates main contrib non-free
-
-#deb-src https://deb.debian.org/debian bullseye-updates main contrib non-free
-
-deb https://deb.debian.org/debian bullseye-backports main contrib non-free
-
-#deb-src https://deb.debian.org/debian bullseye-backports main contrib non-free
-{{< /admonition >}}
-
-### Ubuntu(20.04 LTS)
-
-参考[Official Archive Mirrors for Ubuntu](https://launchpad.net/ubuntu/+archivemirrors), 选择相应镜像源, 比如: 
-
-[清华大学开源软件镜像站使用帮助-Ubuntu](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
-
-{{< admonition type=quote title="点此展开镜像源" open=false >}}
-#默认注释了源码镜像以提高 apt update 速度, 如有需要可自行取消注释
-
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal main restricted universe multiverse
-
-#deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal main restricted universe multiverse
-
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-updates main restricted universe multiverse
-
-#deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-updates main restricted universe multiverse
-
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-backports main restricted universe multiverse
-
-#deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-backports main restricted universe multiverse
-
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-security main restricted universe multiverse
-
-#deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-security main restricted universe multiverse
-{{< /admonition >}}
+参考 [Official Archive Mirrors for Ubuntu](https://launchpad.net/ubuntu/+archivemirrors) 和 [清华大学开源软件镜像站使用帮助-Ubuntu](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
 
 ## 网卡驱动
 

@@ -72,25 +72,18 @@ Control Sequence Introducer (CSI) 在ANSI转义序列中用两字符序列`ESC [
 在 [环境变量配置文件](../2021-6/) 中添加: 
 
 ```bash
-export PS1='${debian_chroot:+($debian_chroot)}\[\e[1;37m\t \e[1;31m\u\e[1;37m@\e[1;31m\h \e[1;36m$PWD\e[1;31m\]\n\$\[\e[0m\]'
-
-```
-
-其他Linux发行版自行注意`chroot`的写法。如果觉得自己用不到`chroot`, 也可以这样: 
-
-```bash
-export PS1='\[\e[1;37m\t \e[1;31m\u\e[1;37m@\e[1;31m\h \e[1;36m$PWD\e[1;31m\]\n\$\[\e[0m\]'
+export PS1='\n\[\e[1;37m\t \e[1;31m\u\e[1;37m@\e[1;31m\h \e[1;36m$PWD\e[1;31m\]\n\$ \[\e[0m\]'
 ```
 
 ### 解释
 
+- `\n`表示换行。
 - `\[`和`\]`这两个转义字符通知bash, 被括起来的字符不占用命令行上的任何空间, 这样就使自动换行能够继续正常工作。如果没有这两个转义字符, 当用户键入的命令到达终端的最右端时, 或者查看历史命令时, 就会出现显示错乱的情况。
 - `\e[1;37m`即SGR转义序列`ESC [ parameters m`, 定义后续字符的颜色, 这里是加粗的白色。
 - `\t`以HH:MM:SS格式显示24小时制时间。
 - `\u`显示当前用户名。
 - `\h`显示当前host机器名称。
 - `$PWD`显示完整路径。
-- `\n`表示换行。
 - `\$`当用户为`root`时, 显示为`#`。
 - `\e[0m`重置后续字符的显示控制属性为默认设置。
 
@@ -99,13 +92,13 @@ export PS1='\[\e[1;37m\t \e[1;31m\u\e[1;37m@\e[1;31m\h \e[1;36m$PWD\e[1;31m\]\n\
 普通用户:
 
 <div style="background-color:black;font-weight:bold;">
-    <span style="color:white;">20:34:50</span> <span style="color:red;">senzyo</span><span style="color:white;">@</span><span style="color:red;">Debian</span> <span style="color:cyan;">/home/senzyo</span><div></div><span style="color:red;">$</span>
+    <br /><span style="color:white;">20:34:50</span> <span style="color:red;">senzyo</span><span style="color:white;">@</span><span style="color:red;">Debian</span> <span style="color:cyan;">/home/senzyo</span><div></div><span style="color:red;">$ </span>
 </div>
 
 root用户:
 
 <div style="background-color:black;font-weight:bold;">
-    <span style="color:white;">20:34:50</span> <span style="color:red;">root</span><span style="color:white;">@</span><span style="color:red;">Debian</span> <span style="color:cyan;">/root</span><div></div><span style="color:red;">#</span>
+    <br /><span style="color:white;">20:34:50</span> <span style="color:red;">root</span><span style="color:white;">@</span><span style="color:red;">Debian</span> <span style="color:cyan;">/root</span><div></div><span style="color:red;"># </span>
 </div>
 
 ## Git Bash on Windows

@@ -54,7 +54,7 @@ summary: Customize and Colorize CMD Prompt.
 ```batch
 @echo off
 :: Prompt
-prompt $e[1;37m$T $e[1;31m用户名$e[1;37m@$e[1;31m电脑名 $e[1;36m$P $_$e[1;31m$$$e[0m
+prompt $_$e[1;37m$T $e[1;31m用户名$e[1;37m@$e[1;31m电脑名 $e[1;36m$P $_$e[1;31m$$ $e[0m
 ```
 
 ### 解释
@@ -91,7 +91,7 @@ prompt $e[1;37m$T $e[1;31m用户名$e[1;37m@$e[1;31m电脑名 $e[1;36m$P $_$e[1;
 ### 效果
 
 <div style="background-color:black">
-    <span style="color:white;">20:34:50.71</span> <span style="color:red;">senzyo</span><span style="color:white;">@</span><span style="color:red;">Windows</span> <span style="color:cyan;">D:\Desktop</span><div></div><span style="color:red;">$</span>
+    <br /><span style="color:white;">20:34:50.71</span> <span style="color:red;">senzyo</span><span style="color:white;">@</span><span style="color:red;">Windows</span> <span style="color:cyan;">D:\Desktop</span><div></div><span style="color:red;">$ </span>
 </div>
 
 - `$T` 会将毫秒一起输出, 暂时没有找到控制其输出格式的命令

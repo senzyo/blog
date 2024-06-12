@@ -7,39 +7,52 @@ tags: [Custom,Proxy,Linux]
 series: [Use Clash Core]
 series_weight: 2
 featuredImagePreview: ""
-summary: 本文不使用 Clash Verge 等 GUI 客户端, 而是通过 Dashboard 网页来控制 Clash Meta Core。
+summary: 本文不使用 Clash Verge 等 GUI 客户端, 而是通过 systemd 服务和 Dashboard 网页来控制 Clash Meta Core (mihomo)。
 ---
 
-{{< admonition type=info title="提示" open=true >}}
-鉴于原版 Clash Core (包括开源版本和 Premium 版本) 删库, 请使用 Clash Meta Core。
+{{< admonition type=tip title="改名" open=true >}}
+`Clash Meta` 改名为 `mihomo`。
 {{< /admonition >}}
 
-## Clash核心
+## Core
 
-下载 [Clash Meta Core](https://github.com/MetaCubeX/mihomo/releases/tag/Prerelease-Alpha), 版本选择参考 [FAQ](https://wiki.metacubex.one/startup/faq/)。将 `mihomo-linux-amd64` 重命名为 `clash-meta-core`。
+参考 [FAQ](https://wiki.metacubex.one/faq/faq/) 下载 [二进制文件](https://wiki.metacubex.one/startup/), 解压后将其重命名为 `mihomo`。
 
 ```bash
-chmod +x clash-meta-core
-sudo mv clash-meta-core /usr/local/bin/
+chmod +x mihomo
+sudo mv mihomo /usr/local/bin/
 ```
 
 ## 配置文件
 
-参考 [Clash配置文件](../2023-7/#Clash配置文件)。
+参考 [Clash配置文件](../2023-7/#配置文件)。
+
+```bash
+mkdir /etc/mihomo
+sudo cp config.yaml /etc/mihomo/
+```
+
+## Dashboard
+
+下载 [Yacd-meta](https://ghproxy.net/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip) 或者 [MetaCubeXD](https://ghproxy.net/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip), 解压后将文件夹重命名为 `ui`。
+
+```bash
+sudo cp -r ui /etc/mihomo/
+```
 
 ## 设置守护进程
 
 参考 [创建运行服务](https://wiki.metacubex.one/startup/service/)。
 
 ```bash
-sudo vim /etc/systemd/system/clash-meta.service
+sudo vim /etc/systemd/system/mihomo.service
 ```
 
 写入以下内容:
 
 ```
 [Unit]
-Description=Clash Meta
+Description=mihomo service
 Documentation=https://wiki.metacubex.one
 After=network.target NetworkManager.service systemd-networkd.service
 
@@ -47,12 +60,12 @@ After=network.target NetworkManager.service systemd-networkd.service
 Type=simple
 LimitNPROC=500
 LimitNOFILE=1000000
-CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH
-AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE
 Restart=on-failure
 RestartSec=10s
 ExecStartPre=/usr/bin/sleep 1s
-ExecStart=/usr/local/bin/clash-meta-core -d /etc/clash-meta
+ExecStart=/usr/local/bin/mihomo -d /etc/mihomo
 ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
@@ -65,34 +78,107 @@ WantedBy=multi-user.target
 sudo systemctl daemon-reload
 ```
 
-设置开机自启并立刻启动: 
-
-```bash
-sudo systemctl enable --now clash-meta.service
-```
-
-查看状态: 
-
-```bash
-sudo systemctl status clash-meta.service
-```
-
-## Dashboard
-
-下载 [Yacd-meta](https://ghproxy.net/https://github.com/MetaCubeX/Yacd-meta/archive/gh-pages.zip) 或者 [MetaCubeXD](https://ghproxy.net/https://github.com/MetaCubeX/metacubexd/archive/gh-pages.zip), 解压后将文件夹重命名为 `ui`。然后和其他 Clash 配置文件一起放到 `/etc/clash-meta/` 中。
-
-如果在配置文件中使用 `external-ui-url`, core 启动时会自动下载 Dashboard, 这样就不用手动下载放置了。
-
-访问 [http://127.0.0.1:9090/ui/](http://127.0.0.1:9090/ui/), 在 `API Base URL` 栏填写 `http://127.0.0.1:9090`, `Secret` 栏填写 `config.yaml` 中自己设置的 `secret` 随机字符串, 支持大小写英文字母+数字+特殊符号。
-
-{{< admonition type=tip title="提醒" open=true >}}
-首次使用 MetaCubeXD 管理 Clash Meta Core 时, 最好先点击一下配置页面的 `更新 GEO 数据库` 按钮, 取决于网络状况, 数据库文件可能下载不完全, 比如只下载了 `GeoSite.dat` 而没有下载 `GeoIP.dat`。
+{{< admonition type=success title="完成了" open=true >}}
+现在可以运行 `sudo systemctl start mihomo.service` 测试一下整个流程, 应该一切正常。
 {{< /admonition >}}
 
 ## 日常使用
 
-`clash-meta.service` 可以用 `systemctl` 命令方便地开关。
+### 开关系统和浏览器代理
 
 Chrome 会跟随 KDE 系统代理, Firefox 则不然。对于 KDE 系统代理和 [Firefox](../2024-4) 代理, 参考 [开关系统和浏览器代理](../2024-2/#开关系统和浏览器代理)。
 
-至于开关 TUN, 通过 Dashboard 手动点一下得了, 懒得写脚本, 反正我已经转为使用 [sing-box](../2024-2/) 了。
+### 当前模式重启
+
+将以下代码追加到 `/etc/proxy-custom` 中: 
+
+```bash
+function mihomo-restart() {
+    dir_config="/etc/mihomo"
+    service="mihomo.service"
+    sudo systemctl restart $service
+    sleep 3
+    substate=$(systemctl show -p SubState --value $service)
+    echo -e "$service state: \e[1;33m$substate\e[0m."
+    if [ $substate == "running" ]; then
+        secret=$(grep secret $dir_config/config.yaml | cut -d ' ' -f 2)
+        controller_api=$(grep external-controller $dir_config/config.yaml | cut -d ' ' -f 2)
+        response=$(curl -s -H "Authorization: Bearer ${secret}" -H "Content-Type: application/json" -X GET "http://${controller_api}/configs")
+        if echo "$response" | grep -q '"tun":{"enable":true'; then
+            echo -e "Use \e[1;34mtun\e[0m mode."
+            kde-proxy-off
+            # ff-proxy-off
+        else
+            echo -e "Use \e[1;34msystem proxy\e[0m mode."
+            kde-proxy-on
+            # ff-proxy-on
+        fi
+    fi
+}
+```
+
+### 停止运行
+
+将以下代码追加到 `/etc/proxy-custom` 中: 
+
+```bash
+function mihomo-stop() {
+    service="mihomo.service"
+    sudo systemctl stop $service
+    sleep 1
+    substate=$(systemctl show -p SubState --value $service)
+    echo -e "$service state: \e[1;33m$substate\e[0m."
+}
+```
+
+### 切换模式重启
+
+将以下代码追加到 `/etc/proxy-custom` 中: 
+
+```bash
+function mihomo-switch() {
+    dir_config="/etc/mihomo"
+    service="mihomo.service"
+    substate=$(systemctl show -p SubState --value $service)
+    if [ $substate != "running" ]; then
+        sudo systemctl restart $service
+        sleep 3
+        substate=$(systemctl show -p SubState --value $service)
+        if [ $substate != "running" ]; then
+            echo -e "Run $service \e[1;31mfailed\e[0m."
+            exit 1
+        fi
+    fi
+    echo -e "$service state: \e[1;33m$substate\e[0m."
+    if [ $substate == "running" ]; then
+        secret=$(grep secret $dir_config/config.yaml | cut -d ' ' -f 2)
+        controller_api=$(grep external-controller $dir_config/config.yaml | cut -d ' ' -f 2)
+        response=$(curl -s -H "Authorization: Bearer ${secret}" -H "Content-Type: application/json" -X GET "http://${controller_api}/configs")
+        if echo "$response" | grep -q '"tun":{"enable":true'; then
+            echo -e "Use \e[1;34msystem proxy\e[0m mode."
+            curl -H "Authorization: Bearer ${secret}" -H "Content-Type: application/json" -X PATCH -d '{"tun":{"enable":false}}' "http://${controller_api}/configs"
+            kde-proxy-on
+            # ff-proxy-on
+        else
+            echo -e "Use \e[1;34mtun\e[0m mode."
+            curl -H "Authorization: Bearer ${secret}" -H "Content-Type: application/json" -X PATCH -d '{"tun":{"enable":true}}' "http://${controller_api}/configs"
+            kde-proxy-off
+            # ff-proxy-off
+        fi
+    fi
+}
+```
+
+### 查看日志
+
+查看日志: 
+
+```bash
+sudo journalctl -u mihomo.service -o cat -e
+```
+
+查看实时日志: 
+
+```bash
+sudo journalctl -u mihomo.service -o cat -f
+```

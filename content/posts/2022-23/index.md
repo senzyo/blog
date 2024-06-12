@@ -26,13 +26,13 @@ summary: Customize and Colorize PowerShell Prompt.
 
 参考 [这里](../2020-1/#永久代理-1) 设置永久配置 `$PROFILE`, 将下面的代码写入, 使其在打开 PowerShell 时可以被预加载。
 
-```shell
+```powershell
 function prompt {
     $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = [Security.Principal.WindowsPrincipal] $identity
     $adminRole = [Security.Principal.WindowsBuiltInRole]::Administrator
 
-    "`e[97m$(Get-Date -Format "HH:mm:ss")" + " " + "`e[91m$(if($principal.IsInRole($adminRole)) { "admin" } else { "senzyo" })" + "`e[97m@" + "`e[91m$env:computername" + " " + "`e[96m$(Get-Location)" + "`r`n" + "`e[91m$(if($principal.IsInRole($adminRole)) { "#" } else { "$" })`e[0m"
+    "`r`n" + "`e[97m$(Get-Date -Format "HH:mm:ss")" + " " + "`e[91m$(if($principal.IsInRole($adminRole)) { "admin" } else { "senzyo" })" + "`e[97m@" + "`e[91m$env:computername" + " " + "`e[96m$(Get-Location)" + "`r`n" + "`e[91m$(if($principal.IsInRole($adminRole)) { "#" } else { "$" }) `e[0m"
 }
 ```
 
@@ -47,33 +47,37 @@ function prompt {
 普通用户:
 
 <div style="background-color:black">
-    <span style="color:white;">20:34:50</span> <span style="color:red;">senzyo</span><span style="color:white;">@</span><span style="color:red;">Windows</span> <span style="color:cyan;">D:\Desktop</span><div></div><span style="color:red;">$</span>
+    <br /><span style="color:white;">20:34:50</span> <span style="color:red;">senzyo</span><span style="color:white;">@</span><span style="color:red;">Windows</span> <span style="color:cyan;">D:\Desktop</span><div></div><span style="color:red;">$ </span>
 </div>
 
 管理员账户:
 
 <div style="background-color:black">
-    <span style="color:white;">20:34:50</span> <span style="color:red;">admin</span><span style="color:white;">@</span><span style="color:red;">Windows</span> <span style="color:cyan;">D:\Desktop</span><div></div><span style="color:red;">#</span>
+    <br /><span style="color:white;">20:34:50</span> <span style="color:red;">admin</span><span style="color:white;">@</span><span style="color:red;">Windows</span> <span style="color:cyan;">D:\Desktop</span><div></div><span style="color:red;"># </span>
 </div>
 
 ## PowerShell 5.x
 
 支持以 `[char]27` 表示 `ESC`, 不以支持 \``e` 表示。
 
-对于 Prompt 的多行显示支持存在 BUG, 在更高版本中此问题已修复。
+{{< admonition type=bug title="BUG" open=true >}}
+PowerShell 5.x 对于 Prompt 的多行显示支持存在 BUG, 更高版本的 PowerShell 已修复此问题。
+
+所以下面的样式只是单行。
+{{< /admonition >}}
 
 ### 代码
 
 参考 [这里](../2020-1/#永久代理-1) 设置永久配置 `$PROFILE`, 将下面的代码写入, 使其在打开 PowerShell 时可以被预加载。
 
-```shell
+```powershell
 function prompt {
     $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = [Security.Principal.WindowsPrincipal] $identity
     $adminRole = [Security.Principal.WindowsBuiltInRole]::Administrator
     $ESC = [char]27
 
-    "$ESC[97m$(Get-Date -Format "HH:mm:ss")" + " " + "$ESC[91m$(if($principal.IsInRole($adminRole)) { "admin" } else { "senzyo" })" + "$ESC[97m@" + "$ESC[91m$env:computername" + " " + "$ESC[96m$(Get-Location)" + "$ESC[91m$(if($principal.IsInRole($adminRole)) { " #" } else { " $" })$ESC[0m"
+    "$ESC[97m$(Get-Date -Format "HH:mm:ss")" + " " + "$ESC[91m$(if($principal.IsInRole($adminRole)) { "admin" } else { "senzyo" })" + "$ESC[97m@" + "$ESC[91m$env:computername" + " " + "$ESC[96m$(Get-Location)" + "$ESC[91m$(if($principal.IsInRole($adminRole)) { " #" } else { " $" }) $ESC[0m"
 }
 ```
 
@@ -82,13 +86,13 @@ function prompt {
 普通用户:
 
 <div style="background-color:black">
-    <span style="color:white;">20:34:50</span> <span style="color:red;">senzyo</span><span style="color:white;">@</span><span style="color:red;">Windows</span> <span style="color:cyan;">D:\Desktop</span> <span style="color:red;">$</span>
+    <span style="color:white;">20:34:50</span> <span style="color:red;">senzyo</span><span style="color:white;">@</span><span style="color:red;">Windows</span> <span style="color:cyan;">D:\Desktop</span> <span style="color:red;">$ </span>
 </div>
 
 管理员账户:
 
 <div style="background-color:black">
-    <span style="color:white;">20:34:50</span> <span style="color:red;">admin</span><span style="color:white;">@</span><span style="color:red;">Windows</span> <span style="color:cyan;">D:\Desktop</span> <span style="color:red;">#</span>
+    <span style="color:white;">20:34:50</span> <span style="color:red;">admin</span><span style="color:white;">@</span><span style="color:red;">Windows</span> <span style="color:cyan;">D:\Desktop</span> <span style="color:red;"># </span>
 </div>
 
 --------------------
