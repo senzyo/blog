@@ -104,7 +104,8 @@ function mihomo-restart() {
         secret=$(grep secret $dir_config/config.yaml | cut -d ' ' -f 2)
         controller_api=$(grep external-controller $dir_config/config.yaml | cut -d ' ' -f 2)
         response=$(curl -s -H "Authorization: Bearer ${secret}" -H "Content-Type: application/json" -X GET "http://${controller_api}/configs")
-        if echo "$response" | grep -q '"tun":{"enable":true'; then
+        tun_state=$(echo "$response" | jq -r '.tun.enable')
+        if [ "$tun_state" = "true" ]; then
             echo -e "Use \e[1;34mtun\e[0m mode."
             kde-proxy-off
             # ff-proxy-off
@@ -146,6 +147,7 @@ function mihomo-switch() {
         substate=$(systemctl show -p SubState --value $service)
         if [ $substate != "running" ]; then
             echo -e "Run $service \e[1;31mfailed\e[0m."
+            sleep 2
             exit 1
         fi
     fi
@@ -154,7 +156,8 @@ function mihomo-switch() {
         secret=$(grep secret $dir_config/config.yaml | cut -d ' ' -f 2)
         controller_api=$(grep external-controller $dir_config/config.yaml | cut -d ' ' -f 2)
         response=$(curl -s -H "Authorization: Bearer ${secret}" -H "Content-Type: application/json" -X GET "http://${controller_api}/configs")
-        if echo "$response" | grep -q '"tun":{"enable":true'; then
+        tun_state=$(echo "$response" | jq -r '.tun.enable')
+        if [ "$tun_state" = "true" ]; then
             echo -e "Use \e[1;34msystem proxy\e[0m mode."
             curl -H "Authorization: Bearer ${secret}" -H "Content-Type: application/json" -X PATCH -d '{"tun":{"enable":false}}' "http://${controller_api}/configs"
             kde-proxy-on

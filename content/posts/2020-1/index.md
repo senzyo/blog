@@ -16,13 +16,11 @@ summary: Git, Linux 与 Windows 的终端代理设置。
 只对当前终端有效, 新建终端需要重新设置。
 {{< /admonition >}}
 
-**格式**: 
+设置代理 **格式**: 
 
 ```batch
 set http_proxy=protocol://[proxy_userid]:[proxy_password]@proxy_ip:proxy_port
 ```
-
-输入设置代理的命令: 
 
 **HTTP代理**: 
 
@@ -31,8 +29,6 @@ set http_proxy=http://127.0.0.1:7890
 set https_proxy=http://127.0.0.1:7890
 ```
 
-或者
-
 **SOCKS5代理**: 
 
 ```batch
@@ -40,7 +36,7 @@ set http_proxy=socks5://127.0.0.1:7890
 set https_proxy=socks5://127.0.0.1:7890
 ```
 
-使用命令查看是否设置成功: 
+检查是否设置成功: 
 
 ```batch
 echo %http_proxy%
@@ -89,13 +85,11 @@ DOSKEY proxy-unset=set http_proxy= $t set https_proxy= $t echo Proxy environment
 只对当前终端有效, 新建终端需要重新设置。
 {{< /admonition >}}
 
-**格式**: 
+设置代理 **格式**: 
 
 ```shell
 $env:http_proxy="protocol://[proxy_userid]:[proxy_password]@proxy_ip:proxy_port"
 ```
-
-输入设置代理的命令: 
 
 **HTTP代理**: 
 
@@ -104,16 +98,19 @@ $env:http_proxy="http://127.0.0.1:7890"
 $env:https_proxy="http://127.0.0.1:7890"
 ```
 
-或者
+{{< admonition type=question title="似乎不支持 SOCKS 代理" open=true >}}
+PowerShell 似乎不支持以环境变量的方式设置 SOCKS 代理。
 
-**SOCKS5代理**: 
+但可以确定的是, `Invoke-WebRequest` 在 PowerShell 5.1 只支持 HTTP 代理, 在 PowerShell 7.x 支持 HTTPS 和 SOCKS 代理。
+
+使用示例:
 
 ```shell
-$env:http_proxy="socks5://127.0.0.1:7890"
-$env:https_proxy="socks5://127.0.0.1:7890"
+Invoke-RestMethod -Proxy "socks5://127.0.0.1:7890" -Uri "https://td.telegram.org/tsetup/tsetup.5.1.5.exe" -OutFile "tsetup.5.1.5.exe"
 ```
+{{< /admonition >}}
 
-使用命令查看是否设置成功: 
+检查是否设置成功: 
 
 ```shell
 $env:http_proxy
@@ -191,9 +188,7 @@ function proxy-unset {
 只对当前终端有效, 新建终端需要重新设置。
 {{< /admonition >}}
 
-输入设置代理的命令: 
-
-**格式**: 
+设置代理 **格式**: 
 
 ```bash
 export http_proxy=protocol://[proxy_userid]:[proxy_password]@proxy_ip:proxy_port
@@ -213,10 +208,18 @@ export http_proxy=socks5://127.0.0.1:7890
 export https_proxy=socks5://127.0.0.1:7890
 ```
 
-设置终端中的**wget**、**curl**等软件都走**SOCKS5**代理: 
+**全部代理**: 
 
 ```bash
-export ALL_PROXY=socks5://127.0.0.1:7890
+export all_proxy=socks5://127.0.0.1:7890
+```
+
+检查是否设置成功: 
+
+```bash
+echo $http_proxy
+echo $https_proxy
+echo $all_proxy
 ```
 
 ### 取消代理
@@ -225,7 +228,7 @@ export ALL_PROXY=socks5://127.0.0.1:7890
 
 ```bash
 unset http_proxy https_proxy
-unset ALL_RPOXY
+unset all_proxy
 ```
 
 ### 永久代理
@@ -301,7 +304,7 @@ git config --global --unset http.proxy
 git config --global --unset https.proxy
 ```
 
-使用`git config --global --list`命令查看是否设置成功。
+使用`git config --global --list`命令检查是否设置成功。
 
 #### 方法二: 在各种Shell中使用Git
 

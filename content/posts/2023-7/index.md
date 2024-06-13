@@ -365,7 +365,7 @@ $process = "mihomo"
 $task = "mihomo"
 $proxy_port = 7890
 
-Stop-Process -Name $process -Force
+Stop-Process -Name $process -Force > $null 2>&1
 Clear-DnsClientCache
 Start-ScheduledTask -TaskName $task
 Start-Sleep -Seconds 3
@@ -375,10 +375,10 @@ if ($state -eq "Running") {
     $proxyEnabled = (Get-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings').ProxyEnable
     if ($proxyEnabled -eq 0) {
         Write-Host "System proxy disabled."
-        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -Method PATCH -Body "{""tun"": {""enable"": true}}" -ContentType "application/json" -Uri "$controller_api/configs"
+        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": true}}' -Uri "$controller_api/configs"
         Write-Host "Use tun mode."
     } else {
-        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -Method PATCH -Body "{""tun"": {""enable"": false}}" -ContentType "application/json" -Uri "$controller_api/configs"
+        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": false}}' -Uri "$controller_api/configs"
         Write-Host "TUN disabled."
         Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyServer -Value "127.0.0.1:$proxy_port"
         Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 1
@@ -399,7 +399,8 @@ $process = "mihomo"
 
 Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 0
 Write-Host "System proxy disabled."
-Stop-Process -Name $process -Force
+Stop-Process -Name $process -Force > $null 2>&1
+Write-Host "${process} stopped."
 Clear-DnsClientCache
 Start-Sleep -Seconds 1
 ```
@@ -415,16 +416,24 @@ $process = "mihomo"
 $task = "mihomo"
 $proxy_port = 7890
 
-Stop-Process -Name $process -Force
-Clear-DnsClientCache
-Start-ScheduledTask -TaskName $task
-Start-Sleep -Seconds 3
 $state = Get-ScheduledTask -TaskName $task | Select-Object -ExpandProperty State
+if ($state -ne "Running") {
+    Stop-Process -Name $process -Force > $null 2>&1
+    Clear-DnsClientCache
+    Start-ScheduledTask -TaskName $task
+    Start-Sleep -Seconds 3
+    $state = Get-ScheduledTask -TaskName $task | Select-Object -ExpandProperty State
+    if ($state -ne "Running") {
+        Write-Host "Run ${task} failed."
+        Start-Sleep -Seconds 2
+        exit 1
+    }
+}
 Write-Host "State of ${task}: ${state}"
 if ($state -eq "Running") {
     $proxyEnabled = (Get-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings').ProxyEnable
     if ($proxyEnabled -eq 0) {
-        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -Method PATCH -Body "{""tun"": {""enable"": false}}" -ContentType "application/json" -Uri "$controller_api/configs"
+        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": false}}' -Uri "$controller_api/configs"
         Write-Host "TUN disabled."
         Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyServer -Value "127.0.0.1:$proxy_port"
         Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 1
@@ -432,11 +441,9 @@ if ($state -eq "Running") {
     } else {
         Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 0
         Write-Host "System proxy disabled."
-        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -Method PATCH -Body "{""tun"": {""enable"": true}}" -ContentType "application/json" -Uri "$controller_api/configs"
+        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": true}}' -Uri "$controller_api/configs"
         Write-Host "Use tun mode."
     }
-} else {
-    Write-Host "Run ${task} failed."
 }
 Start-Sleep -Seconds 1
 ```
@@ -470,9 +477,8 @@ foreach ($Url in $AssetUrls) {
     Write-Host "Downloading $Url"
     Invoke-WebRequest -OutFile $FilePath -Uri "https://ghproxy.net/$Url"
 }
-Start-Sleep -Seconds 1
 
-Stop-Process -Name $process -Force
+Stop-Process -Name $process -Force > $null 2>&1
 Clear-DnsClientCache
 Expand-Archive -LiteralPath "$WindowsBackupPath\$FileName" -DestinationPath "$ClashWorkPath" -Force
 Set-Location -Path $$ClashWorkPath

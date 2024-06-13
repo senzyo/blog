@@ -263,7 +263,7 @@ Set-Location -Path $dir_config
 sing-box.exe check -c config.json 2>$null
 if ($LASTEXITCODE -ne 0) {
     Write-Host "File config.json is invalid."
-    Start-Sleep -Seconds 1
+    Start-Sleep -Seconds 2
     Exit 1
 }
 Stop-ScheduledTask -TaskName $task
@@ -301,7 +301,6 @@ Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\C
 Write-Host "System proxy disabled."
 Stop-ScheduledTask -TaskName $task
 Clear-DnsClientCache
-Start-Sleep -Seconds 1
 $state = Get-ScheduledTask -TaskName $task | Select-Object -ExpandProperty State
 Write-Host "State of ${task} ScheduledTask: ${state}"
 Start-Sleep -Seconds 1
@@ -328,7 +327,7 @@ if ($find) {
 sing-box.exe check -c config_$inbound.json 2>$null
 if ($LASTEXITCODE -ne 0) {
     Write-Host "File config_$inbound.json is invalid."
-    Start-Sleep -Seconds 1
+    Start-Sleep -Seconds 2
     Exit 1
 }
 Stop-ScheduledTask -TaskName $task
