@@ -375,14 +375,16 @@ if ($state -eq "Running") {
     $proxyEnabled = (Get-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings').ProxyEnable
     if ($proxyEnabled -eq 0) {
         Write-Host "System proxy disabled."
-        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": true}}' -Uri "$controller_api/configs"
         Write-Host "Use tun mode."
+        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": true}}' -Uri "$controller_api/configs"
+        Write-Host "TUN enabled."
     } else {
-        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": false}}' -Uri "$controller_api/configs"
-        Write-Host "TUN disabled."
         Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyServer -Value "127.0.0.1:$proxy_port"
         Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 1
+        Write-Host "System proxy enabled."
         Write-Host "Use system proxy mode."
+        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": false}}' -Uri "$controller_api/configs"
+        Write-Host "TUN disabled."
     }
 } else {
     Write-Host "Run ${task} failed."
@@ -417,32 +419,34 @@ $task = "mihomo"
 $proxy_port = 7890
 
 $state = Get-ScheduledTask -TaskName $task | Select-Object -ExpandProperty State
+Write-Host "State of ${task}: ${state}"
 if ($state -ne "Running") {
     Stop-Process -Name $process -Force > $null 2>&1
     Clear-DnsClientCache
     Start-ScheduledTask -TaskName $task
     Start-Sleep -Seconds 3
     $state = Get-ScheduledTask -TaskName $task | Select-Object -ExpandProperty State
+    Write-Host "State of ${task}: ${state}"
     if ($state -ne "Running") {
         Write-Host "Run ${task} failed."
         Start-Sleep -Seconds 2
         exit 1
     }
 }
-Write-Host "State of ${task}: ${state}"
 if ($state -eq "Running") {
     $proxyEnabled = (Get-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings').ProxyEnable
     if ($proxyEnabled -eq 0) {
-        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": false}}' -Uri "$controller_api/configs"
-        Write-Host "TUN disabled."
         Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyServer -Value "127.0.0.1:$proxy_port"
         Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 1
+        Write-Host "System proxy enabled."
         Write-Host "Use system proxy mode."
+        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": false}}' -Uri "$controller_api/configs"
+        Write-Host "TUN disabled."
     } else {
-        Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 0
         Write-Host "System proxy disabled."
-        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": true}}' -Uri "$controller_api/configs"
         Write-Host "Use tun mode."
+        Invoke-RestMethod -Headers @{ "Authorization" = "Bearer $api_secret" } -ContentType "application/json" -Method PATCH -Body '{"tun": {"enable": true}}' -Uri "$controller_api/configs"
+        Write-Host "TUN enabled."
     }
 }
 Start-Sleep -Seconds 1

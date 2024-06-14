@@ -88,7 +88,7 @@ sudo systemctl daemon-reload
 
 Chrome 会跟随 KDE 系统代理, Firefox 则不然。对于 KDE 系统代理和 [Firefox](../2024-4) 代理, 参考 [开关系统和浏览器代理](../2024-2/#开关系统和浏览器代理)。
 
-### 当前模式重启
+### 当前配置重启
 
 将以下代码追加到 `/etc/proxy-custom` 中: 
 
@@ -98,22 +98,26 @@ function mihomo-restart() {
     service="mihomo.service"
     sudo systemctl restart $service
     sleep 3
-    substate=$(systemctl show -p SubState --value $service)
-    echo -e "$service state: \e[1;33m$substate\e[0m."
-    if [ $substate == "running" ]; then
+    sub_state=$(systemctl show -p SubState --value $service)
+    echo -e "$service state: \e[1;33m$sub_state\e[0m."
+    if [ $sub_state == "running" ]; then
         secret=$(grep secret $dir_config/config.yaml | cut -d ' ' -f 2)
         controller_api=$(grep external-controller $dir_config/config.yaml | cut -d ' ' -f 2)
         response=$(curl -s -H "Authorization: Bearer ${secret}" -H "Content-Type: application/json" -X GET "http://${controller_api}/configs")
         tun_state=$(echo "$response" | jq -r '.tun.enable')
-        if [ "$tun_state" = "true" ]; then
+        if [ "$tun_state" == "true" ]; then
+            echo -e "Tun \e[1;32menabled\e[0m."
             echo -e "Use \e[1;34mtun\e[0m mode."
             kde-proxy-off
             # ff-proxy-off
         else
+            echo -e "Tun \e[1;31mdisabled\e[0m."
             echo -e "Use \e[1;34msystem proxy\e[0m mode."
             kde-proxy-on
             # ff-proxy-on
         fi
+    else
+        echo -e "Run $service \e[1;31mfailed\e[0m."
     fi
 }
 ```
@@ -127,8 +131,8 @@ function mihomo-stop() {
     service="mihomo.service"
     sudo systemctl stop $service
     sleep 1
-    substate=$(systemctl show -p SubState --value $service)
-    echo -e "$service state: \e[1;33m$substate\e[0m."
+    sub_state=$(systemctl show -p SubState --value $service)
+    echo -e "$service state: \e[1;33m$sub_state\e[0m."
 }
 ```
 
@@ -140,31 +144,33 @@ function mihomo-stop() {
 function mihomo-switch() {
     dir_config="/etc/mihomo"
     service="mihomo.service"
-    substate=$(systemctl show -p SubState --value $service)
-    if [ $substate != "running" ]; then
+    sub_state=$(systemctl show -p SubState --value $service)
+    echo -e "$service state: \e[1;33m$sub_state\e[0m."
+    if [ $sub_state != "running" ]; then
         sudo systemctl restart $service
         sleep 3
-        substate=$(systemctl show -p SubState --value $service)
-        if [ $substate != "running" ]; then
+        sub_state=$(systemctl show -p SubState --value $service)
+        echo -e "$service state: \e[1;33m$sub_state\e[0m."
+        if [ $sub_state != "running" ]; then
             echo -e "Run $service \e[1;31mfailed\e[0m."
-            sleep 2
             exit 1
         fi
     fi
-    echo -e "$service state: \e[1;33m$substate\e[0m."
-    if [ $substate == "running" ]; then
+    if [ $sub_state == "running" ]; then
         secret=$(grep secret $dir_config/config.yaml | cut -d ' ' -f 2)
         controller_api=$(grep external-controller $dir_config/config.yaml | cut -d ' ' -f 2)
         response=$(curl -s -H "Authorization: Bearer ${secret}" -H "Content-Type: application/json" -X GET "http://${controller_api}/configs")
         tun_state=$(echo "$response" | jq -r '.tun.enable')
-        if [ "$tun_state" = "true" ]; then
-            echo -e "Use \e[1;34msystem proxy\e[0m mode."
+        if [ "$tun_state" == "true" ]; then
             curl -H "Authorization: Bearer ${secret}" -H "Content-Type: application/json" -X PATCH -d '{"tun":{"enable":false}}' "http://${controller_api}/configs"
+            echo -e "Tun \e[1;31mdisabled\e[0m."
+            echo -e "Use \e[1;34msystem proxy\e[0m mode."
             kde-proxy-on
             # ff-proxy-on
         else
-            echo -e "Use \e[1;34mtun\e[0m mode."
             curl -H "Authorization: Bearer ${secret}" -H "Content-Type: application/json" -X PATCH -d '{"tun":{"enable":true}}' "http://${controller_api}/configs"
+            echo -e "Tun \e[1;32menabled\e[0m."
+            echo -e "Use \e[1;34mtun\e[0m mode."
             kde-proxy-off
             # ff-proxy-off
         fi

@@ -250,7 +250,7 @@ Start-Sleep -Seconds 1
 现在可以运行任务计划程序 `sing-box-trigger` 测试一下整个流程, 应该一切正常。
 {{< /admonition >}}
 
-### 当前模式重启
+### 当前配置重启
 
 修改以下内容, 写入到脚本 `C:\Users\<UserName>\Apps\sing-box\Restart.ps1`:
 

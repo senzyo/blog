@@ -179,9 +179,9 @@ if [ $count -eq 3 ]; then
 fi
 sudo systemctl start $service
 sleep 5
-substate=$(systemctl show -p SubState --value $service)
-echo -e "$service state: \e[1;33m$substate\e[0m."
-if [ $substate == "running" ]; then
+sub_state=$(systemctl show -p SubState --value $service)
+echo -e "$service state: \e[1;33m$sub_state\e[0m."
+if [ $sub_state == "running" ]; then
     if [[ $inbound == "mixed" ]]; then
         echo -e "Use \e[1;34msystem proxy\e[0m mode."
         kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "ftpProxy" "http://127.0.0.1 $proxy_port"
@@ -259,9 +259,9 @@ for inbound in "${inbound_list[@]}"; do
 done
 sudo systemctl start $service
 sleep 5
-substate=$(systemctl show -p SubState --value $service)
-echo -e "$service state: \e[1;33m$substate\e[0m."
-if [ $substate == "running" ]; then
+sub_state=$(systemctl show -p SubState --value $service)
+echo -e "$service state: \e[1;33m$sub_state\e[0m."
+if [ $sub_state == "running" ]; then
     if [[ $inbound_prefer == "mixed" ]]; then
         echo -e "Use \e[1;34msystem proxy\e[0m mode."
         kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "ftpProxy" "http://127.0.0.1 $proxy_port"
@@ -351,7 +351,7 @@ if [ -f /etc/proxy-custom ]; then
 fi
 ```
 
-### 当前模式重启
+### 当前配置重启
 
 将以下代码追加到 `/etc/proxy-custom` 中: 
 
@@ -367,9 +367,9 @@ function sing-box-restart() {
     fi
     sudo systemctl restart $service
     sleep 5
-    substate=$(systemctl show -p SubState --value $service)
-    echo -e "$service state: \e[1;33m$substate\e[0m."
-    if [ $substate == "running" ]; then
+    sub_state=$(systemctl show -p SubState --value $service)
+    echo -e "$service state: \e[1;33m$sub_state\e[0m."
+    if [ $sub_state == "running" ]; then
         if grep -q '"type": "tun"' $dir_config/config.json; then
             echo -e "Use \e[1;34mtun\e[0m mode."
             kde-proxy-off
@@ -379,6 +379,8 @@ function sing-box-restart() {
             kde-proxy-on
             # ff-proxy-on
         fi
+    else
+        echo -e "Run $service \e[1;31mfailed\e[0m."
     fi
 }
 ```
@@ -392,8 +394,8 @@ function sing-box-stop() {
     service="sing-box.service"
     sudo systemctl stop $service
     sleep 1
-    substate=$(systemctl show -p SubState --value $service)
-    echo -e "$service state: \e[1;33m$substate\e[0m."
+    sub_state=$(systemctl show -p SubState --value $service)
+    echo -e "$service state: \e[1;33m$sub_state\e[0m."
 }
 ```
 
@@ -421,9 +423,9 @@ function sing-box-switch() {
     sudo cp $dir_config/config_$inbound.json $dir_config/config.json
     sudo systemctl restart $service
     sleep 5
-    substate=$(systemctl show -p SubState --value $service)
-    echo -e "$service state: \e[1;33m$substate\e[0m."
-    if [ $substate == "running" ]; then
+    sub_state=$(systemctl show -p SubState --value $service)
+    echo -e "$service state: \e[1;33m$sub_state\e[0m."
+    if [ $sub_state == "running" ]; then
         if [ $inbound == "mixed" ]; then
             echo -e "Use \e[1;34msystem proxy\e[0m mode."
             kde-proxy-on
@@ -433,6 +435,8 @@ function sing-box-switch() {
             kde-proxy-off
             # ff-proxy-off
         fi
+    else
+        echo -e "Run $service \e[1;31mfailed\e[0m."
     fi
 }
 ```
