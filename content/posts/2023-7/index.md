@@ -28,7 +28,7 @@ summary: 本文不使用 Clash Verge 等 GUI 客户端, 而是通过任务计划
 # 官方配置详解 https://wiki.metacubex.one/config/
 
 allow-lan: false
-bind-address: "*"
+bind-address: '*'
 mode: rule
 log-level: error
 ipv6: true
@@ -38,8 +38,8 @@ find-process-mode: always
 external-controller: 127.0.0.1:9090
 secret: AjIuQAZf795UQ16V3si6
 external-ui: ui
-# external-ui-url: "https://ghproxy.net/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip"
-external-ui-url: "https://ghproxy.net/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip"
+external-ui-url: 'https://ghproxy.net/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip'
+# external-ui-url: 'https://ghproxy.net/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip'
 profile:
   store-selected: true
   store-fake-ip: true
@@ -52,8 +52,8 @@ geo-auto-update: true
 # 单位为小时
 geo-update-interval: 24
 geox-url:
-  geoip: "https://ghproxy.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat"
-  geosite: "https://ghproxy.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat"
+  geoip: 'https://ghproxy.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat'
+  geosite: 'https://ghproxy.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat'
 global-ua: clash.meta
 
 dns:
@@ -70,16 +70,21 @@ dns:
     - 'tls://223.5.5.5'
   nameserver-policy:
   # 为 proxy-provider 使用的域名指定 DNS 服务器, 不然无法下载订阅文件
-    '+.pronetwork.top,+.wd-turbo.com': 'tls://223.5.5.5'
-    'geosite:geolocation-!cn': 'tls://8.8.8.8#🕸 兜底'
-    'geosite:cn': 'tls://223.5.5.5'
+    '+.pronetwork.top,+.wd-turbo.com': ['https://dns.alidns.com/dns-query', 'tls://dns.alidns.com']
+    'geosite:geolocation-!cn': ['https://dns.google/dns-query#🚀 默认出站', 'tls://dns.google#🚀 默认出站']
+    'geosite:cn': ['https://dns.alidns.com/dns-query', 'tls://dns.alidns.com']
   nameserver:
-    - 'tls://8.8.8.8#🕸 兜底'
+    - 'https://dns.google/dns-query#🚀 默认出站'
+    - 'tls://dns.google#🚀 默认出站'
   proxy-server-nameserver:
-    - 'tls://223.5.5.5'
+    - 'https://dns.alidns.com/dns-query'
+    - 'tls://dns.alidns.com'
 
 sniffer:
   enable: false
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: false
 
 mixed-port: 7890
 tun:
@@ -88,18 +93,18 @@ tun:
   auto-route: true
   auto-detect-interface: true
   dns-hijack:
-    - udp://any:53
-    - tcp://any:53
+    - 'udp://any:53'
+    - 'tcp://any:53'
   strict_route: true
   gso: true
   endpoint-independent-nat: false
   exclude-package:
-    - com.android.captiveportallogin
+    - 'com.android.captiveportallogin'
 
 urltest: &urltest
   type: url-test
   disable-udp: false
-  url: https://www.gstatic.com/generate_204
+  url: 'https://www.gstatic.com/generate_204'
   # 单位为秒, 仅影响 proxies 下的节点
   interval: 300
   # 单位为毫秒
@@ -109,94 +114,104 @@ urltest: &urltest
   lazy: false
   expected-status: 204
   use:
-    - Provider1
+    - 'Provider1'
 
 select1: &select1
   type: select
   disable-udp: false
   proxies:
-    - 🌏 日韩台新
-    - DIRECT
-    - 📌 单选节点
-    - 🇭🇰 香港节点
-    - 🇯🇵 日本节点
-    - 🇰🇷 韩国节点
-    - 🇹🇼 台湾节点
-    - 🇸🇬 新加坡节点
-    - 🇺🇸 美国节点
+    - '🚀 默认出站'
+    - 'DIRECT'
+    - '📌 单选节点'
+    - '🇭🇰 香港节点'
+    - '🇯🇵 日本节点'
+    - '🇰🇷 韩国节点'
+    - '🇹🇼 台湾节点'
+    - '🇸🇬 新加坡节点'
+    - '🇺🇸 美国节点'
 
 proxy-groups:
-  - name: "🕸 兜底"
-    <<: *select1
-  - name: "🌏 日韩台新"
-    filter: "🇯🇵|日本|JP|Japan|🇰🇷|韩国|KR|South Korea|🇹🇼|台湾|TW|Taiwan|🇸🇬|新加坡|SG|Singapore"
-    <<: *urltest
-  - name: "📌 单选节点"
+  - name: '🚀 默认出站'
     type: select
     disable-udp: false
-    exclude-filter: "剩余|流量|raffic|有效|时间|到期|xpire|地址|网址|官网|自动|最优|最快"
+    proxies:
+      - '🌏 日韩台新'
+      - '📌 单选节点'
+      - '🇭🇰 香港节点'
+      - '🇯🇵 日本节点'
+      - '🇰🇷 韩国节点'
+      - '🇹🇼 台湾节点'
+      - '🇸🇬 新加坡节点'
+      - '🇺🇸 美国节点'
+  - name: '🌏 日韩台新'
+    filter: '🇯🇵|日本|JP|Japan|🇰🇷|韩国|KR|South Korea|🇹🇼|台湾|TW|Taiwan|🇸🇬|新加坡|SG|Singapore'
+    <<: *urltest
+  - name: '📌 单选节点'
+    type: select
+    disable-udp: false
+    exclude-filter: '剩余|流量|raffic|有效|时间|到期|xpire|地址|网址|官网|自动|最优|最快'
     use:
-      - Provider1
-  - name: "📢 广告"
+      - 'Provider1'
+  - name: '📢 广告'
     type: select
     disable-udp: false
     proxies:
-      - REJECT
-      - 🌏 日韩台新
-      - DIRECT
-      - 📌 单选节点
-      - 🇭🇰 香港节点
-      - 🇯🇵 日本节点
-      - 🇰🇷 韩国节点
-      - 🇹🇼 台湾节点
-      - 🇸🇬 新加坡节点
-      - 🇺🇸 美国节点
-  - name: "📥 Download"
+      - 'REJECT'
+      - '🚀 默认出站'
+      - 'DIRECT'
+      - '📌 单选节点'
+      - '🇭🇰 香港节点'
+      - '🇯🇵 日本节点'
+      - '🇰🇷 韩国节点'
+      - '🇹🇼 台湾节点'
+      - '🇸🇬 新加坡节点'
+      - '🇺🇸 美国节点'
+  - name: '📥 Download'
     <<: *select1
-  - name: "🍎 Apple"
+  - name: '🍎 Apple'
     type: select
     disable-udp: false
     proxies:
-      - DIRECT
-      - 🌏 日韩台新
-      - 📌 单选节点
-      - 🇭🇰 香港节点
-      - 🇯🇵 日本节点
-      - 🇰🇷 韩国节点
-      - 🇹🇼 台湾节点
-      - 🇸🇬 新加坡节点
-      - 🇺🇸 美国节点
-  - name: "🎮 Game"
+      - 'DIRECT'
+      - '🚀 默认出站'
+      - '📌 单选节点'
+      - '🇭🇰 香港节点'
+      - '🇯🇵 日本节点'
+      - '🇰🇷 韩国节点'
+      - '🇹🇼 台湾节点'
+      - '🇸🇬 新加坡节点'
+      - '🇺🇸 美国节点'
+  - name: '🎮 Game'
     <<: *select1
-  - name: "🔎 Google"
+  - name: '🔎 Google'
     <<: *select1
-  - name: "🥽 Meta"
+  - name: '🥽 Meta'
     <<: *select1
-  - name: "☁️ OneDrive"
+  - name: '☁️ OneDrive'
     <<: *select1
-  - name: "🤖 OpenAI"
+  - name: '🤖 OpenAI'
     <<: *select1
-  - name: "🪟 Microsoft"
+  - name: '🪟 Microsoft'
     <<: *select1
-  - name: "✈️ Telegram"
+  - name: '✈️ Telegram'
     <<: *select1
-  - name: "🇭🇰 香港节点"
-    filter: "🇭🇰|香港|HK|Hong Kong"
+  - name: '🇭🇰 香港节点'
+    filter: '🇭🇰|香港|HK|Hong Kong'
     <<: *urltest
-  - name: "🇯🇵 日本节点"
-    filter: "🇯🇵|日本|JP|Japan"
+  - name: '🇯🇵 日本节点'
+    filter: '🇯🇵|日本|JP|Japan'
     <<: *urltest
-  - name: "🇰🇷 韩国节点"
-    filter: "🇰🇷|韩国|KR|South Korea"
+  - name: '🇰🇷 韩国节点'
+    filter: '🇰🇷|韩国|KR|South Korea'
     <<: *urltest
-  - name: "🇹🇼 台湾节点"
-    filter: "🇹🇼|台湾|TW|Taiwan"
+  - name: '🇹🇼 台湾节点'
+    filter: '🇹🇼|台湾|TW|Taiwan'
     <<: *urltest
-  - name: "🇸🇬 新加坡节点"
-    filter: "🇸🇬|新加坡|SG|Singapore"
+  - name: '🇸🇬 新加坡节点'
+    filter: '🇸🇬|新加坡|SG|Singapore'
     <<: *urltest
-  - name: "🇺🇸 美国节点"
-    filter: "🇺🇸|美国|US|USA|United States"
+  - name: '🇺🇸 美国节点'
+    filter: '🇺🇸|美国|US|USA|United States'
     <<: *urltest
 
 rules:
@@ -206,10 +221,10 @@ rules:
   - GEOSITE,private,DIRECT
   - GEOIP,private,DIRECT,no-resolve
   - GEOSITE,category-ads-all,📢 广告
-  - DOMAIN-SUFFIX,copymanga.site,🕸 兜底
-  - DOMAIN-SUFFIX,mangafuna.xyz,🕸 兜底
-  - DOMAIN-SUFFIX,mangafunb.fun,🕸 兜底
-  - DOMAIN-SUFFIX,senzyo.net,🕸 兜底
+  - DOMAIN-SUFFIX,copymanga.site,🚀 默认出站
+  - DOMAIN-SUFFIX,mangafuna.xyz,🚀 默认出站
+  - DOMAIN-SUFFIX,mangafunb.fun,🚀 默认出站
+  - DOMAIN-SUFFIX,senzyo.net,🚀 默认出站
   - SUB-RULE,(RULE-SET,download_process),download
   - GEOSITE,apple,🍎 Apple
   - GEOSITE,category-games@cn,DIRECT
@@ -223,10 +238,10 @@ rules:
   - GEOSITE,microsoft,🪟 Microsoft
   - GEOSITE,telegram,✈️ Telegram
   - GEOIP,telegram,✈️ Telegram,no-resolve
-  - GEOSITE,geolocation-!cn,🕸 兜底
+  - GEOSITE,geolocation-!cn,🚀 默认出站
   - GEOSITE,cn,DIRECT
   - GEOIP,cn,DIRECT,no-resolve
-  - MATCH,🕸 兜底
+  - MATCH,🚀 默认出站
 sub-rules:
   download:
     - GEOSITE,cn,DIRECT
@@ -243,7 +258,7 @@ proxy-providers:
     proxy: DIRECT
     health-check:
       enable: true
-      url: https://www.gstatic.com/generate_204
+      url: 'https://www.gstatic.com/generate_204'
       # 单位为秒, 仅影响 proxy-group 中 use 下的节点
       interval: 300
       # 单位为毫秒
@@ -252,13 +267,13 @@ proxy-providers:
       expected-status: 204
     override:
       udp: true
-      up: "50 Mbps"
-      down: "70 Mbps"
+      up: '10 Mbps'
+      down: '70 Mbps'
 
 rule-providers:
   download_process:
     type: http
-    url: "https://ghproxy.net/https://raw.githubusercontent.com/senzyo/as-gist/master/Rule/Clash/download_process.yaml"
+    url: 'https://ghproxy.net/https://raw.githubusercontent.com/senzyo/as-gist/master/Rule/Clash/download_process.yaml'
     path: ./rule-providers/download_process.yaml
     # 单位为秒
     interval: 86400
