@@ -279,6 +279,14 @@ rule-providers:
     interval: 86400
     behavior: classical
     format: yaml
+
+ntp:
+  enable: true
+  write-to-system: false
+  server: ntp.aliyun.com
+  port: 123
+  # 单位为分钟
+  interval: 30
 ```
 
 ## Dashboard
