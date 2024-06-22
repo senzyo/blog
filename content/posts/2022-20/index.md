@@ -31,7 +31,7 @@ summary: 这是一篇许久以前的刷机笔记。
 
 - TWRP: https://twrp.me/xiaomi/xiaomiredminote5pro.html, 不支持动态分区
 - OrangeFox: https://sourceforge.net/projects/whyred-orangefox/files/TEST/, 只有使用 4.19 内核的版本支持动态分区
-- LineageOS Recovery: https://t.me/noperoms/8125, 支持动态分区
+- LineageOS Recovery: 在 https://github.com/Whyred-Dynamic-Development/Rom-Releases/releases/ 中查找 `recovery-los-whyred.img`, 支持动态分区
 
 对于 OrangeFox: 
 
@@ -103,7 +103,7 @@ Cache 无效的分区
 
 ### Dynamic Partition
 
-一些使用 4.19 内核的类原生 ROM, 比如 Evolution-X 和 LineageOS, 都使用了动态分区, 需要使用支持动态分区的 Recovery 来刷入 ROM, 比如上文 [Recovery](#recovery) 中的 [OrangeFox](https://sourceforge.net/projects/whyred-orangefox/files/TEST/) 和 [LineageOS Recovery](https://t.me/noperoms/8125)。
+一些使用 4.19 内核的类原生 ROM, 比如 Evolution-X 和 LineageOS, 都使用了动态分区, 需要使用支持动态分区的 Recovery 来刷入 ROM, 比如上文 [Recovery](#recovery) 中提到的。
 
 刷入 ROM 时, 如果出现有关分区的报错, 忽视即可, 因为此时分区尚未设为动态类型。
 
@@ -117,7 +117,7 @@ Cache 无效的分区
 - DotOS: https://www.droidontime.com/devices/whyred, 已停止维护
 - Evolution-X: https://evolution-x.org/device/whyred, https://sourceforge.net/projects/evolution-x/files/whyred/13/, 已停止维护
 - Havoc-OS: https://havoc-os.com/device#whyred, 已停止维护
-- LineageOS: ~~[Official](https://download.lineageos.org/whyred)~~ 已撤包, [Unofficial](https://t.me/s/whyredupdates?q=LineageOS)
+- LineageOS: ~~[Official](https://download.lineageos.org/whyred)~~ 已撤包, [Unofficial](https://t.me/s/whyredupdates?q=LineageOS) ~ [GitHub](https://github.com/Whyred-Dynamic-Development/Rom-Releases/releases/latest)
 - PixelExperience: https://get.pixelexperience.org/whyred, 已停止维护
 - PixelOS: https://pixelos.net/download/whyred, 已停止维护
 
@@ -412,7 +412,7 @@ OPPO Enco Air = Name_Based
 
 ### Google Apps
 
-可在 Recovery 中通过 `adb sideload` 刷入 GApps, 推荐 [BiTGApps](https://bitgapps.io/), 也可选择 [Mind The Gapps](https://androidfilehost.com/?w=files&flid=322935) 或 [The Open GApps Project](https://opengapps.org/#downloadsection)。
+可在 Recovery 中通过 `adb sideload` 刷入 GApps, 推荐 [BiTGApps](https://bitgapps.io/), 也可选择 [Mind The Gapps](https://wiki.lineageos.org/gapps/) 或 [The Open GApps Project](https://opengapps.org/#downloadsection)。
 
 {{< admonition type=warning title="注意" open=true >}}
 成功刷入 ROM 后, 先不要开机, 要在这时刷入 GApps。若是不小心开了机, 只能恢复出厂设置后再刷入 GApps。因为 `SetupWizard` 需要在设备首次启动时运行。
