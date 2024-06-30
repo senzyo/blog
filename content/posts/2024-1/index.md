@@ -33,7 +33,7 @@ toc:
     
     url_gene="https://a.com"  # 生成配置的后端地址
     url_sub="https://b.com"   # 来自机场的订阅链接
-    url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-template/normal/tun/dot/8.8.8.8/ghproxy.net/config.json"  # 配置所用模板的地址
+    url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-templates/normal/tun/dot/8.8.8.8/ghproxy.net/config.json"  # 配置所用模板的地址
     url_dl="$url_gene/config/$url_sub&ua=clashmeta&emoji=1&file=$url_tpl"
     echo $url_dl
     # curl -L -o config.json "$url_dl"

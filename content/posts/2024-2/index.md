@@ -148,7 +148,7 @@ dir_config="/etc/sing-box"
 url_gene="https://example.com"  # 生成配置的后端地址
 url_sub="https://example.com"   # 来自机场的订阅链接
 inbound="tun"                   # mixed or tun
-url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-template/normal/$inbound/dot/8.8.8.8/ghproxy.net/config.json"  # 配置所用模板的地址
+url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-templates/normal/$inbound/dot/8.8.8.8/ghproxy.net/config.json"  # 配置所用模板的地址
 url_dl="$url_gene/config/$url_sub&ua=clashmeta&emoji=1&file=$url_tpl"
 kioslaverc="/home/<UserName>/.config/kioslaverc"
 proxy_port="7890"
@@ -234,7 +234,7 @@ done
 cd $dir_config
 inbound_list=(mixed tun)
 for inbound in "${inbound_list[@]}"; do
-    url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-template/normal/$inbound/dot/8.8.8.8/ghproxy.net/config.json"  # 配置所用模板的地址
+    url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-templates/normal/$inbound/dot/8.8.8.8/ghproxy.net/config.json"  # 配置所用模板的地址
     url_dl="$url_gene/config/$url_sub&ua=clashmeta&emoji=1&file=$url_tpl"
     count=0
     while [ $count -lt 3 ]; do
