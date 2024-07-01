@@ -96,7 +96,7 @@ tun:
     - 'udp://any:53'
     - 'tcp://any:53'
   strict_route: true
-  gso: true
+  gso: false
   endpoint-independent-nat: false
   exclude-package:
     - 'com.android.captiveportallogin'
