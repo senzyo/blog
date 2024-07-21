@@ -359,6 +359,16 @@ function ff-proxy-off {
     echo 'user_pref("network.proxy.type", 0);' >"$firefox_profile"
     echo -e "Firefox Proxy ${red}disabled${reset}. Restart Firefox to apply."
 }
+
+unset $reset
+unset $red
+unset $green
+unset $yellow
+unset $blue
+
+unset $proxy_port
+unset $kioslaverc
+unset $firefox_profile
 ```
 
 然后在 `/etc/bash.bashrc` 中写入: 
