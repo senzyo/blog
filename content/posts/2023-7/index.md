@@ -58,27 +58,27 @@ global-ua: clash.meta
 
 dns:
   enable: true
-  prefer-h3: false
+  prefer-h3: true
+  use-hosts: true
+  respect-rules: false
   listen: 0.0.0.0:10053
   ipv6: true
   # 可选值 fake-ip / redir-host
-  enhanced-mode: redir-host
+  enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter: ['*.lan', 'stun.*.*.*', 'stun.*.*', time.windows.com, time.nist.gov, time.apple.com, time.asia.apple.com, '*.ntp.org.cn', '*.openwrt.pool.ntp.org', time1.cloud.tencent.com, time.ustc.edu.cn, pool.ntp.org, ntp.ubuntu.com, ntp.aliyun.com, ntp1.aliyun.com, ntp2.aliyun.com, ntp3.aliyun.com, ntp4.aliyun.com, ntp5.aliyun.com, ntp6.aliyun.com, ntp7.aliyun.com, time1.aliyun.com, time2.aliyun.com, time3.aliyun.com, time4.aliyun.com, time5.aliyun.com, time6.aliyun.com, time7.aliyun.com, '*.time.edu.cn', time1.apple.com, time2.apple.com, time3.apple.com, time4.apple.com, time5.apple.com, time6.apple.com, time7.apple.com, time1.google.com, time2.google.com, time3.google.com, time4.google.com, music.163.com, '*.music.163.com', '*.126.net', musicapi.taihe.com, music.taihe.com, songsearch.kugou.com, trackercdn.kugou.com, '*.kuwo.cn', api-jooxtt.sanook.com, api.joox.com, joox.com, y.qq.com, '*.y.qq.com', streamoc.music.tc.qq.com, mobileoc.music.tc.qq.com, isure.stream.qqmusic.qq.com, dl.stream.qqmusic.qq.com, aqqmusic.tc.qq.com, amobile.music.tc.qq.com, '*.xiami.com', '*.music.migu.cn', music.migu.cn, '*.msftconnecttest.com', '*.msftncsi.com', localhost.ptlogin2.qq.com, '*.*.*.srv.nintendo.net', '*.*.stun.playstation.net', 'xbox.*.*.microsoft.com', '*.ipv6.microsoft.com', '*.*.xboxlive.com', speedtest.cros.wr.pvp.net]
   # 更多 DNS 参考: https://senzyo.net/2022-22/
   default-nameserver:
-    - 'tls://223.5.5.5'
+    - 'tls://223.6.6.6'
   nameserver-policy:
   # 为 proxy-provider 使用的域名指定 DNS 服务器, 不然无法下载订阅文件
-    '+.pronetwork.top,+.wd-turbo.com': ['https://dns.alidns.com/dns-query', 'tls://dns.alidns.com']
-    'geosite:geolocation-!cn': ['https://dns.google/dns-query#🚀 默认出站', 'tls://dns.google#🚀 默认出站']
-    'geosite:cn': ['https://dns.alidns.com/dns-query', 'tls://dns.alidns.com']
+    '+.pronetwork.top,+.wd-turbo.com': ['https://dns.alidns.com/dns-query']
+    'geosite:geolocation-!cn': ['https://dns.google/dns-query#🚀 默认出站']
+    'geosite:cn': ['https://dns.alidns.com/dns-query']
   nameserver:
     - 'https://dns.google/dns-query#🚀 默认出站'
-    - 'tls://dns.google#🚀 默认出站'
   proxy-server-nameserver:
     - 'https://dns.alidns.com/dns-query'
-    - 'tls://dns.alidns.com'
 
 sniffer:
   enable: false
@@ -195,7 +195,9 @@ proxy-groups:
     <<: *select1
   - name: '✈️ Telegram'
     <<: *select1
-  - name: '🇭🇰 香港节点'
+  - name: '🖥️ SSH'
+    <<: *select1
+- name: '🇭🇰 香港节点'
     filter: '🇭🇰|香港|HK|Hong Kong'
     <<: *urltest
   - name: '🇯🇵 日本节点'
@@ -220,6 +222,9 @@ rules:
   # https://github.com/MetaCubeX/meta-rules-dat?tab=readme-ov-file#geositedatgeositedb-内容
   - GEOSITE,private,DIRECT
   - GEOIP,private,DIRECT,no-resolve
+  - PROCESS-NAME,ssh,🖥️ SSH
+  - PROCESS-NAME,ssh.exe,🖥️ SSH
+  - PROCESS-NAME,ssh-agent.exe,🖥️ SSH
   - GEOSITE,category-ads-all,📢 广告
   - DOMAIN-SUFFIX,copymanga.site,🚀 默认出站
   - DOMAIN-SUFFIX,mangafuna.xyz,🚀 默认出站
@@ -279,14 +284,6 @@ rule-providers:
     interval: 86400
     behavior: classical
     format: yaml
-
-ntp:
-  enable: true
-  write-to-system: false
-  server: ntp.aliyun.com
-  port: 123
-  # 单位为分钟
-  interval: 30
 ```
 
 ## Dashboard
