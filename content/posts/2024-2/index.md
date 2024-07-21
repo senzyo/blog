@@ -313,18 +313,18 @@ proxy_port="7890"
 kioslaverc="/home/<UserName>/.config/kioslaverc"
 firefox_profile="/home/<UserName>/.mozilla/firefox/xxx/user.js"
 
-function proxy-set() {
+function proxy-set {
     export http_proxy=socks5://127.0.0.1:$proxy_port
     export https_proxy=socks5://127.0.0.1:$proxy_port
     echo -e "Proxy environment variable has been ${green}set${reset}."
 }
 
-function proxy-unset() {
+function proxy-unset {
     unset http_proxy https_proxy
     echo -e "Proxy environment variable has been ${red}unset${reset}."
 }
 
-function kde-proxy-on() {
+function kde-proxy-on {
     kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "ftpProxy" "http://127.0.0.1 $proxy_port"
     kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "httpProxy" "http://127.0.0.1 $proxy_port"
     kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "httpsProxy" "http://127.0.0.1 $proxy_port"
@@ -333,12 +333,12 @@ function kde-proxy-on() {
     echo -e "KDE proxy ${green}enabled${reset}."
 }
 
-function kde-proxy-off() {
+function kde-proxy-off {
     kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "ProxyType" 0
     echo -e "KDE proxy ${red}disabled${reset}."
 }
 
-function ff-proxy-on() {
+function ff-proxy-on {
     cat <<EOF >"$firefox_profile"
 user_pref("network.proxy.backup.ssl", "127.0.0.1");
 user_pref("network.proxy.backup.ssl_port", $proxy_port);
@@ -355,7 +355,7 @@ EOF
     echo -e "Firefox Proxy ${green}enabled${reset}. Restart Firefox to apply."
 }
 
-function ff-proxy-off() {
+function ff-proxy-off {
     echo 'user_pref("network.proxy.type", 0);' >"$firefox_profile"
     echo -e "Firefox Proxy ${red}disabled${reset}. Restart Firefox to apply."
 }
@@ -374,7 +374,7 @@ fi
 将以下代码追加到 `/etc/proxy-custom` 中: 
 
 ```bash
-function sing-box-restart() {
+function sing-box-restart {
     dir_config="/etc/sing-box"
     service="sing-box.service"
     sing-box check -c $dir_config/config.json &>/dev/null
@@ -408,7 +408,7 @@ function sing-box-restart() {
 将以下代码追加到 `/etc/proxy-custom` 中: 
 
 ```bash
-function sing-box-stop() {
+function sing-box-stop {
     service="sing-box.service"
     sudo systemctl stop $service
     sleep 1
@@ -424,7 +424,7 @@ sing-box 的入站方式是固定在配置文件中的, 而且不支持通过 AP
 将以下代码追加到 `/etc/proxy-custom` 中: 
 
 ```bash
-function sing-box-switch() {
+function sing-box-switch {
     dir_config="/etc/sing-box"
     service="sing-box.service"
     if grep -q '"type": "tun"' $dir_config/config.json; then
