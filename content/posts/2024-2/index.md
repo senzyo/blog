@@ -143,10 +143,14 @@ vim /etc/sing-box/update.sh
 #!/bin/bash
 
 reset="\e[0m"
+black="\e[1;30m"
 red="\e[1;31m"
 green="\e[1;32m"
 yellow="\e[1;33m"
 blue="\e[1;34m"
+purple="\e[1;35m"
+cyan="\e[1;36m"
+white="\e[1;37m"
 
 service="sing-box.service"
 ping_site="ntp.aliyun.com"
@@ -186,8 +190,8 @@ fi
 sudo systemctl start $service
 sleep 5
 sub_state=$(systemctl show -p SubState --value $service)
-echo -e "$service state: ${yellow}$sub_state${reset}."
 if [ $sub_state == "running" ]; then
+    echo -e "$service state: ${green}$sub_state${reset}."
     if [[ $inbound == "mixed" ]]; then
         echo -e "Use ${blue}system proxy${reset} mode."
         kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "ftpProxy" "http://127.0.0.1 $proxy_port"
@@ -201,6 +205,8 @@ if [ $sub_state == "running" ]; then
         kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "ProxyType" 0
         echo -e "KDE proxy ${red}disabled${reset}."
     fi
+else
+    echo -e "$service state: ${red}$sub_state${reset}."
 fi
 ```
 
@@ -224,10 +230,14 @@ vim /etc/sing-box/update.sh
 #!/bin/bash
 
 reset="\e[0m"
+black="\e[1;30m"
 red="\e[1;31m"
 green="\e[1;32m"
 yellow="\e[1;33m"
 blue="\e[1;34m"
+purple="\e[1;35m"
+cyan="\e[1;36m"
+white="\e[1;37m"
 
 service="sing-box.service"
 ping_site="ntp.aliyun.com"
@@ -272,8 +282,8 @@ done
 sudo systemctl start $service
 sleep 5
 sub_state=$(systemctl show -p SubState --value $service)
-echo -e "$service state: ${yellow}$sub_state${reset}."
 if [ $sub_state == "running" ]; then
+    echo -e "$service state: ${green}$sub_state${reset}."
     if [[ $inbound_prefer == "mixed" ]]; then
         echo -e "Use ${blue}system proxy${reset} mode."
         kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "ftpProxy" "http://127.0.0.1 $proxy_port"
@@ -287,6 +297,8 @@ if [ $sub_state == "running" ]; then
         kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "ProxyType" 0
         echo -e "KDE proxy ${red}disabled${reset}."
     fi
+else
+    echo -e "$service state: ${red}$sub_state${reset}."
 fi
 ```
 
@@ -304,10 +316,14 @@ Chrome 会跟随 KDE 系统代理, Firefox 则不然。所以对于 KDE 系统�
 
 ```bash
 reset="\e[0m"
+black="\e[1;30m"
 red="\e[1;31m"
 green="\e[1;32m"
 yellow="\e[1;33m"
 blue="\e[1;34m"
+purple="\e[1;35m"
+cyan="\e[1;36m"
+white="\e[1;37m"
 
 proxy_port="7890"
 kioslaverc="/home/<UserName>/.config/kioslaverc"
@@ -360,11 +376,16 @@ function ff-proxy-off {
     echo -e "Firefox Proxy ${red}disabled${reset}. Restart Firefox to apply."
 }
 
+# 保持以下内容位于文件末尾
 unset $reset
+unset $black
 unset $red
 unset $green
 unset $yellow
 unset $blue
+unset $purple
+unset $cyan
+unset $white
 
 unset $proxy_port
 unset $kioslaverc
@@ -381,7 +402,7 @@ fi
 
 ### 当前配置重启
 
-将以下代码追加到 `/etc/proxy-custom` 中: 
+将以下代码添加到 `/etc/proxy-custom` 中: 
 
 ```bash
 function sing-box-restart {
@@ -389,15 +410,15 @@ function sing-box-restart {
     service="sing-box.service"
     sing-box check -c $dir_config/config.json &>/dev/null
     if [ $? -ne 0 ]; then
-        echo -e "File ${yellow}$dir_config/config.json${reset} is invalid."
+        echo -e "File ${yellow}$dir_config/config.json${reset} is ${red}invalid${reset}."
         sleep 2
         exit 1
     fi
     sudo systemctl restart $service
     sleep 5
     sub_state=$(systemctl show -p SubState --value $service)
-    echo -e "$service state: ${yellow}$sub_state${reset}."
     if [ $sub_state == "running" ]; then
+        echo -e "$service state: ${green}$sub_state${reset}."
         if grep -q '"type": "tun"' $dir_config/config.json; then
             echo -e "Use ${blue}tun${reset} mode."
             kde-proxy-off
@@ -408,7 +429,7 @@ function sing-box-restart {
             # ff-proxy-on
         fi
     else
-        echo -e "Run $service ${red}failed${reset}."
+        echo -e "$service state: ${red}$sub_state${reset}."
     fi
 }
 ```
@@ -423,7 +444,7 @@ function sing-box-stop {
     sudo systemctl stop $service
     sleep 1
     sub_state=$(systemctl show -p SubState --value $service)
-    echo -e "$service state: ${yellow}$sub_state${reset}."
+    echo -e "$service state: ${red}$sub_state${reset}."
 }
 ```
 
@@ -444,7 +465,7 @@ function sing-box-switch {
     fi
     sing-box check -c $dir_config/config_$inbound.json &>/dev/null
     if [ $? -ne 0 ]; then
-        echo -e "File ${yellow}$dir_config/config_$inbound.json${reset} is invalid."
+        echo -e "File ${yellow}$dir_config/config_$inbound.json${reset} is ${red}invalid${reset}."
         sleep 2
         exit 1
     fi
@@ -452,8 +473,8 @@ function sing-box-switch {
     sudo systemctl restart $service
     sleep 5
     sub_state=$(systemctl show -p SubState --value $service)
-    echo -e "$service state: ${yellow}$sub_state${reset}."
     if [ $sub_state == "running" ]; then
+        echo -e "$service state: ${green}$sub_state${reset}."
         if [ $inbound == "mixed" ]; then
             echo -e "Use ${blue}system proxy${reset} mode."
             kde-proxy-on
@@ -464,7 +485,7 @@ function sing-box-switch {
             # ff-proxy-off
         fi
     else
-        echo -e "Run $service ${red}failed${reset}."
+        echo -e "$service state: ${red}$sub_state${reset}."
     fi
 }
 ```
