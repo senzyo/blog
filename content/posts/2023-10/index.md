@@ -10,6 +10,10 @@ featuredImagePreview: ""
 summary: 本文不使用 Clash Verge 等 GUI 客户端, 而是通过 systemd 服务和 Dashboard 网页来控制 Clash Meta Core (mihomo)。
 ---
 
+{{< admonition type=info title="注意" open=true >}}
+此文仅适用于客户端, 不适用于服务器和路由器。
+{{< /admonition >}}
+
 {{< admonition type=tip title="改名" open=true >}}
 `Clash Meta` 改名为 `mihomo`。
 {{< /admonition >}}

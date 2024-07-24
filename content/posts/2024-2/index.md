@@ -10,6 +10,10 @@ featuredImagePreview: ""
 summary: 开机自动更新 `config.json` 并启动 sing-box。通过 systemd 服务和 Dashboard 网页来控制 sing-box。
 ---
 
+{{< admonition type=info title="注意" open=true >}}
+此文仅适用于客户端, 不适用于服务器和路由器。
+{{< /admonition >}}
+
 思路是通过 [Systemd](https://wiki.archlinux.org/title/Systemd) 的 [Timer](https://wiki.archlinux.org/title/systemd/Timers) 来开机自启动对应的 Service, 这个 Service 将执行一个脚本, 脚本循环检测网络可用性, 当网络可用时, 从远端下载配置文件替换本地的配置文件, 然后启动 `sing-box.service`。
 
 ## Core
