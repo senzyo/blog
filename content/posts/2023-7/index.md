@@ -62,7 +62,7 @@ global-ua: clash.meta
 
 dns:
   enable: true
-  prefer-h3: true
+  prefer-h3: false
   use-hosts: true
   respect-rules: false
   listen: 0.0.0.0:10053
@@ -276,8 +276,8 @@ proxy-providers:
       expected-status: 204
     override:
       udp: true
-      up: '50 Mbps'
-      down: '100 Mbps'
+      up: '45 Mbps'
+      down: '90 Mbps'
 
 rule-providers:
   downloader:
