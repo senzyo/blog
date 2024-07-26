@@ -224,7 +224,7 @@ bundle = false
   # KaTeX mathematical formulas config (KaTeX https://katex.org/)
   # KaTeX 数学公式配置 (KaTeX https://katex.org/)
   [page.math]
-    enable = false
+    enable = true
     # default block delimiter is $$ ... $$ and \\[ ... \\]
     # 默认块定界符是 $$ ... $$ 和 \\[ ... \\]
     blockLeftDelimiter = ""
