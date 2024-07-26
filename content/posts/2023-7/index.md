@@ -73,7 +73,7 @@ dns:
   fake-ip-filter: ['*.lan', 'stun.*.*.*', 'stun.*.*', time.windows.com, time.nist.gov, time.apple.com, time.asia.apple.com, '*.ntp.org.cn', '*.openwrt.pool.ntp.org', time1.cloud.tencent.com, time.ustc.edu.cn, pool.ntp.org, ntp.ubuntu.com, ntp.aliyun.com, ntp1.aliyun.com, ntp2.aliyun.com, ntp3.aliyun.com, ntp4.aliyun.com, ntp5.aliyun.com, ntp6.aliyun.com, ntp7.aliyun.com, time1.aliyun.com, time2.aliyun.com, time3.aliyun.com, time4.aliyun.com, time5.aliyun.com, time6.aliyun.com, time7.aliyun.com, '*.time.edu.cn', time1.apple.com, time2.apple.com, time3.apple.com, time4.apple.com, time5.apple.com, time6.apple.com, time7.apple.com, time1.google.com, time2.google.com, time3.google.com, time4.google.com, music.163.com, '*.music.163.com', '*.126.net', musicapi.taihe.com, music.taihe.com, songsearch.kugou.com, trackercdn.kugou.com, '*.kuwo.cn', api-jooxtt.sanook.com, api.joox.com, joox.com, y.qq.com, '*.y.qq.com', streamoc.music.tc.qq.com, mobileoc.music.tc.qq.com, isure.stream.qqmusic.qq.com, dl.stream.qqmusic.qq.com, aqqmusic.tc.qq.com, amobile.music.tc.qq.com, '*.xiami.com', '*.music.migu.cn', music.migu.cn, '*.msftconnecttest.com', '*.msftncsi.com', localhost.ptlogin2.qq.com, '*.*.*.srv.nintendo.net', '*.*.stun.playstation.net', 'xbox.*.*.microsoft.com', '*.ipv6.microsoft.com', '*.*.xboxlive.com', speedtest.cros.wr.pvp.net, ssh.github.com, altssh.gitlab.com]
   # 更多 DNS 参考: https://senzyo.net/2022-22/
   default-nameserver:
-    - 'tls://223.6.6.6'
+    - 'udp://223.6.6.6'
   nameserver-policy:
   # 为 proxy-provider 使用的域名指定 DNS 服务器, 不然无法下载订阅文件
     '+.pronetwork.top,+.wd-turbo.com': ['https://dns.alidns.com/dns-query']
@@ -87,7 +87,7 @@ dns:
 sniffer:
   enable: false
   force-dns-mapping: true
-  parse-pure-ip: true
+  parse-pure-ip: false
   override-destination: false
 
 mixed-port: 7890
@@ -201,7 +201,7 @@ proxy-groups:
     <<: *select1
   - name: '🖥️ SSH'
     <<: *select1
-- name: '🇭🇰 香港节点'
+  - name: '🇭🇰 香港节点'
     filter: '🇭🇰|香港|HK|Hong Kong'
     <<: *urltest
   - name: '🇯🇵 日本节点'
