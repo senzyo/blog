@@ -110,7 +110,7 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 - [Microsoft 365 E5 Renew Plus](https://e5renew.com/), 刷 Microsoft 365 E5 账户的活跃度
 - [Microsoft .NET SDK](https://dotnet.microsoft.com/zh-cn/download/dotnet)
 - [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/zh-CN/cpp/windows/latest-supported-vc-redist)
-- [Microsoft Visual Studio Code](https://code.visualstudio.com/#alt-downloads)
+- [Microsoft Visual Studio Code](https://code.visualstudio.com/Download)
 - [MusicPlayer2](https://github.com/zhongyang219/MusicPlayer2/releases/latest)
 - [Node.js](https://nodejs.org/en/download/)
 - [OBS Studio](https://obsproject.com/download)
@@ -119,7 +119,6 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 - [Oracle JDK Archive](https://www.oracle.com/java/technologies/downloads/archive/)
 - [Pandoc](https://github.com/jgm/pandoc/releases/latest), 转换文件格式
 - [PixPin](https://pixpinapp.com/), 相比侧重于贴图的 Snipaste 有更多功能
-- [pot-app](https://github.com/pot-app/pot-desktop/releases/latest), 语言翻译
 - [Process Explorer](https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer), 管理软件进程
 - [Process Monitor](https://learn.microsoft.com/en-us/sysinternals/downloads/procmon), 监控软件进程
 - [QtScrcpy](https://github.com/barry-ran/QtScrcpy/releases/latest), 基于 ADB 的 Android 屏幕共享
@@ -141,9 +140,7 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 - [Windows Update Blocker](https://www.sordum.org/9470/windows-update-blocker-v1-8/), 启用和禁用 Windows 更新
 - [Windows Defender Remover](https://github.com/ionuttbara/windows-defender-remover/releases/latest), 禁用或移除 Windows Defender 等安全组件
 - [WizTree](https://diskanalyzer.com/download), 分析磁盘文件大小
-- [阿里云盘](https://www.aliyundrive.com/)
 - [百度网盘](https://pan.baidu.com/download)
-- [哔哩下载姬](https://github.com/leiurayer/downkyi/releases/latest)
 - [微信](https://weixin.qq.com/)
 
 ## 托盘时间显示秒数
