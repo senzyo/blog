@@ -34,6 +34,8 @@ mkdir /etc/sing-box
 sudo cp -r ui /etc/sing-box/
 ```
 
+后续一切工作正常后, 可以打开 Dashboard (http://127.0.0.1:9090/ui) 查看相应信息并进行管理。
+
 ## Service
 
 创建 sing-box 的 systemd 服务: 
@@ -157,7 +159,7 @@ cyan="\e[1;36m"
 white="\e[1;37m"
 
 service="sing-box.service"
-ping_site="ntp.aliyun.com"
+ping="1.2.4.8"
 dir_config="/etc/sing-box"
 url_gene="https://example.com"  # 生成配置的后端地址
 url_sub="https://example.com"   # 来自机场的订阅链接
@@ -169,7 +171,7 @@ proxy_port="7890"
 
 sudo systemctl stop $service
 kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "ProxyType" 0
-until ping -c 1 $ping_site &>/dev/null; do
+until ping -c 1 $ping &>/dev/null; do
     sleep 2
 done
 cd $dir_config
@@ -220,6 +222,8 @@ chmod +x /etc/sing-box/update.sh
 
 {{< admonition type=success title="完成了" open=true >}}
 现在可以运行 `sudo systemctl start sing-box-trigger.timer` 测试一下整个流程, 应该一切正常。
+
+现在可以打开 Dashboard (http://127.0.0.1:9090/ui) 查看相应信息并进行管理。
 {{< /admonition >}}
 
 #### 两种配置
@@ -244,7 +248,7 @@ cyan="\e[1;36m"
 white="\e[1;37m"
 
 service="sing-box.service"
-ping_site="ntp.aliyun.com"
+ping="1.2.4.8"
 dir_config="/etc/sing-box"
 url_gene="https://example.com"  # 生成配置的后端地址
 url_sub="https://example.com"   # 来自机场的订阅链接
@@ -254,7 +258,7 @@ proxy_port="7890"
 
 sudo systemctl stop $service
 kwriteconfig6 --file $kioslaverc --group "Proxy Settings" --key "ProxyType" 0
-until ping -c 1 $ping_site &>/dev/null; do
+until ping -c 1 $ping &>/dev/null; do
     sleep 2
 done
 cd $dir_config
@@ -312,6 +316,8 @@ chmod +x /etc/sing-box/update.sh
 
 {{< admonition type=success title="完成了" open=true >}}
 现在可以运行 `sudo systemctl start sing-box-trigger.timer` 测试一下整个流程, 应该一切正常。
+
+现在可以打开 Dashboard (http://127.0.0.1:9090/ui) 查看相应信息并进行管理。
 {{< /admonition >}}
 
 ### 开关系统和浏览器代理

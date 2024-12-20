@@ -114,7 +114,7 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 - [MusicPlayer2](https://github.com/zhongyang219/MusicPlayer2/releases/latest)
 - [Node.js](https://nodejs.org/en/download/)
 - [OBS Studio](https://obsproject.com/download)
-- [Office Tool Plus](https://otp.landian.vip/zh-cn/) + [KMS](https://www.coolhub.top/tech-articles/kms_list.html), 安装 Microsoft Office
+- [Office Tool Plus](https://otp.landian.vip/zh-cn/) + [MAS](https://github.com/massgravel/Microsoft-Activation-Scripts) 或者 [KMS](https://www.coolhub.top/tech-articles/kms_list.html), 安装并激活 Microsoft Office
 - [OpenJDK Archived](https://jdk.java.net/archive/)
 - [Oracle JDK Archive](https://www.oracle.com/java/technologies/downloads/archive/)
 - [Pandoc](https://github.com/jgm/pandoc/releases/latest), 转换文件格式

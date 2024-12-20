@@ -31,56 +31,57 @@ summary: 本文不使用 Clash Verge 等 GUI 客户端, 而是通过任务计划
 # 官方参考配置 https://github.com/MetaCubeX/mihomo/blob/Alpha/docs/config.yaml
 # 官方配置详解 https://wiki.metacubex.one/config/
 
+mixed-port: 7890
 allow-lan: false
 bind-address: '*'
-mode: rule
-log-level: error
-ipv6: true
-# 单位为秒
-keep-alive-interval: 30
+# 若非 always, SUB-RULE 不生效
 find-process-mode: always
+mode: rule
+geox-url:
+  geoip: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
+  geosite: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
+geo-auto-update: true
+# 单位为小时
+geo-update-interval: 24
+log-level: error
+ipv6: false
 external-controller: 127.0.0.1:9090
-secret: AjIuQAZf795UQ16V3si6
+secret: ""
+external-controller-cors:
+  allow-origins:
+    - '*'
+  allow-private-network: false
 external-ui: ui
-external-ui-url: 'https://ghp.ci/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip'
-# external-ui-url: 'https://ghp.ci/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip'
+external-ui-url: 'https://ghproxy.net/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip'
+# external-ui-url: 'https://ghproxy.net/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip'
+global-client-fingerprint: chrome
 profile:
   store-selected: true
   store-fake-ip: true
 unified-delay: true
 tcp-concurrent: true
-global-client-fingerprint: chrome
 geodata-mode: true
-geodata-loader: memconservative
-geo-auto-update: true
-# 单位为小时
-geo-update-interval: 24
-geox-url:
-  geoip: 'https://ghp.ci/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat'
-  geosite: 'https://ghp.ci/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat'
-global-ua: clash.meta
+geodata-loader: standard
 
 dns:
   enable: true
   prefer-h3: false
   use-hosts: true
+  use-system-hosts: false
   respect-rules: false
   listen: 0.0.0.0:10053
-  ipv6: true
-  # 可选值 fake-ip / redir-host
-  enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
-  fake-ip-filter: ['*.lan', 'stun.*.*.*', 'stun.*.*', time.windows.com, time.nist.gov, time.apple.com, time.asia.apple.com, '*.ntp.org.cn', '*.openwrt.pool.ntp.org', time1.cloud.tencent.com, time.ustc.edu.cn, pool.ntp.org, ntp.ubuntu.com, ntp.aliyun.com, ntp1.aliyun.com, ntp2.aliyun.com, ntp3.aliyun.com, ntp4.aliyun.com, ntp5.aliyun.com, ntp6.aliyun.com, ntp7.aliyun.com, time1.aliyun.com, time2.aliyun.com, time3.aliyun.com, time4.aliyun.com, time5.aliyun.com, time6.aliyun.com, time7.aliyun.com, '*.time.edu.cn', time1.apple.com, time2.apple.com, time3.apple.com, time4.apple.com, time5.apple.com, time6.apple.com, time7.apple.com, time1.google.com, time2.google.com, time3.google.com, time4.google.com, music.163.com, '*.music.163.com', '*.126.net', musicapi.taihe.com, music.taihe.com, songsearch.kugou.com, trackercdn.kugou.com, '*.kuwo.cn', api-jooxtt.sanook.com, api.joox.com, joox.com, y.qq.com, '*.y.qq.com', streamoc.music.tc.qq.com, mobileoc.music.tc.qq.com, isure.stream.qqmusic.qq.com, dl.stream.qqmusic.qq.com, aqqmusic.tc.qq.com, amobile.music.tc.qq.com, '*.xiami.com', '*.music.migu.cn', music.migu.cn, '*.msftconnecttest.com', '*.msftncsi.com', localhost.ptlogin2.qq.com, '*.*.*.srv.nintendo.net', '*.*.stun.playstation.net', 'xbox.*.*.microsoft.com', '*.ipv6.microsoft.com', '*.*.xboxlive.com', speedtest.cros.wr.pvp.net, ssh.github.com, altssh.gitlab.com]
+  ipv6: false
+  enhanced-mode: redir-host
   # 更多 DNS 参考: https://senzyo.net/2022-22/
   default-nameserver:
-    - 'udp://223.6.6.6'
+    - 'udp://1.2.4.8'
   nameserver-policy:
   # 为 proxy-provider 使用的域名指定 DNS 服务器, 不然无法下载订阅文件
     '+.pronetwork.top,+.wd-turbo.com': ['https://dns.alidns.com/dns-query']
-    'geosite:geolocation-!cn': ['https://dns.google/dns-query#🚀 默认出站']
+    'geosite:geolocation-!cn': ['https://8.8.8.8/dns-query#🚀 默认出站']
     'geosite:cn': ['https://dns.alidns.com/dns-query']
   nameserver:
-    - 'https://dns.google/dns-query#🚀 默认出站'
+    - 'https://8.8.8.8/dns-query#🚀 默认出站'
   proxy-server-nameserver:
     - 'https://dns.alidns.com/dns-query'
 
@@ -90,31 +91,30 @@ sniffer:
   parse-pure-ip: false
   override-destination: false
 
-mixed-port: 7890
 tun:
   enable: true
-  stack: mixed
+  stack: system
   auto-route: true
   auto-detect-interface: true
   dns-hijack:
     - 'udp://any:53'
     - 'tcp://any:53'
   strict_route: true
-  gso: false
   endpoint-independent-nat: false
   exclude-package:
     - 'com.android.captiveportallogin'
+    - 'org.localsend.localsend_app'
 
 urltest: &urltest
   type: url-test
   disable-udp: false
   url: 'https://www.gstatic.com/generate_204'
   # 单位为秒, 仅影响 proxies 下的节点
-  interval: 300
+  interval: 600
   # 单位为毫秒
   timeout: 2000
   # 单位为毫秒
-  tolerance: 0
+  tolerance: 10
   lazy: false
   expected-status: 204
   use:
@@ -156,48 +156,17 @@ proxy-groups:
     exclude-filter: '剩余|流量|raffic|有效|时间|到期|xpire|地址|网址|官网|自动|最优|最快'
     use:
       - 'Provider1'
-  - name: '📢 广告'
-    type: select
-    disable-udp: false
-    proxies:
-      - 'REJECT'
-      - '🚀 默认出站'
-      - 'DIRECT'
-      - '📌 单选节点'
-      - '🇭🇰 香港节点'
-      - '🇯🇵 日本节点'
-      - '🇰🇷 韩国节点'
-      - '🇹🇼 台湾节点'
-      - '🇸🇬 新加坡节点'
-      - '🇺🇸 美国节点'
   - name: '📥 Downloader'
     <<: *select1
-  - name: '🍎 Apple'
-    type: select
-    disable-udp: false
-    proxies:
-      - 'DIRECT'
-      - '🚀 默认出站'
-      - '📌 单选节点'
-      - '🇭🇰 香港节点'
-      - '🇯🇵 日本节点'
-      - '🇰🇷 韩国节点'
-      - '🇹🇼 台湾节点'
-      - '🇸🇬 新加坡节点'
-      - '🇺🇸 美国节点'
   - name: '🎮 Game'
     <<: *select1
   - name: '🔎 Google'
-    <<: *select1
-  - name: '🥽 Meta'
     <<: *select1
   - name: '☁️ OneDrive'
     <<: *select1
   - name: '🤖 OpenAI'
     <<: *select1
   - name: '🪟 Microsoft'
-    <<: *select1
-  - name: '✈️ Telegram'
     <<: *select1
   - name: '🖥️ SSH'
     <<: *select1
@@ -221,32 +190,29 @@ proxy-groups:
     <<: *urltest
 
 rules:
-  # 所有 geoip 和 geosite 类别参考:
-  # https://github.com/Loyalsoldier/v2ray-rules-dat/issues/146#issuecomment-940664130
+  # geoip.dat 类别: https://github.com/Loyalsoldier/geoip/tree/release/text
+  # geosite.dat 类别: 
+  # https://github.com/v2fly/domain-list-community/tree/master/data
   # https://github.com/MetaCubeX/meta-rules-dat?tab=readme-ov-file#geositedatgeositedb-内容
-  - GEOSITE,private,DIRECT
   - GEOIP,private,DIRECT,no-resolve
+  - PROCESS-NAME,localsend,DIRECT
+  - PROCESS-NAME,localsend_app.exe,DIRECT
   - SUB-RULE,(PROCESS-NAME,ssh),ssh
   - SUB-RULE,(PROCESS-NAME,ssh.exe),ssh
   - SUB-RULE,(PROCESS-NAME,ssh-agent.exe),ssh
-  - GEOSITE,category-ads-all,📢 广告
   - DOMAIN-SUFFIX,copymanga.site,🚀 默认出站
+  - DOMAIN-SUFFIX,copymanga.tv,🚀 默认出站
   - DOMAIN-SUFFIX,mangafuna.xyz,🚀 默认出站
   - DOMAIN-SUFFIX,mangafunb.fun,🚀 默认出站
   - DOMAIN-SUFFIX,senzyo.net,🚀 默认出站
   - SUB-RULE,(RULE-SET,downloader),downloader
-  - GEOSITE,apple,🍎 Apple
   - GEOSITE,category-games@cn,DIRECT
   - GEOSITE,category-games,🎮 Game
   - GEOSITE,google,🔎 Google
   - GEOIP,google,🔎 Google,no-resolve
-  - GEOSITE,meta,🥽 Meta
-  - GEOIP,facebook,🥽 Meta,no-resolve
   - GEOSITE,onedrive,☁️ OneDrive
   - GEOSITE,openai,🤖 OpenAI
   - GEOSITE,microsoft,🪟 Microsoft
-  - GEOSITE,telegram,✈️ Telegram
-  - GEOIP,telegram,✈️ Telegram,no-resolve
   - GEOSITE,geolocation-!cn,🚀 默认出站
   - GEOSITE,cn,DIRECT
   - GEOIP,cn,DIRECT,no-resolve
@@ -273,23 +239,23 @@ proxy-providers:
       enable: true
       url: 'https://www.gstatic.com/generate_204'
       # 单位为秒, 仅影响 proxy-group 中 use 下的节点
-      interval: 300
+      interval: 600
       # 单位为毫秒
       timeout: 2000
       lazy: false
       expected-status: 204
     override:
       udp: true
-      up: '45 Mbps'
+      up: '30 Mbps'
       down: '90 Mbps'
 
 rule-providers:
   downloader:
     type: http
-    url: 'https://ghp.ci/https://raw.githubusercontent.com/senzyo/as-gist/master/Rule/Clash/downloader.yaml'
+    url: 'https://gitlab.com/senzyo_sama/as-gist/-/raw/master/Rule/Clash/downloader.yaml'
     path: ./rule-providers/downloader.yaml
     # 单位为秒
-    interval: 86400
+    interval: 604800
     behavior: classical
     format: yaml
 ```
@@ -297,6 +263,8 @@ rule-providers:
 ## Dashboard
 
 下载 [Yacd-meta](https://ghproxy.net/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip) 或者 [MetaCubeXD](https://ghproxy.net/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip), 解压后将文件夹重命名为 `ui`, 移动到 mihomo 工作目录下: `C:\Users\<UserName>\Apps\mihomo\ui`。
+
+后续一切工作正常后, 可以打开 Dashboard (http://127.0.0.1:9090/ui) 查看相应信息并进行管理。
 
 ## 开机自启动
 
@@ -358,18 +326,19 @@ rule-providers:
 
 {{< /admonition >}}
 
-## 防火墙
+## 智能多宿主名称解析与防火墙
 
-防火墙入站规则放行 `mihomo.exe`。
+注意, 在 Windows 中, 如果在 TUN 配置中启用了严格路由,
 
-## 禁用智能多宿主名称解析
+1. 不必手动启用组策略中 `计算机配置`→`管理模板`→`网络`→`DNS 客户端`→`禁用智能多宿主名称解析` 这一策略了, 保持这一策略为 `未配置/已禁用` 即可。
+2. 不必手动为 mihomo 配置 Windows 防火墙, mihomo 会自动配置的。
+3. 不然, 你会发现虽然测速延迟还可以, 但实际速度很慢。
+4. 由于 mihomo 和 sing-box 都使用 sing-tun, 所以上述注意事项同样适用于 sing-box。
 
-1. 按下 `Win+S/Q`, 搜索并打开 `编辑组策略`。
-2. 转到 `计算机配置`→`管理模板`→`网络`→`DNS 客户端`。
-3. 找到 `禁用智能多宿主名称解析`, 启用它。
-
-{{< admonition type=success title="基本完成了" open=true >}}
+{{< admonition type=success title="完成了" open=true >}}
 现在可以运行 `任务计划程序` 或 `Windows 服务` 测试一下整个流程, 应该一切正常。
+
+现在可以打开 Dashboard (http://127.0.0.1:9090/ui) 查看相应信息并进行管理。
 {{< /admonition >}}
 
 ## 脚本

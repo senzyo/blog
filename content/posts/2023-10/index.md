@@ -44,6 +44,8 @@ sudo cp config.yaml /etc/mihomo/
 sudo cp -r ui /etc/mihomo/
 ```
 
+后续一切工作正常后, 可以打开 Dashboard (http://127.0.0.1:9090/ui) 查看相应信息并进行管理。
+
 ## 设置守护进程
 
 参考 [创建运行服务](https://wiki.metacubex.one/startup/service/)。
@@ -84,6 +86,8 @@ sudo systemctl daemon-reload
 
 {{< admonition type=success title="完成了" open=true >}}
 现在可以运行 `sudo systemctl start mihomo.service` 测试一下整个流程, 应该一切正常。
+
+现在可以打开 Dashboard (http://127.0.0.1:9090/ui) 查看相应信息并进行管理。
 {{< /admonition >}}
 
 ## 日常使用
