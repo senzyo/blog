@@ -63,6 +63,12 @@ PowerShell有自己的历史机制 (Get-History, Clear-History), 是独立于主
 (Get-PSReadlineOption).HistorySavePath
 ```
 
-会得到PowerShell的输入历史记录存放路径: `C:\Users\<UserName>\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt`
+会得到PowerShell的输入历史记录存放路径: `C:\Users\<UserName>\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt`。打开一看, 历史记录全在这, 删除后, 关闭当前PowerShell, 再重新打开, 就调不出历史纪录了。
 
-打开一看, 历史记录全在这, 删除后, 关闭当前PowerShell, 再重新打开, 就调不出历史纪录了。
+参考 [这里](../2020-1/#永久代理-1), 将自定义的 `function` 写入 `profile.ps1` 文件中: 
+
+```powershell
+function ch {
+    Remove-Item -Force AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLineConsoleHost_history.txt
+}
+```
