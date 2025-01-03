@@ -141,7 +141,7 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 - [Windows Defender Remover](https://github.com/ionuttbara/windows-defender-remover/releases/latest), 禁用或移除 Windows Defender 等安全组件
 - [WizTree](https://diskanalyzer.com/download), 分析磁盘文件大小
 - [百度网盘](https://pan.baidu.com/download)
-- [微信](https://weixin.qq.com/)
+- [微信](https://pc.weixin.qq.com/)
 
 ## 托盘时间显示秒数
 
@@ -240,4 +240,15 @@ Windows Registry Editor Version 5.00
 Windows Registry Editor Version 5.00
 
 [-HKEY_CLASSES_ROOT\*\shell\Get-FileHash]
+```
+
+## 禁止开始搜索框查询网络内容
+
+将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表: 
+
+```
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer]
+"DisableSearchBoxSuggestions"=dword:00000001
 ```
