@@ -31,16 +31,16 @@ toc:
 3. 在 [Vercel](https://vercel.com/new) 部署 `sing-box-subscribe`。
 4. 创建用于存放自定义模板的 GitHub 仓库, 比如 [sing-box-templates](https://github.com/senzyo/sing-box-templates)。
 5. 拼接出最终的 URL, 比如: 
-   
+
     ```bash
     #!/bin/bash
-    
+
     url_gene="https://a.com"  # 生成配置的后端地址
     url_sub="https://b.com"   # 来自机场的订阅链接
-    url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-templates/normal/tun/dot/8.8.8.8/ghproxy.net/config.json"  # 配置所用模板的地址
+    url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-templates/public/tun/doh/ali/google/testingcf.jsdelivr.net/config.json"  # 配置所用模板的地址
     url_dl="$url_gene/config/$url_sub&ua=clashmeta&emoji=1&file=$url_tpl"
     echo $url_dl
-    # curl -L -o config.json "$url_dl"
+    curl -L -o config.json "$url_dl"
     ```
 
 6. 在 Android 或 Apple 设备的 sing-box 图形客户端中添加这个最终的 URL 作为订阅链接。
