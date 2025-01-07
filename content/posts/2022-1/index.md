@@ -85,9 +85,11 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 - [AppContainer Loopback Exemption Utility](https://www.telerik.com/fiddler/add-ons), 让 UWP 软件走代理
 - [Aria2](https://github.com/aria2/aria2/releases/latest)
 - [Autoruns](https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns), 管理 Windows 自启动项
+- [Bind9](https://downloads.isc.org/isc/bind9/9.17.15/), 可运行于 Windows 的最后版本
 - [Bulk Crap Uninstaller](https://github.com/Klocman/Bulk-Crap-Uninstaller/releases/latest), 软件的安装监控与卸载清理
 - [Context Menu Manager](https://gitee.com/BluePointLilac/ContextMenuManager), 管理 Windows 右键菜单
 - [CrystalDiskInfo & CrystalDiskMark](https://crystalmark.info/en/download/), 硬盘的信息和测速
+- [DirectX End-User Runtime](https://www.microsoft.com/zh-CN/download/details.aspx?id=8109)
 - [DoNotSpy11](https://pxc-coding.com/donotspy11/donotspy-11-download/), 启用和禁用 Windows 隐私项
 - [dupeGuru](https://github.com/arsenetar/dupeguru/releases/latest), 查找重复文件
 - [EasyUEFI](https://www.easyuefi.com/index-us.html), 管理 UEFI

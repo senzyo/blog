@@ -10,6 +10,8 @@ summary: " "
 
 {{< admonition type=quote title="原文地址" open=true >}}
 本文转载自 [AdGuard DNS](https://adguard-dns.io/kb/general/dns-providers/) 和它的 [源文件](https://ghproxy.net/https://raw.githubusercontent.com/AdguardTeam/KnowledgeBaseDNS/master/docs/general/dns-providers.md)。
+
+顺便一提 [全国DNS服务器IP地址大全](https://dnsdaquan.com/)。
 {{< /admonition >}}
 
 ## 测试可用性
