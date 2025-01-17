@@ -187,6 +187,7 @@ keywords = ["senzyo"]
   Youtubecustom = ""
   Youtubelegacy = ""
   Zhihu = ""
+  Bluesky = ""
   # [social.Diaspora]
   #   id = ""
   #   prefix = ""
