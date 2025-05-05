@@ -78,6 +78,10 @@ sudo systemctl status minecraft
 
 操作相关文件夹或文件后, 比如 `worlds/`, `server.properties`, `allowlist.json`, `permissions.json` 等, 重启服务器才能使相关更改生效。
 
+```bash
+sudo systemctl restart minecraft
+```
+
 ### 文件夹归属
 
 确保 `/opt/minecraft` 属于 minecraft 用户: 
@@ -90,7 +94,9 @@ sudo chown -R minecraft:minecraft /opt/minecraft
 
 记得在服务器的防火墙, 以及服务器网页控制台的防火墙中开放 `/opt/minecraft/server.properties` 中 `server-port` 和 `server-portv6` 使用的端口号。
 
-### 世界名称
+### 世界
+
+世界的数据, 也就是存档, 位于 `/opt/minecraft/worlds/` 路径下。
 
 `/opt/minecraft/server.properties` 中的 `level-name` 即 `/opt/minecraft/worlds/XXX/levelname.txt` 中的值, 也就是世界的名称。
 
