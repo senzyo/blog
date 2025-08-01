@@ -285,7 +285,9 @@ sudo reboot
 
 5. 更多字体设置参考 [字体](../2023-4/#字体)。
 
-## BBR
+## TCP调优
+
+### BBR
 
 查看系统现在的拥塞控制算法: 
 
@@ -317,15 +319,31 @@ sudo modprobe tcp_bbr
 net.ipv4.tcp_congestion_control = bbr
 ```
 
-还可以顺便改一下队列管理算法, 添加: 
+运行 `sysctl -p` 应用更改。
 
-```
-net.core.default_qdisc = cake
-```
+### TCP缓冲区
 
-重启系统后, 检查: 
+参考文章: [『败类教程』美西CN2跨网也能单线程500M且0重传！手把手教你TCP调优](https://www.nodeseek.com/post-197087-1)
+
+但受运营商限制, 未能发挥理论作用, 效果不大。
+
+查看当前 TCP 缓冲区大小: 
 
 ```bash
-sysctl net.ipv4.tcp_congestion_control
-sysctl net.core.default_qdisc
+sysctl net.ipv4.tcp_wmem
+sysctl net.ipv4.tcp_rmem
+```
+
+根据 [TCP缓冲区计算器](https://tcp-cal.mereith.com) 临时设置 TCP 缓冲区大小: 
+
+```bash
+sysctl -w net.ipv4.tcp_wmem="4096 16384 4194304"
+sysctl -w net.ipv4.tcp_rmem="4096 131072 6291456"
+```
+
+或将参数写入 `/etc/sysctl.conf` 以永久保存, 这是 Debian 的默认参数: 
+
+```
+net.ipv4.tcp_wmem = 4096 16384 4194304
+net.ipv4.tcp_rmem = 4096 131072 6291456
 ```
