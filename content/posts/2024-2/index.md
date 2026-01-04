@@ -159,13 +159,13 @@ cyan="\e[1;36m"
 white="\e[1;37m"
 
 service="sing-box.service"
-ping="1.2.4.8"
+ping="223.5.5.5"
 dir_config="/etc/sing-box"
 url_gene="https://example.com"  # 生成配置的后端地址
 url_sub="https://example.com"   # 来自机场的订阅链接
 inbound="tun"                   # mixed or tun
 url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-templates/public/$inbound/doh/ali/google/testingcf.jsdelivr.net/config.json"  # 配置所用模板的地址
-url_dl="$url_gene/config/$url_sub&ua=clashmeta&emoji=1&file=$url_tpl"
+url_dl="$url_gene/config/$url_sub&ua=clashmeta&emoji=1&file=$url_tpl"  # 或者ua=sing-box等等, 具体看机场对于客户端和协议的支持情况
 kioslaverc="/home/<UserName>/.config/kioslaverc"
 proxy_port="7890"
 
@@ -248,7 +248,7 @@ cyan="\e[1;36m"
 white="\e[1;37m"
 
 service="sing-box.service"
-ping="1.2.4.8"
+ping="223.5.5.5"
 dir_config="/etc/sing-box"
 url_gene="https://example.com"  # 生成配置的后端地址
 url_sub="https://example.com"   # 来自机场的订阅链接
@@ -265,7 +265,7 @@ cd $dir_config
 inbound_list=(mixed tun)
 for inbound in "${inbound_list[@]}"; do
     url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-templates/public/$inbound/doh/ali/google/testingcf.jsdelivr.net/config.json"  # 配置所用模板的地址
-    url_dl="$url_gene/config/$url_sub&ua=clashmeta&emoji=1&file=$url_tpl"
+    url_dl="$url_gene/config/$url_sub&ua=clashmeta&emoji=1&file=$url_tpl"  # 或者ua=sing-box等等, 具体看机场对于客户端和协议的支持情况
     count=0
     while [ $count -lt 3 ]; do
         curl -fsSLo temp.json "$url_dl" --connect-timeout 10 --max-time 40

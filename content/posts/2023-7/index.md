@@ -38,8 +38,8 @@ bind-address: '*'
 find-process-mode: always
 mode: rule
 geox-url:
-  geoip: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
-  geosite: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
+  geoip: "https://gh-proxy.org/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  geosite: "https://gh-proxy.org/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
 geo-auto-update: true
 # 单位为小时
 geo-update-interval: 24
@@ -52,8 +52,8 @@ external-controller-cors:
     - '*'
   allow-private-network: false
 external-ui: ui
-external-ui-url: 'https://ghproxy.net/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip'
-# external-ui-url: 'https://ghproxy.net/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip'
+external-ui-url: 'https://gh-proxy.org/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip'
+# external-ui-url: 'https://gh-proxy.org/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip'
 global-client-fingerprint: chrome
 profile:
   store-selected: true
@@ -74,14 +74,15 @@ dns:
   enhanced-mode: redir-host
   # 更多 DNS 参考: https://senzyo.net/2022-22/
   default-nameserver:
-    - 'udp://1.2.4.8'
+    - 'udp://223.5.5.5'
   nameserver-policy:
   # 为 proxy-provider 使用的域名指定 DNS 服务器, 不然无法下载订阅文件
-    '+.pronetwork.top,+.wd-turbo.com': ['https://dns.alidns.com/dns-query']
-    'geosite:geolocation-!cn': ['https://8.8.8.8/dns-query#🚀 默认出站']
+    '+.gh-proxy.com,+.gh-proxy.org,+.pronetwork.top,+.wd-turbo.com': ['https://dns.alidns.com/dns-query']
+    'geosite:geolocation-!cn': ['https://8.8.8.8/dns-query#🚀FinalOut']
+    'category-games@cn': ['https://dns.alidns.com/dns-query']
     'geosite:cn': ['https://dns.alidns.com/dns-query']
   nameserver:
-    - 'https://8.8.8.8/dns-query#🚀 默认出站'
+    - 'https://8.8.8.8/dns-query#🚀FinalOut'
   proxy-server-nameserver:
     - 'https://dns.alidns.com/dns-query'
 
@@ -124,68 +125,68 @@ select1: &select1
   type: select
   disable-udp: false
   proxies:
-    - '🚀 默认出站'
+    - '🚀FinalOut'
     - 'DIRECT'
-    - '📌 单选节点'
-    - '🇭🇰 香港节点'
-    - '🇯🇵 日本节点'
-    - '🇰🇷 韩国节点'
-    - '🇹🇼 台湾节点'
-    - '🇸🇬 新加坡节点'
-    - '🇺🇸 美国节点'
+    - '📌单选节点'
+    - '🇭🇰香港节点'
+    - '🇯🇵日本节点'
+    - '🇰🇷韩国节点'
+    - '🇹🇼台湾节点'
+    - '🇸🇬新加坡节点'
+    - '🇺🇸美国节点'
 
 proxy-groups:
-  - name: '🚀 默认出站'
+  - name: '🚀FinalOut'
     type: select
     disable-udp: false
     proxies:
-      - '🌏 日韩台新'
-      - '📌 单选节点'
-      - '🇭🇰 香港节点'
-      - '🇯🇵 日本节点'
-      - '🇰🇷 韩国节点'
-      - '🇹🇼 台湾节点'
-      - '🇸🇬 新加坡节点'
-      - '🇺🇸 美国节点'
-  - name: '🌏 日韩台新'
+      - '🌏日韩台新'
+      - '📌单选节点'
+      - '🇭🇰香港节点'
+      - '🇯🇵日本节点'
+      - '🇰🇷韩国节点'
+      - '🇹🇼台湾节点'
+      - '🇸🇬新加坡节点'
+      - '🇺🇸美国节点'
+  - name: '🌏日韩台新'
     filter: '🇯🇵|日本|JP|Japan|🇰🇷|韩国|KR|South Korea|🇹🇼|台湾|TW|Taiwan|🇸🇬|新加坡|SG|Singapore'
     <<: *urltest
-  - name: '📌 单选节点'
+  - name: '📌单选节点'
     type: select
     disable-udp: false
     exclude-filter: '剩余|流量|raffic|有效|时间|到期|xpire|地址|网址|官网|自动|最优|最快'
     use:
       - 'Provider1'
-  - name: '📥 Downloader'
+  - name: '📥Downloader'
     <<: *select1
-  - name: '🎮 Game'
+  - name: '🎮Game'
     <<: *select1
-  - name: '🔎 Google'
+  - name: '🔎Google'
     <<: *select1
-  - name: '☁️ OneDrive'
+  - name: '☁️OneDrive'
     <<: *select1
-  - name: '🤖 OpenAI'
+  - name: '🤖OpenAI'
     <<: *select1
-  - name: '🪟 Microsoft'
+  - name: '🪟Microsoft'
     <<: *select1
-  - name: '🖥️ SSH'
+  - name: '🖥️SSH'
     <<: *select1
-  - name: '🇭🇰 香港节点'
+  - name: '🇭🇰香港节点'
     filter: '🇭🇰|香港|HK|Hong Kong'
     <<: *urltest
-  - name: '🇯🇵 日本节点'
+  - name: '🇯🇵日本节点'
     filter: '🇯🇵|日本|JP|Japan'
     <<: *urltest
-  - name: '🇰🇷 韩国节点'
+  - name: '🇰🇷韩国节点'
     filter: '🇰🇷|韩国|KR|South Korea'
     <<: *urltest
-  - name: '🇹🇼 台湾节点'
+  - name: '🇹🇼台湾节点'
     filter: '🇹🇼|台湾|TW|Taiwan'
     <<: *urltest
-  - name: '🇸🇬 新加坡节点'
+  - name: '🇸🇬新加坡节点'
     filter: '🇸🇬|新加坡|SG|Singapore'
     <<: *urltest
-  - name: '🇺🇸 美国节点'
+  - name: '🇺🇸美国节点'
     filter: '🇺🇸|美国|US|USA|United States'
     <<: *urltest
 
@@ -197,35 +198,32 @@ rules:
   - GEOIP,private,DIRECT,no-resolve
   - PROCESS-NAME,localsend,DIRECT
   - PROCESS-NAME,localsend_app.exe,DIRECT
+  - DOMAIN-SUFFIX,gh-proxy.com,DIRECT
+  - DOMAIN-SUFFIX,gh-proxy.org,DIRECT
   - SUB-RULE,(PROCESS-NAME,ssh),ssh
   - SUB-RULE,(PROCESS-NAME,ssh.exe),ssh
   - SUB-RULE,(PROCESS-NAME,ssh-agent.exe),ssh
-  - DOMAIN-SUFFIX,copymanga.site,🚀 默认出站
-  - DOMAIN-SUFFIX,copymanga.tv,🚀 默认出站
-  - DOMAIN-SUFFIX,mangafuna.xyz,🚀 默认出站
-  - DOMAIN-SUFFIX,mangafunb.fun,🚀 默认出站
-  - DOMAIN-SUFFIX,senzyo.net,🚀 默认出站
   - SUB-RULE,(RULE-SET,downloader),downloader
   - GEOSITE,category-games@cn,DIRECT
-  - GEOSITE,category-games,🎮 Game
-  - GEOSITE,google,🔎 Google
-  - GEOIP,google,🔎 Google,no-resolve
-  - GEOSITE,onedrive,☁️ OneDrive
-  - GEOSITE,openai,🤖 OpenAI
-  - GEOSITE,microsoft,🪟 Microsoft
-  - GEOSITE,geolocation-!cn,🚀 默认出站
+  - GEOSITE,category-games,🎮Game
+  - GEOSITE,google,🔎Google
+  - GEOIP,google,🔎Google,no-resolve
+  - GEOSITE,onedrive,☁️OneDrive
+  - GEOSITE,openai,🤖OpenAI
+  - GEOSITE,microsoft,🪟Microsoft
+  - GEOSITE,geolocation-!cn,🚀FinalOut
   - GEOSITE,cn,DIRECT
   - GEOIP,cn,DIRECT,no-resolve
-  - MATCH,🚀 默认出站
+  - MATCH,🚀FinalOut
 sub-rules:
   downloader:
     - GEOSITE,cn,DIRECT
     - GEOIP,cn,DIRECT,no-resolve
-    - MATCH,📥 Downloader
+    - MATCH,📥Downloader
   ssh:
     - GEOSITE,cn,DIRECT
     - GEOIP,cn,DIRECT,no-resolve
-    - MATCH,🖥️ SSH
+    - MATCH,🖥️SSH
 
 proxy-providers:
   Provider1:
@@ -247,12 +245,12 @@ proxy-providers:
     override:
       udp: true
       up: '30 Mbps'
-      down: '90 Mbps'
+      down: '100 Mbps'
 
 rule-providers:
   downloader:
     type: http
-    url: 'https://gitlab.com/senzyo_sama/as-gist/-/raw/master/Rule/Clash/downloader.yaml'
+    url: 'https://gh-proxy.org/https://raw.githubusercontent.com/senzyo/as-gist/refs/heads/master/Rule/Clash/downloader.yaml'
     path: ./rule-providers/downloader.yaml
     # 单位为秒
     interval: 604800

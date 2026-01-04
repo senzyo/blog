@@ -20,7 +20,8 @@ toc:
 
 - sing-box 不像 clash 那样支持 `proxy-providers`。
 - sing-box 在 Linux 和 Windows 平台的核心程序不支持定时更新配置文件。
-- 机场不支持 sing-box。
+- 有的机场不支持 sing-box。
+- 有的机场支持 sing-box 但配置文件的写法不合适。
 
 所以只能使用“(远端) 后端下载订阅→提取节点→根据模板生成适用的配置→客户端下载配置”的方式, 那么选用哪个后端呢? 
 
@@ -38,12 +39,10 @@ toc:
     url_gene="https://a.com"  # 生成配置的后端地址
     url_sub="https://b.com"   # 来自机场的订阅链接
     url_tpl="https://raw.githubusercontent.com/senzyo/sing-box-templates/public/tun/doh/ali/google/testingcf.jsdelivr.net/config.json"  # 配置所用模板的地址
-    url_dl="$url_gene/config/$url_sub&ua=clashmeta&emoji=1&file=$url_tpl"
+    url_dl="$url_gene/config/$url_sub&ua=clashmeta&emoji=1&file=$url_tpl"  # 或者ua=sing-box等等, 具体看机场对于客户端和协议的支持情况
     echo $url_dl
     curl -L -o config.json "$url_dl"
     ```
 
 6. 在 Android 或 Apple 设备的 sing-box 图形客户端中添加这个最终的 URL 作为订阅链接。
 7. 对于 Linux 和 Windows, 阅读 [sing-box on Linux](https://senzyo.net/2024-2/#日常使用) 和 [sing-box on Windows](https://senzyo.net/2024-3/#日常使用)。
-
-
