@@ -42,15 +42,7 @@ Windows 10: [https://www.microsoft.com/zh-cn/software-download/windows10](https:
 
 ### 禁用BitLocker
 
-{{< admonition type=info title="仅影响 Windows 11" open=true >}}
-根据 [蓝点网](https://www.landiannews.com/archives/103718.html) 消息: 
-
-在 2023 年 7 月微软发布 Windows 11 Build 25905 版, 在此版本中微软已经调整启用设备加密的先决条件, 以便在全新安装 Windows 11 时自动启用设备加密功能。
-
-最初该功能仅在 Windows 11 专业版中启用, 到今年 10 月份发布 Windows 11 24H2 正式版时, 预计家庭版系统也会默认采用设备加密功能。
-{{< /admonition >}}
-
-在 OOBE 界面按下快捷键 `Shift+F10` 或者 `Shift+Fn+F10` 打开命令提示符, 输入 `regedit` 打开注册表, 然后转到如下路径: 
+在 OOBE 界面按下快捷键 `Shift+F10` 或者 `Shift+Fn+F10` 打开命令提示符, 输入 `regedit` 打开注册表, 然后转到如下路径:
 
 ```
 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
@@ -64,13 +56,13 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 
 ## 禁止系统更新自动更新驱动
 
-有时候自己安装的更新比 Windows 更新的时候安装的驱动更好、更新, 为了防止 Windows 更新将驱动换掉, 需要禁用自动驱动更新: 
+有时候自己安装的更新比 Windows 更新的时候安装的驱动更好、更新, 为了防止 Windows 更新将驱动换掉, 需要禁用自动驱动更新:
 
 1. 按下 `Win+S/Q`, 搜索并打开 `查看高级系统设置`。
 2. 在 `高级系统设置` 的 `硬件` 选项卡下, 点击 `设备安装设置`。
 3. 选择 `否, 每次只为我安装最兼容的驱动程序` 并保存更改。
 
-然后通过本地组策略编辑器修改 Windows Update 的行为: 
+然后通过本地组策略编辑器修改 Windows Update 的行为:
 
 1. 按下 `Win+S/Q`, 搜索并打开 `编辑组策略`。
 2. 转到 `计算机配置`→`管理模板`→`Windows 组件`→`Windows 更新`。
@@ -102,6 +94,7 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 - [HEVC扩展​](https://store.rg-adguard.net/), 来自设备制造商的 HEVC 扩展。​ProductId: `9n4wgh0z6vhq`
 - [HiBit Uninstaller](https://www.hibitsoft.ir/), 软件的安装监控与卸载清理
 - [Hugo](https://github.com/gohugoio/hugo/releases/latest), 静态博客构建。下载 `hugo_extended`
+- [ImageGlass](https://github.com/d2phap/ImageGlass/releases/latest), 强大的图片查看器
 - [InControl](https://www.grc.com/incontrol.htm), 控制 Windows 更新。可以只更新补丁, 不更新版本
 - [Joplin](https://joplinapp.org/help/#desktop-applications), Markdown 笔记
 - [Kaspersky](https://my.kaspersky.com/)
@@ -120,6 +113,7 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 - [OpenJDK Archived](https://jdk.java.net/archive/)
 - [Oracle JDK Archive](https://www.oracle.com/java/technologies/downloads/archive/)
 - [Pandoc](https://github.com/jgm/pandoc/releases/latest), 转换文件格式
+- [PinWin](https://sourceforge.net/projects/pinwin/files/), 将指定软件的窗口置顶
 - [PixPin](https://pixpinapp.com/), 相比侧重于贴图的 Snipaste 有更多功能
 - [Process Explorer](https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer), 管理软件进程
 - [Process Monitor](https://learn.microsoft.com/en-us/sysinternals/downloads/procmon), 监控软件进程
@@ -130,7 +124,7 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 - [Snipaste](https://zh.snipaste.com/), 屏幕截图与贴图
 - [Telegram](https://telegram.org/)
 - [TinyTask](https://tinytask.net/), 只需录制动作无需编辑脚本的自动化工具
-- [TopMost](https://www.sordum.org/9182/window-topmost-control-v1-2/), 置顶软件的窗口
+- [TopMost](https://www.sordum.org/9182/window-topmost-control-v1-2/), 将指定软件的窗口置顶
 - [TrafficMonitor](https://gitee.com/zhongyang219/TrafficMonitor), 在托盘显示 CPU、内存和网速等监控信息
 - [TSAC](https://bellard.org/tsac/), 极低比特率但几乎不损失质量的音频压缩工具
 - [ValiDrive](https://www.grc.com/validrive.htm), 检测 U 盘、存储卡、移动硬盘的真实容量, 避免虚标
@@ -153,9 +147,16 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 设置→个性化→任务栏→任务栏行为→在系统栏托盘时钟中显示秒数 (耗电更多)
 {{< /admonition >}}
 
-定位到注册表 `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced`, 新建 `DWORD (32位) 值`, 命名为 `ShowSecondsInSystemClock`, 修改数值数据为 **1** (十六进制), 最后重启 **explorer.exe**。
+将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表:
 
-此项功能 Windows 10 和 Windows 11 可用。值得注意的是, Windows 11 一开始删除了这项功能, 后来又把它加回来了。如果你设置后没有生效, 请将 Windows 11 更新至最新。
+```
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+"ShowSecondsInSystemClock"=dword:00000001
+```
+
+最后重启 **explorer.exe**。
 
 ## 右键菜单检测文件哈希值
 
@@ -163,7 +164,7 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\BitLocker
 
 ### Windows 10
 
-将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表: 
+将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表:
 
 ```
 Windows Registry Editor Version 5.00
@@ -200,7 +201,7 @@ Windows Registry Editor Version 5.00
 
 ### Windows 11
 
-将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表: 
+将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表:
 
 ```
 Windows Registry Editor Version 5.00
@@ -236,7 +237,7 @@ Windows Registry Editor Version 5.00
 
 ### 移除
 
-将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表: 
+将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表:
 
 ```
 Windows Registry Editor Version 5.00
@@ -246,7 +247,7 @@ Windows Registry Editor Version 5.00
 
 ## 禁止开始搜索框查询网络内容
 
-将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表: 
+将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表:
 
 ```
 Windows Registry Editor Version 5.00
