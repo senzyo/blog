@@ -25,7 +25,7 @@ summary: 本文不使用 Clash Verge 等 GUI 客户端, 而是通过任务计划
 ## 配置文件
 
 创建 mihomo 工作目录, 比如 `C:\Users\<UserName>\Apps\mihomo`。
-放入配置文件 `config.yaml`。参考以下配置: 
+放入配置文件 `config.yaml`。参考以下配置:
 
 ```yaml
 # 官方参考配置 https://github.com/MetaCubeX/mihomo/blob/Alpha/docs/config.yaml
@@ -77,19 +77,19 @@ dns:
     - 'udp://223.5.5.5'
   nameserver-policy:
   # 为 proxy-provider 使用的域名指定 DNS 服务器, 不然无法下载订阅文件
-    '+.gh-proxy.com,+.gh-proxy.org,+.pronetwork.top,+.wd-turbo.com': ['https://dns.alidns.com/dns-query']
-    'geosite:geolocation-!cn': ['https://8.8.8.8/dns-query#🚀FinalOut']
-    'category-games@cn': ['https://dns.alidns.com/dns-query']
-    'geosite:cn': ['https://dns.alidns.com/dns-query']
+    '+.gh-proxy.org,+.wd-turbo.com': ['https://dns.alidns.com/dns-query#DIRECT']
+    'category-games@cn': ['https://dns.alidns.com/dns-query#DIRECT']
+    'geosite:geolocation-!cn': ['tcp://8.8.8.8#🚀FinalOut']
+    'geosite:cn': ['https://dns.alidns.com/dns-query#DIRECT']
   nameserver:
-    - 'https://8.8.8.8/dns-query#🚀FinalOut'
+    - 'tcp://8.8.8.8#🚀FinalOut'
   proxy-server-nameserver:
-    - 'https://dns.alidns.com/dns-query'
+    - 'https://dns.alidns.com/dns-query#DIRECT'
 
 sniffer:
   enable: false
   force-dns-mapping: true
-  parse-pure-ip: false
+  parse-pure-ip: true
   override-destination: false
 
 tun:
@@ -121,20 +121,6 @@ urltest: &urltest
   use:
     - 'Provider1'
 
-select1: &select1
-  type: select
-  disable-udp: false
-  proxies:
-    - '🚀FinalOut'
-    - 'DIRECT'
-    - '📌单选节点'
-    - '🇭🇰香港节点'
-    - '🇯🇵日本节点'
-    - '🇰🇷韩国节点'
-    - '🇹🇼台湾节点'
-    - '🇸🇬新加坡节点'
-    - '🇺🇸美国节点'
-
 proxy-groups:
   - name: '🚀FinalOut'
     type: select
@@ -158,19 +144,18 @@ proxy-groups:
     use:
       - 'Provider1'
   - name: '📥Downloader'
-    <<: *select1
-  - name: '🎮Game'
-    <<: *select1
-  - name: '🔎Google'
-    <<: *select1
-  - name: '☁️OneDrive'
-    <<: *select1
-  - name: '🤖OpenAI'
-    <<: *select1
-  - name: '🪟Microsoft'
-    <<: *select1
-  - name: '🖥️SSH'
-    <<: *select1
+    type: select
+    disable-udp: false
+    proxies:
+      - '🚀FinalOut'
+      - 'DIRECT'
+      - '📌单选节点'
+      - '🇭🇰香港节点'
+      - '🇯🇵日本节点'
+      - '🇰🇷韩国节点'
+      - '🇹🇼台湾节点'
+      - '🇸🇬新加坡节点'
+      - '🇺🇸美国节点'
   - name: '🇭🇰香港节点'
     filter: '🇭🇰|香港|HK|Hong Kong'
     <<: *urltest
@@ -192,25 +177,16 @@ proxy-groups:
 
 rules:
   # geoip.dat 类别: https://github.com/Loyalsoldier/geoip/tree/release/text
-  # geosite.dat 类别: 
+  # geosite.dat 类别:
   # https://github.com/v2fly/domain-list-community/tree/master/data
   # https://github.com/MetaCubeX/meta-rules-dat?tab=readme-ov-file#geositedatgeositedb-内容
+  - GEOSITE,private,DIRECT
   - GEOIP,private,DIRECT,no-resolve
   - PROCESS-NAME,localsend,DIRECT
   - PROCESS-NAME,localsend_app.exe,DIRECT
-  - DOMAIN-SUFFIX,gh-proxy.com,DIRECT
   - DOMAIN-SUFFIX,gh-proxy.org,DIRECT
-  - SUB-RULE,(PROCESS-NAME,ssh),ssh
-  - SUB-RULE,(PROCESS-NAME,ssh.exe),ssh
-  - SUB-RULE,(PROCESS-NAME,ssh-agent.exe),ssh
   - SUB-RULE,(RULE-SET,downloader),downloader
   - GEOSITE,category-games@cn,DIRECT
-  - GEOSITE,category-games,🎮Game
-  - GEOSITE,google,🔎Google
-  - GEOIP,google,🔎Google,no-resolve
-  - GEOSITE,onedrive,☁️OneDrive
-  - GEOSITE,openai,🤖OpenAI
-  - GEOSITE,microsoft,🪟Microsoft
   - GEOSITE,geolocation-!cn,🚀FinalOut
   - GEOSITE,cn,DIRECT
   - GEOIP,cn,DIRECT,no-resolve
@@ -220,10 +196,6 @@ sub-rules:
     - GEOSITE,cn,DIRECT
     - GEOIP,cn,DIRECT,no-resolve
     - MATCH,📥Downloader
-  ssh:
-    - GEOSITE,cn,DIRECT
-    - GEOIP,cn,DIRECT,no-resolve
-    - MATCH,🖥️SSH
 
 proxy-providers:
   Provider1:
@@ -314,7 +286,7 @@ rule-providers:
 
     注意, `<id>` 指 `Name`, `<name>` 指 `DisplayName`。更多 XML 设置参考 [文档](https://github.com/winsw/winsw/blob/v3.0.0-alpha.11/docs/xml-config-file.md)。
 
-2. 在 mihomo 工作目录中运行以下命令将 `mihomo service` 安装为 Windows 服务: 
+2. 在 mihomo 工作目录中运行以下命令将 `mihomo service` 安装为 Windows 服务:
 
     ```shell
     winsw.exe install "mihomo service.xml"
@@ -453,7 +425,7 @@ Start-Sleep -Seconds 1
 
 ### 更新并备份Core
 
-由于 mihomo 的 [Alpha](https://github.com/MetaCubeX/mihomo/releases/tag/Prerelease-Alpha) 版本更新很快, 手动更新版本并备份到网盘也太麻烦了, 干脆用 PowerShell 脚本自动下载核心到 OneDrive 的文件夹中, 并覆盖 mihomo 工作目录中的旧版本可执行文件: 
+由于 mihomo 的 [Alpha](https://github.com/MetaCubeX/mihomo/releases/tag/Prerelease-Alpha) 版本更新很快, 手动更新版本并备份到网盘也太麻烦了, 干脆用 PowerShell 脚本自动下载核心到 OneDrive 的文件夹中, 并覆盖 mihomo 工作目录中的旧版本可执行文件:
 
 ```shell
 $Releaseurl = "https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/Prerelease-Alpha"
@@ -507,7 +479,7 @@ mihomo 的外部控制 API 支持开关 TUN 模式。
 
 ### 权限
 
-为 `.ps1` 文件 (PowerShell 脚本文件) 创建快捷方式, 然后右击文件, “属性→快捷方式→目标”, 在文件路径前添加 `powershell.exe -ExecutionPolicy Bypass -File`, 比如: 
+为 `.ps1` 文件 (PowerShell 脚本文件) 创建快捷方式, 然后右击文件, “属性→快捷方式→目标”, 在文件路径前添加 `powershell.exe -ExecutionPolicy Bypass -File`, 比如:
 
 ```
 powershell.exe -ExecutionPolicy Bypass -File "Stop.ps1"
@@ -534,13 +506,13 @@ if (! ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity
 
 ### 不代理范围
 
-脚本中可设置不代理的 IP 范围, 即 `localhost`, `127.*`, IP 私有地址和 `本地Intranet` 范围: 
+脚本中可设置不代理的 IP 范围, 即 `localhost`, `127.*`, IP 私有地址和 `本地Intranet` 范围:
 
 ```shell
 Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyOverride -Value "localhost;127.*;10.*;172.16.*;172.17.*;172.18.*;172.19.*;172.20.*;172.21.*;172.22.*;172.23.*;172.24.*;172.25.*;172.26.*;172.27.*;172.28.*;172.29.*;172.30.*;172.31.*;192.168.*;<local>"
 ```
 
-IP 私有地址范围: 
+IP 私有地址范围:
 
 - A类地址范围: 10.0.0.0 ~ 10.255.255.255
 - B类地址范围: 172.16.0.0 ~ 172.31.255.555
@@ -560,7 +532,7 @@ IP 私有地址范围:
 
 ### PowerShell脚本无法运行
 
-参考微软官方文档 [Set-ExecutionPolicy](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.security/set-executionpolicy), 以管理员身份运行 PowerShell, 执行以下命令: 
+参考微软官方文档 [Set-ExecutionPolicy](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.security/set-executionpolicy), 以管理员身份运行 PowerShell, 执行以下命令:
 
 ```shell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
