@@ -16,7 +16,7 @@ summary: 简单配置服务器的 Nftables, Input 只允许 `SSH`、`HTTP` 和 `
 
 nftables默认配置文件一般是`/etc/nftables.conf`, 但是还是确定一下情况比较放心, 毕竟考虑到系统不同或版本不同, 默认配置文件还有可能是`/etc/nftables.start.conf`, 或者其他。
 
-参考nftables官方文档[Advanced ruleset for dynamic environments](https://wiki.nftables.org/wiki-nftables/index.php/Advanced_ruleset_for_dynamic_environments), nftables默认配置文件的路径可以通过查看`nftables.service`文件得知, 但使用`find /etc -name "nftables.service"`搜索后发现我的Debian 11中`nftables.service`文件的路径并不是`/etc/systemd/system/nftables.service`, 而是`/etc/systemd/system/sysinit.target.wants/nftables.service`, 文件内容中注意到以下三行: 
+参考nftables官方文档[Advanced ruleset for dynamic environments](https://wiki.nftables.org/wiki-nftables/index.php/Advanced_ruleset_for_dynamic_environments), nftables默认配置文件的路径可以通过查看`nftables.service`文件得知, 但使用`find /etc -name "nftables.service"`搜索后发现我的Debian 11中`nftables.service`文件的路径并不是`/etc/systemd/system/nftables.service`, 而是`/etc/systemd/system/sysinit.target.wants/nftables.service`, 文件内容中注意到以下三行:
 
 ```
 ...
@@ -30,43 +30,61 @@ ExecStop=/usr/sbin/nft flush ruleset
 
 ## 简单配置参考
 
-参考nftables官方文档[Simple ruleset for a server](https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_server), 将`/etc/nftables.conf`文件更改为以下内容: 
+参考nftables官方文档[Simple ruleset for a server](https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_server), 将`/etc/nftables.conf`文件更改为以下内容:
 
 ```
-#!/usr/sbin/nft -f
-
 flush ruleset
 
 table inet firewall {
     chain input {
         type filter hook input priority 0; policy drop;
-        ct state vmap { established : accept, related : accept, invalid : drop }
-        iifname lo accept
-        tcp dport { 22, 80, 443 } accept
+        # 允许回环接口
+        iif lo accept
+        # 状态检查
+        ct state invalid drop
+        ct state { established, related } accept
+        # 反欺骗检查
+        fib saddr . iif oif missing drop
+        # 允许特定 TCP/UDP 端口
+        tcp dport { 80, 443, 50022 } accept
+        udp dport 443 accept
+        # ICMP 处理
         meta protocol vmap { ip : jump input_ipv4, ip6 : jump input_ipv6 }
-        # https://wiki.nftables.org/wiki-nftables/index.php/Rejecting_traffic
-        reject with icmpx type admin-prohibited
     }
+
     chain input_ipv4 {
-        # icmp type echo-request limit rate 5/second accept
+        # 允许 Ping
+        icmp type echo-request limit rate 5/second burst 10 packets accept
+        # 允许路径 MTU 发现
+        icmp type { destination-unreachable, time-exceeded, parameter-problem } accept
     }
+
     chain input_ipv6 {
-        # icmpv6 type echo-request limit rate 5/second accept
+        # 允许 Ping
+        icmpv6 type echo-request limit rate 5/second burst 10 packets accept
+        # 允许 IPv6 邻居发现
+        icmpv6 type { nd-neighbor-solicit, nd-neighbor-advert, nd-router-advert } ip6 hoplimit 255 accept
+        # 允许路径 MTU 发现
+        icmpv6 type { packet-too-big, destination-unreachable, time-exceeded, parameter-problem } accept
     }
+
     chain forward {
         type filter hook forward priority 0; policy drop;
     }
-    # no need to define output chain, default policy is accept if undefined.
+
+    chain output {
+        type filter hook output priority 0; policy accept;
+    }
 }
 ```
 
-重启`nftables.service`服务: 
+重启`nftables.service`服务:
 
 ```bash
 systemctl restart nftables.service
 ```
 
-检查nftables当前应用的规则: 
+检查nftables当前应用的规则:
 
 ```bash
 nft list ruleset
