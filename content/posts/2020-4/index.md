@@ -32,7 +32,7 @@ https://www.debian.org/doc/manuals/debian-reference/ch01.zh-cn.html
    递归更改用户文件夹的权限: `sudo chown -R <UserName>:<UserGroup> /home/<UserName>`
    {{< /admonition >}}
 
-2. 修改用户密码: 
+2. 修改用户密码:
 
    ```bash
    sudo passwd <UserName>
@@ -42,13 +42,13 @@ https://www.debian.org/doc/manuals/debian-reference/ch01.zh-cn.html
 
 ### 用户加入sudoers
 
-1. 更改`sudoers`文件权限: 
+1. 更改`sudoers`文件权限:
 
    ```bash
    sudo chmod 644 /etc/sudoers
    ```
 
-2. 编辑`/etc/sudoers`, 在`root ALL=(ALL:ALL) ALL`下添加一行`你的用户名 ALL=(ALL:ALL) ALL`, 比如: 
+2. 编辑`/etc/sudoers`, 在`root ALL=(ALL:ALL) ALL`下添加一行`你的用户名 ALL=(ALL:ALL) ALL`, 比如:
 
    ```
    root ALL=(ALL:ALL) ALL
@@ -65,7 +65,7 @@ sudo passwd root
 
 ### alias
 
-在 [环境变量配置文件](../2021-6/) 中添加以下内容: 
+在 [环境变量配置文件](../2021-6/) 中添加以下内容:
 
 ```bash
 alias ls="ls -F --color=auto"
@@ -82,13 +82,13 @@ alias ch="> $HOME/.bash_history;history -c;clear"
 
 ### ls -l时间格式
 
-在 [环境变量配置文件](../2021-6/) 中添加: 
+在 [环境变量配置文件](../2021-6/) 中添加:
 
 ```bash
 export TIME_STYLE="+%Y-%m-%d %H:%M:%S"
 ```
 
-输出示例: 
+输出示例:
 
 ```bash
 -rw------- 1 root root 4096 2022-05-28 20:00:00 .bash_history
@@ -101,14 +101,14 @@ export TIME_STYLE="+%Y-%m-%d %H:%M:%S"
 - 更多信息参考 https://man.openbsd.org/sshd_config
 {{< /admonition >}}
 
-1. 在`~/.ssh/authorized_keys`文件中追加客户端的公钥内容, 然后更改权限: 
+1. 在`~/.ssh/authorized_keys`文件中追加客户端的公钥内容, 然后更改权限:
 
    ```bash
    chmod 700 ~/.ssh
    chmod 600 ~/.ssh/authorized_keys
    ```
 
-2. 更改`/etc/ssh/sshd_config`文件内容: 
+2. 更改`/etc/ssh/sshd_config`文件内容:
 
    ```
    Include /etc/ssh/sshd_config.d/*.conf        # 包含指定的配置文件, 可指定多个
@@ -138,7 +138,7 @@ export TIME_STYLE="+%Y-%m-%d %H:%M:%S"
 
    - 如果仍然有登录后提示, 可以清空相应文件`> /etc/motd`。
 
-3. 重启SSH服务: 
+3. 重启SSH服务:
 
    ```bash
    sudo systemctl restart ssh.service
@@ -148,7 +148,7 @@ export TIME_STYLE="+%Y-%m-%d %H:%M:%S"
 
 ## 软件镜像源
 
-在`/etc/apt/source.list`中编辑镜像源。先使用http源 (将源中的https替换为http) 安装以下软件: 
+在`/etc/apt/source.list`中编辑镜像源。先使用http源 (将源中的https替换为http) 安装以下软件:
 
 ```bash
 sudo apt install apt-transport-https ca-certificates
@@ -172,7 +172,7 @@ sudo apt install apt-transport-https ca-certificates
 
 下载[驱动](https://wireless.wiki.kernel.org/_media/en/users/drivers/iwlwifi-ty-59.601f3a66.0.tgz), 更多网卡驱动[列表](https://www.intel.com/content/www/us/en/support/articles/000005511/wireless.html)。
 
-安装: 
+安装:
 
 ```bash
 tar -zxvf iwlwifi-ty-59.601f3a66.0.tgz
@@ -189,7 +189,7 @@ sudo reboot
 
 1. 电脑插入网线, 或者手机USB网络共享。
 
-2. 编辑`/etc/modprobe.d/blacklist.conf`, 添加: 
+2. 编辑`/etc/modprobe.d/blacklist.conf`, 添加:
 
    ```
    blacklist rtw88_8821ce
@@ -199,26 +199,26 @@ sudo reboot
 
 3. 从tomaspinho的[GitHub仓库](https://github.com/tomaspinho/rtl8821ce)下载驱动。
 
-4. 执行命令: 
+4. 执行命令:
 
    ```bash
    sudo apt install bc module-assistant build-essential dkms
    sudo m-a prepare
    ```
 
-5. `cd`到下载的驱动的目录, 执行以下命令: 
+5. `cd`到下载的驱动的目录, 执行以下命令:
 
    ```bash
    sudo ./dkms-install.sh
    ```
 
-6. 默认情况下, Linux可能会启用PCIe活动状态电源管理。这可能与该驱动程序冲突。编辑`/etc/default/grub`, 在`GRUB_CMDLINE_LINUX_DEFAULT`后添加`pci=noaer`, 比如: 
+6. 默认情况下, Linux可能会启用PCIe活动状态电源管理。这可能与该驱动程序冲突。编辑`/etc/default/grub`, 在`GRUB_CMDLINE_LINUX_DEFAULT`后添加`pci=noaer`, 比如:
 
    ```
    GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pci=noaer"
    ```
 
-   然后更新grub: 
+   然后更新grub:
 
    ```bash
    sudo update-grub
@@ -270,13 +270,13 @@ sudo reboot
 
 1. 提前在Windows中将需要的字体从`C:/Windows/Fonts`中复制出来, 放到`C:/Users/<UserName>/Fonts`中。
 2. 使用文件管理器(比如Dolphin)挂载Windows系统盘, 这时Windows系统盘根路径一般为`/run/media/<UserName>/Windows/`。
-3. 在Linux中为Windows字体新建一个目录: 
+3. 在Linux中为Windows字体新建一个目录:
 
    ```bash
    sudo mkdir /usr/share/fonts/Windows
    ```
 
-4. 然后将Windows的字体文件复制过来: 
+4. 然后将Windows的字体文件复制过来:
 
    ```bash
    sudo cp /run/media/<UserName>/Windows/Users/<UserName>/Fonts/* /usr/share/fonts/Windows
@@ -289,37 +289,45 @@ sudo reboot
 
 ### BBR
 
-查看系统现在的拥塞控制算法: 
+查看系统现在的拥塞控制算法:
 
 ```bash
 sysctl net.ipv4.tcp_congestion_control
 ```
 
-查看系统可用的拥塞控制算法: 
+查看系统可用的拥塞控制算法:
 
 ```bash
 sysctl net.ipv4.tcp_available_congestion_control
 ```
 
-如果没有 `bbr`, 检查 BBR 的内核模块是否已加载: 
+如果没有 `bbr`, 检查 BBR 的内核模块是否已加载:
 
 ```bash
 lsmod | grep bbr
 ```
 
-手动加载 BBR 的内核模块: 
+手动加载 BBR 的内核模块:
 
 ```bash
 sudo modprobe tcp_bbr
 ```
 
-编辑 `/etc/sysctl.conf` 或者 `/etc/sysctl.d/99-sysctl.conf`, 添加: 
+编辑 `/etc/sysctl.conf` 或者 `/etc/sysctl.d/99-sysctl.conf`, 添加:
 
 ```
 net.ipv4.tcp_congestion_control = bbr
+net.core.default_qdisc = fq
 ```
 
-运行 `sysctl -p` 应用更改。
+运行 `sysctl --system` 应用更改。
+
+检查系统现在的拥塞控制算法和队列规则算法:
+
+```bash
+sysctl net.ipv4.tcp_congestion_control
+sysctl net.core.default_qdisc
+```
 
 ### TCP缓冲区
 
@@ -327,21 +335,21 @@ net.ipv4.tcp_congestion_control = bbr
 
 但受运营商限制, 未能发挥理论作用, 效果不大。
 
-查看当前 TCP 缓冲区大小: 
+查看当前 TCP 缓冲区大小:
 
 ```bash
 sysctl net.ipv4.tcp_wmem
 sysctl net.ipv4.tcp_rmem
 ```
 
-根据 [TCP缓冲区计算器](https://tcp-cal.mereith.com) 临时设置 TCP 缓冲区大小: 
+根据 [TCP缓冲区计算器](https://tcp-cal.mereith.com) 临时设置 TCP 缓冲区大小:
 
 ```bash
 sysctl -w net.ipv4.tcp_wmem="4096 16384 4194304"
 sysctl -w net.ipv4.tcp_rmem="4096 131072 6291456"
 ```
 
-或将参数写入 `/etc/sysctl.conf` 以永久保存, 这是 Debian 的默认参数: 
+或将参数写入 `/etc/sysctl.conf` 以永久保存, 这是 Debian 的默认参数:
 
 ```
 net.ipv4.tcp_wmem = 4096 16384 4194304
