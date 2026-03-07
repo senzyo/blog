@@ -37,7 +37,7 @@ summary: 开机自动更新 `config.json` 并启动 sing-box。通过任务计�
 1. 常规
 
    名称填 `sing-box-trigger`。
-   
+
    安全选项中, 不用 `更改用户或组`, 使用默认的用户就行, 如果使用 `Administrators` 或者 `SYSTEM` 账户, 任务计划程序启动时会弹出运行窗口。
 
    选择 `不管用户是否登录都要运行`, 勾选 `不存储密码`。不然任务计划程序启动时也会弹出运行窗口。
@@ -68,7 +68,7 @@ summary: 开机自动更新 `config.json` 并启动 sing-box。通过任务计�
 1. 常规
 
    名称填 `sing-box`。
-   
+
    安全选项中, `更改用户或组`, 输入 `system`, 点击 `检查名称` 按钮, 变为 <u>SYSTEM</u>, 即使用 `SYSTEM` 账户。
 
 2. 不使用触发器
@@ -98,6 +98,10 @@ summary: 开机自动更新 `config.json` 并启动 sing-box。通过任务计�
 
 关于脚本的设置, 参考 [关于脚本](../2023-7/#关于脚本) 和 [FAQ](../2023-7/#faq)。
 
+{{< admonition type=warning title="需要 jq" open=true >}}
+需要 jq 来处理 json 文件, [下载](https://github.com/jqlang/jq/releases/latest) 后将其添加到系统环境变量以便脚本调用。
+{{< /admonition >}}
+
 ### 更新配置文件
 
 按需修改 `Update.ps1` 的内容:
@@ -105,7 +109,7 @@ summary: 开机自动更新 `config.json` 并启动 sing-box。通过任务计�
 更改 `$url_sub` 的值为自己的订阅链接, 至于模板 `$url_tpl`, 可以参考 [Generate config of sing-box](../2024-1/) 选择更多模板。
 
 {{< admonition type=question title="无法启动?" open=false >}}
-对于 sing-box 的运行参数, 由 `sing-box help` 得知: 
+对于 sing-box 的运行参数, 由 `sing-box help` 得知:
 
 ```
 Flags:
@@ -130,12 +134,13 @@ Flags:
 
 #### 一种配置
 
-下载使用 `mixed` 或 `tun` 入站的配置文件。
+下载使用 `mixed` **或** `tun` 入站的配置文件。
 
 修改以下内容, 写入到脚本 `C:\Users\<UserName>\Apps\sing-box\Update.ps1`:
 
 ```shell
 $task = "sing-box"
+$process = "sing-box"
 $ping = "223.5.5.5"
 $dir_config = "$env:USERPROFILE\Apps\sing-box"
 $url_gene = "https://example.com"  # 生成配置的后端地址
@@ -146,6 +151,7 @@ $url_dl = "$url_gene/config/$url_sub&ua=clashmeta&emoji=1&file=$url_tpl"  # 或�
 $proxy_port = "7890"
 
 Stop-ScheduledTask -TaskName $task
+Stop-Process -Name $process -Force > $null 2>&1
 Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 0
 Clear-DnsClientCache
 while (!(Test-Connection -ComputerName $ping -Count 1 -Quiet)) {
@@ -171,22 +177,7 @@ while ($count -lt 3) {
 if ($count -eq 3) {
     Write-Host "No changes, keep the existing files."
 }
-Start-ScheduledTask -TaskName $task
-Start-Sleep -Seconds 5
-$state = Get-ScheduledTask -TaskName $task | Select-Object -ExpandProperty State
-Write-Host "State of ${task}: ${state}"
-if ($state -eq "Running") {
-    if ($inbound -eq "mixed") {
-        Write-Host "Use system proxy mode."
-        Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyServer -Value "127.0.0.1:$proxy_port"
-        Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 1
-    } elseif ($inbound -eq "tun") {
-        Write-Host "Use tun mode."
-        Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 0
-    }
-} else {
-    Write-Host "Run ${task} failed."
-}
+
 Start-Sleep -Seconds 1
 ```
 
@@ -198,12 +189,13 @@ Start-Sleep -Seconds 1
 
 #### 两种配置
 
-下载使用 `mixed` 和 `tun` 入站的配置文件。优先使用 `tun` 入站。搭配 [切换模式重启](#切换模式重启) 脚本来切换模式。
+下载使用 `mixed` **和** `tun` 入站的配置文件。优先使用 `tun` 入站。搭配 [切换模式重启](#切换模式重启) 脚本来切换模式。
 
 修改以下内容, 写入到脚本 `C:\Users\<UserName>\Apps\sing-box\Update.ps1`:
 
 ```shell
 $task = "sing-box"
+$process = "sing-box"
 $ping = "223.5.5.5"
 $dir_config = "$env:USERPROFILE\Apps\sing-box"
 $url_gene = "https://example.com"  # 生成配置的后端地址
@@ -212,6 +204,7 @@ $inbound_prefer = "tun"          # mixed or tun
 $proxy_port = "7890"
 
 Stop-ScheduledTask -TaskName $task
+Stop-Process -Name $process -Force > $null 2>&1
 Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 0
 Clear-DnsClientCache
 while (!(Test-Connection -ComputerName $ping -Count 1 -Quiet)) {
@@ -244,22 +237,7 @@ foreach ($inbound in $inbound_list) {
         Write-Host "No changes, keep the existing files."
     }
 }
-Start-ScheduledTask -TaskName $task
-Start-Sleep -Seconds 5
-$state = Get-ScheduledTask -TaskName $task | Select-Object -ExpandProperty State
-Write-Host "State of ${task}: ${state}"
-if ($state -eq "Running") {
-    if ($inbound_prefer -eq "mixed") {
-        Write-Host "Use system proxy mode."
-        Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyServer -Value "127.0.0.1:$proxy_port"
-        Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 1
-    } elseif ($inbound_prefer -eq "tun") {
-        Write-Host "Use tun mode."
-        Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 0
-    }
-} else {
-    Write-Host "Run ${task} failed."
-}
+
 Start-Sleep -Seconds 1
 ```
 
@@ -276,6 +254,7 @@ Start-Sleep -Seconds 1
 ```shell
 $dir_config = "$env:USERPROFILE\Apps\sing-box"
 $task = "sing-box"
+$process = "sing-box"
 $proxy_port = "7890"
 
 Set-Location -Path $dir_config
@@ -286,7 +265,26 @@ if ($LASTEXITCODE -ne 0) {
     Exit 1
 }
 Stop-ScheduledTask -TaskName $task
+Stop-Process -Name $process -Force > $null 2>&1
 Clear-DnsClientCache
+
+# 随机化 tun 接口名称避免启动失败
+$find = Select-String -Path config.json -Pattern '"type": "tun"'
+if ($find) {
+    $random_hex = -join (1..3 | ForEach-Object { "{0:x2}" -f (Get-Random -Min 0 -Max 256) })
+    $json_result = & jq --arg new_name "$random_hex" '(.inbounds[] | select(.type == \"tun\") | .interface_name) = $new_name' config.json 2>$null
+    if ($LASTEXITCODE -eq 0 -and $json_result) {
+        $temp_path = "$dir_config\temp.json"
+        [System.IO.File]::WriteAllLines($temp_path, $json_result)
+        Move-Item -Path temp.json -Destination config.json -Force
+        Write-Host "TUN interface name randomized."
+    } else {
+        Write-Host "TUN interface name randomization failed."
+        pause
+        exit
+    }
+}
+
 Start-ScheduledTask -TaskName $task
 Start-Sleep -Seconds 5
 $state = Get-ScheduledTask -TaskName $task | Select-Object -ExpandProperty State
@@ -315,10 +313,12 @@ Start-Sleep -Seconds 1
 
 ```shell
 $task = "sing-box"
+$process = "sing-box"
 
 Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name ProxyEnable -Value 0
 Write-Host "System proxy disabled."
 Stop-ScheduledTask -TaskName $task
+Stop-Process -Name $process -Force > $null 2>&1
 Clear-DnsClientCache
 $state = Get-ScheduledTask -TaskName $task | Select-Object -ExpandProperty State
 Write-Host "State of ${task} ScheduledTask: ${state}"
@@ -334,6 +334,7 @@ sing-box 的入站方式是固定在配置文件中的, 而且不支持通过 AP
 ```shell
 $dir_config = "$env:USERPROFILE\Apps\sing-box"
 $task = "sing-box"
+$process = "sing-box"
 $proxy_port = "7890"
 
 Set-Location -Path $dir_config
@@ -350,8 +351,27 @@ if ($LASTEXITCODE -ne 0) {
     Exit 1
 }
 Stop-ScheduledTask -TaskName $task
+Stop-Process -Name $process -Force > $null 2>&1
 Clear-DnsClientCache
-Copy-Item "config_$inbound.json" config.json
+
+# 随机化 tun 接口名称避免启动失败
+if ($inbound -eq "tun") {
+    $random_hex = -join (1..3 | ForEach-Object { "{0:x2}" -f (Get-Random -Min 0 -Max 256) })
+    $json_result = & jq --arg new_name "$random_hex" '(.inbounds[] | select(.type == \"tun\") | .interface_name) = $new_name' "config_$inbound.json" 2>$null
+    if ($LASTEXITCODE -eq 0 -and $json_result) {
+        $temp_path = "$dir_config\temp.json"
+        [System.IO.File]::WriteAllLines($temp_path, $json_result)
+        Move-Item -Path temp.json -Destination config.json -Force
+        Write-Host "TUN interface name randomized."
+    } else {
+        Write-Host "TUN interface name randomization failed."
+        pause
+        exit
+    }
+} else {
+    Copy-Item "config_$inbound.json" config.json
+}
+
 Start-ScheduledTask -TaskName $task
 Start-Sleep -Seconds 5
 $state = Get-ScheduledTask -TaskName $task | Select-Object -ExpandProperty State
@@ -370,6 +390,101 @@ if ($state -eq "Running") {
 } else {
     Write-Host "Run ${task} failed."
 }
+Start-Sleep -Seconds 1
+```
+
+### 更新sing-box.exe
+
+```shell
+# 停止运行 sing-box
+if (Get-Process sing-box -ErrorAction SilentlyContinue) {
+    Stop-Process -Name sing-box -Force
+    Write-Host "sing-box has stopped." -ForegroundColor Green
+} else {
+    Write-Host "sing-box is not running." -ForegroundColor Yellow
+}
+
+Clear-DnsClientCache
+Start-Sleep -Seconds 1
+
+# ---- 公共函数 ----
+# 校验 Hash
+function VerifyHash {
+    $Digest = $Response.assets | Where-Object { $_.name -eq "$FileName.zip" } | Select-Object -ExpandProperty digest
+    $RemoteHash = $Digest.Split(':')[-1]
+    $LocalHash = (Get-FileHash $ZipPath -Algorithm SHA256).Hash.ToLower()
+    Write-Host "Verifying SHA256 checksum... " -NoNewline
+    if ($RemoteHash -eq $LocalHash) {
+        Write-Host "Correct!" -ForegroundColor Green
+        return $true
+    } else {
+        Write-Host "Wrong!" -ForegroundColor Red
+        return $false
+    }
+}
+
+# 升级
+function Upgrade {
+    $Url = $Response.assets | Where-Object { $_.name -eq "$FileName.zip" } | Select-Object -ExpandProperty browser_download_url
+    do {
+        if (Test-Path -Path $ZipPath) {
+            Remove-Item $ZipPath -Force
+        }
+        Write-Host "Downloading..."
+        Invoke-WebRequest -OutFile $ZipPath -Uri "https://gh-proxy.org/$Url"
+        $Correct = VerifyHash
+        if ($Correct) {
+            $script:Cover = $true
+        } else {
+            Write-Host "Retry Downloading..."
+            Start-Sleep -Seconds 1
+        }
+    } until ($Correct)
+}
+
+# 检查更新
+function CheckUpdate ($ExeName) {
+    $LocalVersionStr = "0.0.0"
+    if (Test-Path -Path $ExePath) {
+        $VersionOutput = (& $ExePath version) 2>&1
+        if ($VersionOutput[0] -match "([\d.]+)") {
+            $LocalVersionStr = $Matches[1]
+        }
+    }
+    $LocalVersionObj = [System.Version]$LocalVersionStr
+    $RemoteVersionObj = [System.Version]$RemoteVersionStr
+    if ($RemoteVersionObj -gt $LocalVersionObj) {
+        Write-Host "version: $LocalVersionStr -> " -NoNewline
+        Write-Host "$RemoteVersionStr" -ForegroundColor Yellow
+        Upgrade
+    }
+    else {
+        Write-Host "Up to date: " -NoNewline
+        Write-Host "$ExeName $LocalVersionStr" -ForegroundColor Green
+    }
+}
+# ---- 公共函数 结束 ----
+
+$OutDir = "$env:USERPROFILE\Apps\sing-box"
+
+# ---- 更新 sing-box ----
+$ExePath = "$OutDir\sing-box.exe"
+$Response = Invoke-RestMethod -Uri "https://api.github.com/repos/SagerNet/sing-box/releases/latest" -Method Get
+$TagName = $Response.tag_name
+$RemoteVersionStr = $TagName.TrimStart('v')
+$FileName = "sing-box-$RemoteVersionStr-windows-amd64"
+$ZipPath = "$OutDir\$FileName.zip"
+
+CheckUpdate sing-box
+
+# 解压缩并覆盖 sing-box
+if ($script:Cover) {
+    Expand-Archive -Path $ZipPath -DestinationPath $OutDir -Force
+    Move-Item -Path "$OutDir\$FileName\sing-box.exe" -Destination "$OutDir\sing-box.exe" -Force
+    Remove-Item -Recurse "$OutDir\$FileName*" -Force
+}
+# ---- 更新 sing-box 结束 ----
+
 Start-Sleep -Seconds 1
 ```
 

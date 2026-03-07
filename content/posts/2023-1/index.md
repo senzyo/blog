@@ -20,12 +20,12 @@ Arch 可以直接 `sudo pacman -S aria2`。
 2. 在 `aria2.conf` 中的 `bt-tracker=` 后添加 [Tracker](https://github.com/XIU2/TrackersListCollection) 地址, 建议使用 [all_aria2.txt](https://ghproxy.net/https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all_aria2.txt)。
 3. 按照配置文件, 创建需要的空文件 `aria2.session`, 下载 [dht.dat](https://ghproxy.net/https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/dht.dat) 和 [dht6.dat](https://ghproxy.net/https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/dht.dat)。
 4. 修改 `aria2.conf` 中, 以上各文件的引用路径。
-5. Windows 中, 我一般将 aria2 本体和配置等文件放在一起, 比如 `C:\Users\<UserName>\Apps\Aria2`。
+5. Windows 中, 我一般将 aria2 本体和配置等文件放在一起, 比如 `C:\Users\用户名\Apps\aria2`。
 6. Linux 中, 通过 pacman 安装的 aria2, 其路径是 `/usr/bin/aria2c`。配置等文件一般放在 `$XDG_CONFIG_HOME/aria2/` 中, 比如 `~/.config/aria2/`。
 
-## Windows开机自启动
-
-### 方案一: 任务计划程序
+## Windows
+### 开机自启动
+#### 方案一: 任务计划程序
 
 打开任务计划程序, 点击右侧操作列表中的“创建任务”:
 
@@ -41,7 +41,7 @@ Arch 可以直接 `sudo pacman -S aria2`。
 
 3. 操作
 
-    新建, `操作` 选择 `启动程序`, `程序或脚本` 填写 `aria2c.exe`, `添加参数` 填写 `--conf=aria2.conf`, `起始于` 填写 Aria2 工作目录。
+    新建, `操作` 选择 `启动程序`, `程序或脚本` 填写 `aria2c.exe`, `添加参数` 填写 `--conf=aria2.conf`, `起始于` 填写 aria2 工作目录。
 
 4. 条件
 
@@ -54,35 +54,39 @@ Arch 可以直接 `sudo pacman -S aria2`。
 
 6. 运行任务, 检查是否正常。
 
-### 方案二: Windows服务
+#### 方案二: Windows服务
 
 利用 [winsw](https://github.com/winsw/winsw/releases) 安装 Windows 服务。
 
-1. 将以下内容保存为 `Aria2 Service.xml`, 和 `winsw.exe` 一起放入 Aria2 工作目录中。
+1. 将以下内容保存为 `aria2.xml`, 和 `winsw.exe` 一起放入 aria2 工作目录中。
 
     ```xml
     <service>
-        <startmode>Automatic</startmode>
-        <id>Aria2</id>
-        <name>Aria2</name>
-        <description></description>
-        <executable>aria2c.exe</executable>
-        <arguments>--conf=aria2.conf</arguments>
-        <log mode="none"></log>
+      <id>aria2</id>
+      <name>aria2 Download Service</name>
+      <description>aria2 下载服务</description>
+      <startmode>Automatic</startmode>
+      <workingdirectory>C:\Users\用户名\Apps\aria2</workingdirectory>
+      <executable>aria2c.exe</executable>
+      <arguments>--conf=aria2.conf</arguments>
+      <log mode="none"></log>
+      <onfailure action="restart" delay="5 sec" />
     </service>
     ```
 
-2. 在 Aria2 工作目录中运行以下命令将 Aria2 安装为 Windows 服务: 
+2. 在 aria2 工作目录中运行以下命令将 aria2 安装为 Windows 服务:
 
     ```shell
-    winsw.exe install "Aria2 Service.xml"
+    winsw.exe install "aria2.xml"
     ```
 
 3. 运行服务, 检查是否正常。
 
-## Linux开机自启动
+## Linux
 
-为 aria2 设置守护进程: 
+### 开机自启动
+
+为 aria2 设置守护进程:
 
 ```bash
 vim ~/.config/systemd/user/aria2.service
@@ -93,12 +97,12 @@ vim ~/.config/systemd/user/aria2.service
 ```
 [Unit]
 Description=aria2 service
-Documentation=https://wiki.archlinux.org/title/Aria2
+Documentation=https://wiki.archlinux.org/title/aria2
 After=network.target nss-lookup.target
 
 [Service]
 Type=forking
-ExecStart=/usr/bin/aria2c --conf-path=/home/<UserName>/.config/aria2/aria2.conf --daemon
+ExecStart=/usr/bin/aria2c --conf-path=/home/用户名/.config/aria2/aria2.conf --daemon
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
 RestartSec=10s
@@ -108,19 +112,19 @@ LimitNOFILE=infinity
 WantedBy=default.target
 ```
 
-重载 systemd: 
+重载 systemd:
 
 ```bash
 systemctl --user daemon-reload
 ```
 
-设置开机自启并立刻启动: 
+设置开机自启并立刻启动:
 
 ```bash
 systemctl --user enable --now aria2.service
 ```
 
-查看状态: 
+查看状态:
 
 ```bash
 systemctl --user status aria2.service
@@ -134,9 +138,7 @@ systemctl --user status aria2.service
 
 ### Chromium系
 
-安装扩展 [Aria2 for Chrome](https://chrome.google.com/webstore/detail/aria2-for-chrome/mpkodccbngfoacfalldjimigbofkhgjn) 或 [Aria2 for Edge](https://microsoftedge.microsoft.com/addons/detail/aria2-for-edge/jjfgljkjddpcpfapejfkelkbjbehagbh), 这两个扩展是相同的。
-
-这个扩展可以拦截浏览器的下载请求, 转为使用 aria2 下载。并且集成了 [AriaNg](http://ariang.mayswind.net/zh_Hans/), 点击扩展就可以打开 AriaNg。
+安装扩展 [Aria2 Explorer](https://aria2e.com/#download), 它可以拦截浏览器的下载请求, 转为使用 aria2 下载。并且集成了 [AriaNg](http://ariang.mayswind.net/zh_Hans/), 点击扩展就可以打开 AriaNg。
 
 ### Firefox
 
