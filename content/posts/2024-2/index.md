@@ -27,7 +27,7 @@ mv sing-box /usr/local/bin/sing-box
 
 ## Dashboard
 
-下载 [Yacd-meta](https://ghproxy.net/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip) 或者 [MetaCubeXD](https://ghproxy.net/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip), 解压后将文件夹重命名为 `ui`。
+下载 [Yacd-meta](https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip) 或者 [MetaCubeXD](https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip), 解压后将文件夹重命名为 `ui`。
 
 ```bash
 mkdir /etc/sing-box
@@ -38,7 +38,7 @@ sudo cp -r ui /etc/sing-box/
 
 ## Service
 
-创建 sing-box 的 systemd 服务: 
+创建 sing-box 的 systemd 服务:
 
 ```bash
 sudo vim /etc/systemd/system/sing-box.service
@@ -115,7 +115,7 @@ sudo systemctl status sing-box-trigger.timer
 脚本通过 KDE 的 `kwriteconfig6` 来控制系统代理的开关。更改 `$kioslaverc` 的值为自己的 `kioslaverc` 文件路径, 如不需要可将其删除并注释 `kwriteconfig6` 部分。
 
 {{< admonition type=question title="无法启动?" open=false >}}
-对于 sing-box 的运行参数, 由 `sing-box help` 得知: 
+对于 sing-box 的运行参数, 由 `sing-box help` 得知:
 
 ```
 Flags:
@@ -322,7 +322,7 @@ chmod +x /etc/sing-box/update.sh
 
 ### 开关系统和浏览器代理
 
-Chrome 会跟随 KDE 系统代理, Firefox 则不然。所以对于 KDE 系统代理和 [Firefox](../2024-4) 代理, 将操作命令封装成函数写入 [环境变量配置文件](../2021-6/) 中, 比如修改以下内容写入 `/etc/proxy-custom`: 
+Chrome 会跟随 KDE 系统代理, Firefox 则不然。所以对于 KDE 系统代理和 [Firefox](../2024-4) 代理, 将操作命令封装成函数写入 [环境变量配置文件](../2021-6/) 中, 比如修改以下内容写入 `/etc/proxy-custom`:
 
 ```bash
 reset="\e[0m"
@@ -402,7 +402,7 @@ unset $kioslaverc
 unset $firefox_profile
 ```
 
-然后在 `/etc/bash.bashrc` 中写入: 
+然后在 `/etc/bash.bashrc` 中写入:
 
 ```bash
 if [ -f /etc/proxy-custom ]; then
@@ -412,7 +412,7 @@ fi
 
 ### 当前配置重启
 
-将以下代码添加到 `/etc/proxy-custom` 中: 
+将以下代码添加到 `/etc/proxy-custom` 中:
 
 ```bash
 function sing-box-restart {
@@ -446,7 +446,7 @@ function sing-box-restart {
 
 ### 停止运行
 
-将以下代码追加到 `/etc/proxy-custom` 中: 
+将以下代码追加到 `/etc/proxy-custom` 中:
 
 ```bash
 function sing-box-stop {
@@ -462,7 +462,7 @@ function sing-box-stop {
 
 sing-box 的入站方式是固定在配置文件中的, 而且不支持通过 API 切换, 所以只能切换配置文件来切换 `mixed` 或 `tun` 模式。
 
-将以下代码追加到 `/etc/proxy-custom` 中: 
+将以下代码追加到 `/etc/proxy-custom` 中:
 
 ```bash
 function sing-box-switch {
@@ -502,13 +502,13 @@ function sing-box-switch {
 
 ### 查看日志
 
-查看日志: 
+查看日志:
 
 ```bash
 sudo journalctl -u sing-box.service -o cat -e
 ```
 
-查看实时日志: 
+查看实时日志:
 
 ```bash
 sudo journalctl -u sing-box.service -o cat -f

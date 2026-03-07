@@ -9,14 +9,14 @@ summary: " "
 ---
 
 {{< admonition type=quote title="原文地址" open=true >}}
-本文转载自 [AdGuard DNS](https://adguard-dns.io/kb/general/dns-providers/) 和它的 [源文件](https://ghproxy.net/https://raw.githubusercontent.com/AdguardTeam/KnowledgeBaseDNS/master/docs/general/dns-providers.md)。
+本文转载自 [AdGuard DNS](https://adguard-dns.io/kb/general/dns-providers/) 和它的 [源文件](https://raw.githubusercontent.com/AdguardTeam/KnowledgeBaseDNS/master/docs/general/dns-providers.md)。
 
 顺便一提 [全国DNS服务器IP地址大全](https://dnsdaquan.com/)。
 {{< /admonition >}}
 
 ## 测试可用性
 
-以 Google DNS 为例: 
+以 Google DNS 为例:
 
 ```bash
 # DoH
@@ -798,7 +798,7 @@ In "Family" mode, Protected + blocking adult content.
 | -------------- | ----------------------------------------------------------------------------------- |
 | DNS-over-HTTPS | `https://kaitain.restena.lu/dns-query` IP: `158.64.1.29` and IPv6: `2001:a18:1::29` |
 
-| DNS-over-TLS| `tls://kaitain.restena.lu` IP: `158.64.1.29` and IPv6: `2001:a18:1::29` | 
+| DNS-over-TLS| `tls://kaitain.restena.lu` IP: `158.64.1.29` and IPv6: `2001:a18:1::29` |
 
 ### 114DNS
 

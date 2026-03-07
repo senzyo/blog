@@ -232,7 +232,7 @@ rule-providers:
 
 ## Dashboard
 
-下载 [Yacd-meta](https://ghproxy.net/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip) 或者 [MetaCubeXD](https://ghproxy.net/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip), 解压后将文件夹重命名为 `ui`, 移动到 mihomo 工作目录下: `C:\Users\<UserName>\Apps\mihomo\ui`。
+下载 [Yacd-meta](https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip) 或者 [MetaCubeXD](https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip), 解压后将文件夹重命名为 `ui`, 移动到 mihomo 工作目录下: `C:\Users\<UserName>\Apps\mihomo\ui`。
 
 后续一切工作正常后, 可以打开 Dashboard (http://127.0.0.1:9090/ui) 查看相应信息并进行管理。
 
@@ -450,7 +450,7 @@ foreach ($Url in $AssetUrls) {
         $FilePath = "$DefaultDownloadPath\$FileName"
     }
     Write-Host "Downloading $Url"
-    Invoke-WebRequest -OutFile "$FilePath" -Uri "https://ghproxy.net/$Url" -TimeoutSec 40
+    Invoke-WebRequest -OutFile "$FilePath" -Uri "https://gh-proxy.org/$Url" -TimeoutSec 40
 }
 
 Stop-ScheduledTask -TaskName $task

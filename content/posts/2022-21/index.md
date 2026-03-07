@@ -18,7 +18,7 @@ https://ibotpeaches.github.io/Apktool/install/
 
 ### Windows
 
-1. 下载脚本 [wrapper script](https://ghproxy.net/https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/windows/apktool.bat) 重命名为 `apktool.bat`
+1. 下载脚本 [wrapper script](https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/windows/apktool.bat) 重命名为 `apktool.bat`
 2. 下载 jar 包 [find newest here](https://bitbucket.org/iBotPeaches/apktool/downloads/)
 3. 重命名 jar 包为 `apktool.jar`
 4. 将 `apktool.jar` 和 `apktool.bat` 移动至某一文件夹下, 比如 `D:\Apktool`
@@ -27,7 +27,7 @@ https://ibotpeaches.github.io/Apktool/install/
 
 ### Linux
 
-1. 下载脚本 [wrapper script](https://ghproxy.net/https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool) 重命名为 `apktool`
+1. 下载脚本 [wrapper script](https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool) 重命名为 `apktool`
 2. 下载 jar 包 [find newest here](https://bitbucket.org/iBotPeaches/apktool/downloads/)
 3. 重命名 jar 包为 `apktool.jar`
 4. 将 `apktool.jar` 和 `apktool` 移动至某一文件夹下, 比如 `/usr/local/bin` (此路径需要 `root` 用户)
@@ -70,7 +70,7 @@ apktool b bar -o new_bar.apk
 1. 使用此条命令, 会生成 `keystore`  文件, 我将其命名为 `senzyo.keystore`, 别名 `alias` 命名为 `senzyo`
 
 ```shell
-keytool -genkey -keystore senzyo.keystore -alias senzyo -keyalg RSA -keysize 4096 -validity 10000 
+keytool -genkey -keystore senzyo.keystore -alias senzyo -keyalg RSA -keysize 4096 -validity 10000
 ```
 
 2. 使用刚才生成的 `keystore`  文件进行签名, `PureIcon_signed.apk` 是签名后的apk名称, `PureIcon.apk` 是将要签名(还未签名)的apk。
@@ -93,7 +93,7 @@ jarsigner -sigalg MD5withRSA -digestalg SHA1 -keystore senzyo.keystore -signedja
 
 ## Optimize
 
-[Android 开发者网站](https://developer.android.google.cn/studio/command-line/zipalign.html) 对于 `zipalign` 的介绍: 
+[Android 开发者网站](https://developer.android.google.cn/studio/command-line/zipalign.html) 对于 `zipalign` 的介绍:
 
 > zipalign 是一种 zip 归档文件对齐工具。它可确保归档中的所有未压缩文件相对于文件开头都是对齐的。在将 APK 文件分发给最终用户之前, 应该先使用 zipalign 进行优化。如果使用 Android Studio 进行构建, 则此步骤会自动完成。
 

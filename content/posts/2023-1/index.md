@@ -17,8 +17,8 @@ Arch 可以直接 `sudo pacman -S aria2`。
 ## 配置文件
 
 1. 下载 [aria2.conf](https://github.com/P3TERX/aria2.conf/blob/master/aria2.conf), 参考其注释进行修改。
-2. 在 `aria2.conf` 中的 `bt-tracker=` 后添加 [Tracker](https://github.com/XIU2/TrackersListCollection) 地址, 建议使用 [all_aria2.txt](https://ghproxy.net/https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all_aria2.txt)。
-3. 按照配置文件, 创建需要的空文件 `aria2.session`, 下载 [dht.dat](https://ghproxy.net/https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/dht.dat) 和 [dht6.dat](https://ghproxy.net/https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/dht.dat)。
+2. 在 `aria2.conf` 中的 `bt-tracker=` 后添加 [Tracker](https://github.com/XIU2/TrackersListCollection) 地址, 建议使用 [all_aria2.txt](https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all_aria2.txt)。
+3. 按照配置文件, 创建需要的空文件 `aria2.session`, 下载 [dht.dat](https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/dht.dat) 和 [dht6.dat](https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/dht.dat)。
 4. 修改 `aria2.conf` 中, 以上各文件的引用路径。
 5. Windows 中, 我一般将 aria2 本体和配置等文件放在一起, 比如 `C:\Users\用户名\Apps\aria2`。
 6. Linux 中, 通过 pacman 安装的 aria2, 其路径是 `/usr/bin/aria2c`。配置等文件一般放在 `$XDG_CONFIG_HOME/aria2/` 中, 比如 `~/.config/aria2/`。

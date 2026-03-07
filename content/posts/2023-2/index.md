@@ -12,7 +12,7 @@ summary: Rime 的安装、输入方案、词库与皮肤。
 
 ### Arch
 
-安装 fcitx5 包组和 rime: 
+安装 fcitx5 包组和 rime:
 
 ```bash
 yay -S fcitx5-im fcitx5-rime
@@ -46,13 +46,13 @@ GLFW_IM_MODULE=ibus
 yay -S rime-ice-git
 ```
 
-自定义 [default.yaml](https://ghproxy.net/https://raw.githubusercontent.com/iDvel/rime-ice/main/default.yaml) 和 [custom_phrase.txt](https://ghproxy.net/https://raw.githubusercontent.com/iDvel/rime-ice/main/custom_phrase.txt) 文件中的内容, 存放到 rime 的个人配置文件夹 `~/.local/share/fcitx5/rime/` 中。
+自定义 [default.yaml](https://raw.githubusercontent.com/iDvel/rime-ice/main/default.yaml) 和 [custom_phrase.txt](https://raw.githubusercontent.com/iDvel/rime-ice/main/custom_phrase.txt) 文件中的内容, 存放到 rime 的个人配置文件夹 `~/.local/share/fcitx5/rime/` 中。
 
 右击托盘中的 Rime 图标, 重新启动以使配置生效。
 
 #### Windows
 
-将 [雾凇拼音](https://github.com/iDvel/rime-ice) 的所有文件复制到个人配置文件夹 `C:/Users/<UserName>/AppData/Roaming/Rime/` 中, 自定义 [default.yaml](https://ghproxy.net/https://raw.githubusercontent.com/iDvel/rime-ice/main/default.yaml) 和 [custom_phrase.txt](https://ghproxy.net/https://raw.githubusercontent.com/iDvel/rime-ice/main/custom_phrase.txt) 文件中的内容。
+将 [雾凇拼音](https://github.com/iDvel/rime-ice) 的所有文件复制到个人配置文件夹 `C:/Users/<UserName>/AppData/Roaming/Rime/` 中, 自定义 [default.yaml](https://raw.githubusercontent.com/iDvel/rime-ice/main/default.yaml) 和 [custom_phrase.txt](https://raw.githubusercontent.com/iDvel/rime-ice/main/custom_phrase.txt) 文件中的内容。
 
 右击托盘中的 Rime 图标, 重新部署以使配置生效。
 
@@ -64,13 +64,13 @@ yay -S rime-ice-git
 仅作参考, 推荐直接使用上面的 [雾凇拼音](https://github.com/iDvel/rime-ice) 方案。
 {{< /admonition >}}
 
-创建个人配置文件夹: 
+创建个人配置文件夹:
 
 ```bash
 mkdir ~/.local/share/fcitx5/rime/
 ```
 
-在该文件夹中创建 `default.custom.yaml` 文件, 以指定可选的输入法。例如添加下列内容以使用朙月拼音 (luna_pinyin) : 
+在该文件夹中创建 `default.custom.yaml` 文件, 以指定可选的输入法。例如添加下列内容以使用朙月拼音 (luna_pinyin) :
 
 ```yaml
 patch:
@@ -87,7 +87,7 @@ patch:
 
 #### 导入词库
 
-安装 [中文维基百科词库](https://archlinux.org/packages/community/any/rime-pinyin-zhwiki/) 和 [萌娘百科词库](https://aur.archlinux.org/packages/fcitx5-pinyin-moegirl-rime) 为例: 
+安装 [中文维基百科词库](https://archlinux.org/packages/community/any/rime-pinyin-zhwiki/) 和 [萌娘百科词库](https://aur.archlinux.org/packages/fcitx5-pinyin-moegirl-rime) 为例:
 
 ```bash
 yay -S rime-pinyin-zhwiki fcitx5-pinyin-moegirl-rime
@@ -97,13 +97,13 @@ yay -S rime-pinyin-zhwiki fcitx5-pinyin-moegirl-rime
 可以将自定义词库文件放入 `~/.local/share/fcitx5/rime/`, 文件名(filename.dict.yaml)应与词库名统一。
 {{< /admonition >}}
 
-编辑用于朙月拼音的自定义配置文件: 
+编辑用于朙月拼音的自定义配置文件:
 
 ```bash
 vim ~/.local/share/fcitx5/rime/luna_pinyin.custom.yaml
 ```
 
-指定词库配置文件: 
+指定词库配置文件:
 
 ```yaml
 # encoding: utf-8
@@ -112,13 +112,13 @@ patch:
   "translator/dictionary": luna_pinyin.extended  # 词库名字可自定义,与文件名保持一致即可
 ```
 
-编辑用于朙月拼音的词库配置文件: 
+编辑用于朙月拼音的词库配置文件:
 
 ```bash
 vim ~/.local/share/fcitx5/rime/luna_pinyin.extended.dict.yaml
 ```
 
-指定具体的词库以及其他配置: 
+指定具体的词库以及其他配置:
 
 ```yaml
 # encoding: utf-8
@@ -138,7 +138,7 @@ import_tables:
 
 从 [rime-emoji](https://github.com/rime/rime-emoji) 下载 opencc 文件夹, 放入用户配置文件夹 `~/.local/share/fcitx5/rime/` 中。
 
-将 `emoji_suggestion.yaml` 中的内容写入用于朙月拼音的自定义配置文件中: 
+将 `emoji_suggestion.yaml` 中的内容写入用于朙月拼音的自定义配置文件中:
 
 ```bash
 vim ~/.local/share/fcitx5/rime/luna_pinyin.custom.yaml
@@ -164,7 +164,7 @@ patch:
 
 #### 自定义短语
 
-编辑 `~/.local/share/fcitx5/rime/custom_phrase.txt`, 
+编辑 `~/.local/share/fcitx5/rime/custom_phrase.txt`,
 
 {{< admonition type=warning title="注意" open=true >}}
 使用 `UTF-8 ` 编码。
@@ -174,7 +174,7 @@ patch:
 字段顺序为: 文字、编码、权重 (可选)。
 {{< /admonition >}}
 
-例如: 
+例如:
 
 ```
 中州韻輸入法引擎	rime	2
@@ -238,7 +238,7 @@ my_color_schemes:
     candidate_text_color: 0x000000FF     # 文字颜色
     comment_text_color: 0x000000FF       # 注音颜色
     shadow_color: 0x2C2C2CFF             # 阴影颜色
- 
+
   preset_color_schemes/win11dark:
     name: "Win11 暗色 / Win11 Dark"
     # color format, argb: 0xaarrggbb; rgba: 0xrrggbbaa
@@ -267,14 +267,14 @@ font_size_settings:
   style/label_font_point: 12
   style/comment_font_point: 12
 
-# 所有字体都可以通过设置范围来设置; 
-# 在逗号和冒号周围加上空格都可以; 
-# 每个字体集合单元的第一个必须是字体名称; 
-# 起始码点必须在最后码点之前, 使用十六进制; 
-# 如果要定义起始和结束点, 可以这样做: fontname: start_code_point: end_code_point; 
-# 如果只定义起始码点, 可以这样做: fontname: start_code_point; 
-# 如果只定义结束码点, 可以这样做: fontname:: end_code_point; 
-# 字体的粗细和样式必须在第一个字体集合单元中设置, 使用[: weight_set] [:style_set]; 
+# 所有字体都可以通过设置范围来设置;
+# 在逗号和冒号周围加上空格都可以;
+# 每个字体集合单元的第一个必须是字体名称;
+# 起始码点必须在最后码点之前, 使用十六进制;
+# 如果要定义起始和结束点, 可以这样做: fontname: start_code_point: end_code_point;
+# 如果只定义起始码点, 可以这样做: fontname: start_code_point;
+# 如果只定义结束码点, 可以这样做: fontname:: end_code_point;
+# 字体的粗细和样式必须在第一个字体集合单元中设置, 使用[: weight_set] [:style_set];
 # 字体的粗细可以是以下内容, 大小写不敏感: thin、extra_light、ultra_light、light、semi_light、medium、demi_bold、semi_bold、bold、extra_bold、ultra_bold、black、heavy、extra_black、ultra_black、normal
 
 # 字体的样式可以是以下内容, 大小写不敏感: italic、oblique、normal
@@ -306,7 +306,7 @@ win11:
   style/color_scheme_dark: win11dark
   #style/preedit_type: preview_all    # composition
   # layout settings
-  style/layout/align_type: center     # 选项: top, center, bottom 
+  style/layout/align_type: center     # 选项: top, center, bottom
   style/layout/min_height: 0
   style/layout/border: 0              # 边框粗细
   style/layout/spacing: 20            # 拼音与候选项的间距(inline_preedit: false)
