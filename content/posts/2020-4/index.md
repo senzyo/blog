@@ -38,8 +38,6 @@ https://www.debian.org/doc/manuals/debian-reference/ch01.zh-cn.html
    sudo passwd <UserName>
    ```
 
-3. 检查所有用户`cat /etc/passwd`, 检查所有用户组`cat /etc/group`。
-
 ### 用户加入sudoers
 
 1. 更改`sudoers`文件权限:
@@ -59,6 +57,56 @@ https://www.debian.org/doc/manuals/debian-reference/ch01.zh-cn.html
 
 ```bash
 sudo passwd root
+```
+
+### 用户与用户组
+
+查看用户详细信息:
+
+```bash
+cat /etc/passwd
+```
+
+只看“普通用户” (UID >= 1000 的用户) , 通常自己创建的用户 UID 是从 1000 开始的:
+
+```bash
+awk -F: '$3 >= 1000 && $3 != 65534 {print $1}' /etc/passwd
+```
+
+同理只看“系统用户” (UID < 1000 的用户) :
+
+```bash
+awk -F: '$3 < 1000 && $3 != 65534 {print $1}' /etc/passwd
+```
+
+查看用户组详细信息:
+
+```bash
+cat /etc/group
+```
+
+把用户添加到用户组:
+
+```bash
+gpasswd -a 用户名 组名
+```
+
+把用户从用户组中删除:
+
+```bash
+gpasswd -d 用户名 组名
+```
+
+查看某个用户所属的所有组:
+
+```bash
+groups xray
+```
+
+查看某个用户组包含的用户:
+
+```bash
+grep "^nginx" /etc/group
 ```
 
 ## 自定义终端
