@@ -479,15 +479,15 @@ mihomo 的外部控制 API 支持开关 TUN 模式。
 
 ### 权限
 
-为 `.ps1` 文件 (PowerShell 脚本文件) 创建快捷方式, 然后右击文件, “属性→快捷方式→目标”, 在文件路径前添加 `powershell.exe -ExecutionPolicy Bypass -File`, 比如:
+为 `.ps1` 脚本创建快捷方式, 右击快捷方式, `属性`→`快捷方式`→`目标`, 在脚本文件路径前添加 `powershell.exe -ExecutionPolicy Bypass -File`, 注意 `-File` 和文件之间还有一个空格, 比如:
 
+```shell
+powershell.exe -ExecutionPolicy Bypass -File "C:\Users\admin\Apps\mihomo\Stop.ps1"
 ```
-powershell.exe -ExecutionPolicy Bypass -File "Stop.ps1"
-```
 
-然后点击“应用”。
+点击 `应用`。
 
-此外, 因为管理任务计划程序和 Windows 服务需要管理员权限, 所以需要让 `.ps1` 文件以管理员身份运行: 在“属性→快捷方式→高级”中勾选“用管理员身份运行”。
+此外, 在 `属性`→`快捷方式`→`高级` 中勾选 `用管理员身份运行`。
 
 {{< admonition type=quote title="或者在脚本开头添加自动提权代码 (不推荐)" open=false >}}
 ```shell
