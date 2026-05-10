@@ -1,7 +1,7 @@
 ---
 title: "Debian安装NVIDIA驱动"
 date: 2020-07-21T20:00:00+08:00
-draft: false
+draft: true
 authors: ["SenZyo"]
 tags: [Debian,Hardware,NVIDIA]
 featuredImagePreview: "/2020-13/featuredImagePreview.svg"
@@ -22,19 +22,19 @@ lshw -numeric -C display
 
 ## 预安装操作
 
-1. 安装当前运行内核的内核头文件和开发包: 
+1. 安装当前运行内核的内核头文件和开发包:
 
     ```bash
     sudo apt-get install linux-headers-$(uname -r)
     ```
 
-2. 编译和安装NVIDIA驱动程序需要以下先决条件: 
+2. 编译和安装NVIDIA驱动程序需要以下先决条件:
 
     ```bash
     sudo apt install build-essential libglvnd-dev pkg-config
     ```
 
-3. 如果想使用32位兼容性库应用, 比如Steam, 则需要: 
+3. 如果想使用32位兼容性库应用, 比如Steam, 则需要:
 
     ```bash
     sudo dpkg --add-architecture i386
@@ -44,7 +44,7 @@ lshw -numeric -C display
 
 ## 禁用Nouveau
 
-1. 创建文件`/etc/modprobe.d/blacklist-nouveau.conf`, 内容如下: 
+1. 创建文件`/etc/modprobe.d/blacklist-nouveau.conf`, 内容如下:
 
     ```
     blacklist nouveau
@@ -61,7 +61,7 @@ lshw -numeric -C display
 
 ## 检查NVIDIA是否卸载完全
 
-1. 可以通过这些命令查看, 应该都提示找不到或者没有nvidia就算卸载好了: 
+1. 可以通过这些命令查看, 应该都提示找不到或者没有nvidia就算卸载好了:
 
     ```bash
     cat /proc/driver/nvidia/version
@@ -75,7 +75,7 @@ lshw -numeric -C display
     ```bash
     sudo ./NVIDIA_....run --uninstall
     ```
- 
+
     卸载, 或者
 
     ```bash
@@ -96,13 +96,13 @@ lshw -numeric -C display
 
 如果设备只有一个NVIDIA显卡, 禁用nouveau后, 再重启可能就没有图形界面了;如果还有一个Intel集成显卡, 则开机还有图形界面。
 
-有几种方法进入tty: 
+有几种方法进入tty:
 
 - 开机时按`Ctrl+Alt+F2`进入
 - Ubuntu需要在grub进入recover模式, 选择root用户操作。
-- 终端输入`sudo init 3`或`sudo telinit 3`进入。 (输入`sudo init 5`或`sudo telinit 5`恢复平常的图形界面) 
+- 终端输入`sudo init 3`或`sudo telinit 3`进入。 (输入`sudo init 5`或`sudo telinit 5`恢复平常的图形界面)
 
-进入tty后, 使用以下命令排除影响: 
+进入tty后, 使用以下命令排除影响:
 
 ```bash
 sudo systemctl isolate multi-user.target
@@ -114,19 +114,19 @@ modprobe -r nouveau
 
 1. 首先安装NVIDIA官方驱动, 参考[Debian WiKi](https://wiki.debian.org/NvidiaGraphicsDrivers)
 
-2. 对于Debian: 
+2. 对于Debian:
 
     ```bash
     apt install nvidia-driver firmware-misc-nonfree
     ```
-3. 对于Ubuntu, 使用`ubuntu-drivers devices`查看系统推荐的版本, 然后安装指定版本, 比如: 
+3. 对于Ubuntu, 使用`ubuntu-drivers devices`查看系统推荐的版本, 然后安装指定版本, 比如:
 
     ```bash
     sudo apt install nvidia-driver-470
     ```
 
-    如果源中没有, 需要手动添加PPA源: 
-    
+    如果源中没有, 需要手动添加PPA源:
+
     ```bash
     sudo add-apt-repository ppa:graphics-drivers/ppa
     ```
@@ -151,19 +151,19 @@ modprobe -r nouveau
 sudo nvidia-prime
 ```
 
-切换Intel显卡: 
+切换Intel显卡:
 
 ```bash
 sudo prime-select intel
 ```
 
-切换NVIDIA显卡: 
+切换NVIDIA显卡:
 
 ```bash
 sudo prime-select nvidia
 ```
 
-查看正在运行的显卡: 
+查看正在运行的显卡:
 
 ```bash
 prime-select query
