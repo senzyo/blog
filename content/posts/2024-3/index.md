@@ -431,7 +431,7 @@ function Upgrade {
             Remove-Item $ZipPath -Force
         }
         Write-Host "Downloading..."
-        Invoke-WebRequest -OutFile $ZipPath -Uri "https://gh-proxy.org/$Url"
+        Invoke-WebRequest -OutFile $ZipPath -Uri "https://gh-proxy.com/$Url"
         $Correct = VerifyHash
         if ($Correct) {
             $script:Cover = $true

@@ -38,8 +38,8 @@ bind-address: '*'
 find-process-mode: always
 mode: rule
 geox-url:
-  geoip: "https://gh-proxy.org/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
-  geosite: "https://gh-proxy.org/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  geoip: "https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  geosite: "https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
 geo-auto-update: true
 # 单位为小时
 geo-update-interval: 24
@@ -52,8 +52,8 @@ external-controller-cors:
     - '*'
   allow-private-network: false
 external-ui: ui
-external-ui-url: 'https://gh-proxy.org/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip'
-# external-ui-url: 'https://gh-proxy.org/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip'
+external-ui-url: 'https://gh-proxy.com/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip'
+# external-ui-url: 'https://gh-proxy.com/https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip'
 global-client-fingerprint: chrome
 profile:
   store-selected: true
@@ -222,7 +222,7 @@ proxy-providers:
 rule-providers:
   downloader:
     type: http
-    url: 'https://gh-proxy.org/https://raw.githubusercontent.com/senzyo/as-gist/refs/heads/master/Rule/Clash/downloader.yaml'
+    url: 'https://gh-proxy.com/https://raw.githubusercontent.com/senzyo/as-gist/refs/heads/master/Rule/Clash/downloader.yaml'
     path: ./rule-providers/downloader.yaml
     # 单位为秒
     interval: 604800
@@ -450,7 +450,7 @@ foreach ($Url in $AssetUrls) {
         $FilePath = "$DefaultDownloadPath\$FileName"
     }
     Write-Host "Downloading $Url"
-    Invoke-WebRequest -OutFile "$FilePath" -Uri "https://gh-proxy.org/$Url" -TimeoutSec 40
+    Invoke-WebRequest -OutFile "$FilePath" -Uri "https://gh-proxy.com/$Url" -TimeoutSec 40
 }
 
 Stop-ScheduledTask -TaskName $task
