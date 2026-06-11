@@ -69,6 +69,10 @@ PowerShell有自己的历史机制 (Get-History, Clear-History), 是独立于主
 
 ```powershell
 function ch {
-    Remove-Item -Force "$env:AppData\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt"
+    $HistoryPath = "$env:AppData\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt"
+    if (Test-Path $HistoryPath) {
+        Remove-Item -Force $HistoryPath
+    }
+    clear
 }
 ```
