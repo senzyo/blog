@@ -198,56 +198,15 @@ Windows Registry Editor Version 5.00
 
 ## 右键菜单检测文件哈希值
 
-为什么要分成 Windows 10 和 Windows 11 两个部分呢, 因为我没能成功地自定义 Windows Terminal 打开后的窗口大小 (虽然翻了官方文档, 也看了 GitHub Issues)。
-
-### Windows 10
-
 将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表:
 
 ```
 Windows Registry Editor Version 5.00
 
 [HKEY_CLASSES_ROOT\*\shell\Get-FileHash]
-"MUIVerb"="Get-FileHash"
+"MUIVerb"="计算 Hash"
 "SubCommands"=""
 "Icon"="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe,0"
-
-; MD5
-[HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell\MD5]
-"MUIVerb"="MD5"
-"Icon"="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe,0"
-
-[HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell\MD5\command]
-@="PowerShell -NoExit -Command \"mode con cols=90 lines=15\";\"Get-FileHash '%1' -Algorithm MD5 | Format-List\""
-
-;SHA1
-[HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell\SHA1]
-"MUIVerb"="SHA1"
-"Icon"="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe,0"
-
-[HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell\SHA1\command]
-@="PowerShell -NoExit -Command \"mode con cols=90 lines=15\";\"Get-FileHash '%1' -Algorithm SHA1 | Format-List\""
-
-;SHA256
-[HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell\SHA256]
-"MUIVerb"="SHA256"
-"Icon"="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe,0"
-
-[HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell\SHA256\command]
-@="PowerShell -NoExit -Command \"mode con cols=90 lines=15\";\"Get-FileHash '%1' -Algorithm SHA256 | Format-List\""
-```
-
-### Windows 11
-
-将以下内容写入一个 `txt` 中, 修改文件后缀名保存为 `.reg` 文件, 双击导入到注册表:
-
-```
-Windows Registry Editor Version 5.00
-
-[HKEY_CLASSES_ROOT\*\shell\Get-FileHash]
-"MUIVerb"="Get-FileHash"
-"Icon"="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe,0"
-"SubCommands"=""
 
 [HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell]
 
@@ -256,21 +215,21 @@ Windows Registry Editor Version 5.00
 "Icon"="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe,0"
 
 [HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell\MD5\command]
-@="PowerShell -NoExit Get-FileHash '%1' -Algorithm MD5 | Format-List"
+@="conhost.exe powershell.exe -NoExit -Command \"mode con cols=90 lines=15; $p = [Environment]::GetCommandLineArgs()[-1]; Get-FileHash -LiteralPath $p -Algorithm MD5 | Format-List; #\" \"%1\""
 
 [HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell\SHA1]
 "MUIVerb"="SHA1"
 "Icon"="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe,0"
 
 [HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell\SHA1\command]
-@="PowerShell -NoExit Get-FileHash '%1' -Algorithm SHA1 | Format-List"
+@="conhost.exe powershell.exe -NoExit -Command \"mode con cols=90 lines=15; $p = [Environment]::GetCommandLineArgs()[-1]; Get-FileHash -LiteralPath $p -Algorithm SHA1 | Format-List; #\" \"%1\""
 
 [HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell\SHA256]
 "MUIVerb"="SHA256"
 "Icon"="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe,0"
 
 [HKEY_CLASSES_ROOT\*\shell\Get-FileHash\Shell\SHA256\command]
-@="PowerShell -NoExit Get-FileHash '%1' -Algorithm SHA256 | Format-List"
+@="conhost.exe powershell.exe -NoExit -Command \"mode con cols=90 lines=15; $p = [Environment]::GetCommandLineArgs()[-1]; Get-FileHash -LiteralPath $p -Algorithm SHA256 | Format-List; #\" \"%1\""
 ```
 
 ### 移除
