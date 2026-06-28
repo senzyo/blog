@@ -140,12 +140,46 @@ try {
 Write-Host ""
 Write-Host "${Cyan}[提示]${NC} 正在配置 Windows 更新相关的注册表项..."
 
-# 阻止系统更新时顺带更新设备驱动程序
 $RegPath_WU = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
+if (-not (Test-Path $RegPath_WU)) {
+    New-Item -Path $RegPath_WU -Force | Out-Null
+}
+
+# 自动检测系统版本并锁定当前版本
 try {
-    if (-not (Test-Path $RegPath_WU)) {
-        New-Item -Path $RegPath_WU -Force | Out-Null
+    # 读取系统当前的版本信息
+    $OSInfo = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -ErrorAction Stop
+    $ProductName = $OSInfo.ProductName
+    # 确定产品版本 (Windows 10 或 Windows 11)
+    if ($ProductName -like "*Windows 11*") {
+        $ProductVersion = "Windows 11"
+    } elseif ($ProductName -like "*Windows 10*") {
+        $ProductVersion = "Windows 10"
+    } else {
+        # 兜底方案：若名称不匹配, 根据内核编译号判断 (22000及以上为 Windows 11)
+        if ($OSInfo.CurrentBuild -and [int]$OSInfo.CurrentBuild -ge 22000) {
+            $ProductVersion = "Windows 11"
+        } else {
+            $ProductVersion = "Windows 10"
+        }
     }
+    # 确定具体的版本号 (例如 "22H2", "23H2" 等)
+    $TargetReleaseVersionInfo = $OSInfo.DisplayVersion
+    if (-not $TargetReleaseVersionInfo) {
+        throw "无法获取有效的系统版本号"
+    }
+    Write-Host "${Cyan}[提示]${NC} 检测到当前系统为: $ProductVersion ($TargetReleaseVersionInfo)"
+    # 写入版本锁定注册表项
+    Set-ItemProperty -Path $RegPath_WU -Name "TargetReleaseVersion" -Value 1 -Type DWord -Force -ErrorAction Stop
+    Set-ItemProperty -Path $RegPath_WU -Name "ProductVersion" -Value $ProductVersion -Type String -Force -ErrorAction Stop
+    Set-ItemProperty -Path $RegPath_WU -Name "TargetReleaseVersionInfo" -Value $TargetReleaseVersionInfo -Type String -Force -ErrorAction Stop
+    Write-Host "${Green}[成功]${NC} 已锁定当前系统版本, 阻止后续跨大版本升级"
+} catch {
+    Write-Host "${Red}[错误]${NC} 锁定系统版本失败: $_"
+}
+
+# 阻止系统更新时顺带更新设备驱动程序
+try {
     Set-ItemProperty -Path $RegPath_WU -Name "ExcludeWUDriversInQualityUpdate" -Value 1 -Type DWord -Force -ErrorAction Stop
     Write-Host "${Green}[成功]${NC} 已配置组策略: Windows 更新时, 不更新驱动程序"
 } catch {
@@ -167,14 +201,14 @@ try {
 # 拓展 Windows 更新最大暂停天数
 $RegPath_Pause = "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings"
 try {
-    Set-ItemProperty -Path $RegPath_Pause -Name "FlightSettingsMaxPauseDays" -Value 10000 -Type DWord -Force -ErrorAction Stop
-    Write-Host "${Green}[成功]${NC} 已修改注册表: 拓展 Windows 更新最大暂停天数为 ${Yellow}10000${NC} 天 (约 27 年)"
+    Set-ItemProperty -Path $RegPath_Pause -Name "FlightSettingsMaxPauseDays" -Value 7000 -Type DWord -Force -ErrorAction Stop
+    Write-Host "${Green}[成功]${NC} 已修改注册表: 拓展 Windows 更新最大暂停天数为 7000 天"
 } catch {
     Write-Host "${Red}[错误]${NC} 配置 FlightSettingsMaxPauseDays 失败: $_"
 }
 
 Write-Host "${Cyan}[提示]${NC} 脚本执行完毕。若要使用“超长暂停更新”, 请在脚本运行后前往: "
-Write-Host "       ${White}系统设置 -> 更新和安全 (Windows 更新) -> 暂停更新${NC} 中选择一个遥远的日期"
+Write-Host "       ${White}系统设置 -> 更新和安全 (Windows 更新) -> (高级选项) 暂停更新${NC} 中选择一个遥远的日期"
 ```
 
 ## 托盘时间显示秒数
