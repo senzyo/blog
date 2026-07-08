@@ -80,10 +80,6 @@ LANG=zh_CN.UTF-8
 KDE Plasma 也通过系统设置修改界面的语言, 如果按本文修改后还是原来的区域设置, 删除 `~/.config/plasma-localerc`。
 {{< /admonition >}}
 
-{{< admonition type=failure title="不推荐使用 Arch WiKi 的方法" open=true >}}
-在 `/etc/locale.gen` 中使用 `en_US.UTF-8 UTF-8`, 然后 [在用户会话中覆盖系统区域设置](https://wiki.archlinuxcn.org/wiki/Locale#在用户会话中覆盖系统区域设置)。这样有可能会导致使用 `locale` 命令时被报错, 而且有些软件显示中文, 有些软件显示英文, 十分混乱。
-{{< /admonition >}}
-
 `locale.conf` 的变更会在下次登录时生效, 如果要立刻应用新的设置运行:
 
 ```bash

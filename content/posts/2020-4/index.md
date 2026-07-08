@@ -159,29 +159,122 @@ export TIME_STYLE="+%Y-%m-%d %H:%M:%S"
 2. 更改`/etc/ssh/sshd_config`文件内容:
 
    ```
-   Include /etc/ssh/sshd_config.d/*.conf        # 包含指定的配置文件, 可指定多个
-   Port 50022                                   # 指定 SSH 的端口号
-   LoginGraceTime 3s                            # 服务器在用户未成功登录后的一段时间内断开连接
-   PermitRootLogin prohibit-password            # 禁用 root 用户的密码和键盘交互式身份验证
-   MaxAuthTries 4                               # 每个连接允许的最大认证尝试次数。一旦失败次数达到该值的一半, 将记录额外的失败次数
-   MaxSessions 10                               # 指定每个网络连接允许的最大开放的 shell, login 或 subsystem 会话数
-   PubkeyAuthentication yes                     # 启用公钥身份验证
-   AuthenticationMethods publickey              # 指定必须成功通过公钥身份验证
-   PasswordAuthentication no                    # 禁用密码身份验证
-   PermitEmptyPasswords no                      # 禁用使用空密码字符串登录
-   KbdInteractiveAuthentication no              # 禁用键盘交互式认证
-   UsePAM no                                    # 禁用插入式验证模块, 比如双重认证
-   X11Forwarding no                             # 禁用 X11 转发
-   PrintMotd no                                 # 禁止打印登录后的提示信息
-   PrintLastLog yes                             # 显示上次登录的信息
-   TCPKeepAlive yes                             # 指定系统应向对方发送 TCP keepalive 消息, 避免会话无限期挂起
-   Compression no                               # 不压缩服务器与客户端之间传输的数据
-   ClientAliveInterval 60                       # 服务器发送消息来请求客户端的响应的超时时间间隔
-   ClientAliveCountMax 3                        # 如果服务器发送客户端活动消息达到此阈值, 将断开与客户端的连接
-   MaxStartups 5:20:10                          # 指定最大并发未经身份验证的连接数
-   AcceptEnv LANG LC_*                          # 允许客户端传递区域设置环境变量
-   Subsystem sftp /usr/lib/openssh/sftp-server  # 配置外部子系统 (例如文件传输守护程序)
-   AllowUsers root admin                        # 允许登录的用户名
+   # ==========================================
+   # 1. 基础连接设置
+   # ==========================================
+
+   # 默认禁用子配置目录引入, 防止不可控的外部子配置文件覆盖本文件的安全设定
+   # Include /etc/ssh/sshd_config.d/*.conf
+
+   # 指定 SSH 服务监听的非默认高位端口
+   Port 50022
+
+
+   # ==========================================
+   # 2. 身份验证与访问控制
+   # ==========================================
+
+   # 仅允许通过指定的普通用户名进行 SSH 登录
+   AllowUsers admin
+
+   # 禁用 root 用户直接登录, 强制通过普通用户登录后再进行提权
+   PermitRootLogin no
+
+   # 启用公钥身份验证机制
+   PubkeyAuthentication yes
+
+   # 强制限定用户必须且仅能通过公钥进行身份验证, 不接受其他方式
+   AuthenticationMethods publickey
+
+   # 禁用传统的密码身份验证
+   PasswordAuthentication no
+
+   # 禁用空密码账户登录, 规避因本地账户无密码配置带来的漏洞
+   PermitEmptyPasswords no
+
+   # 禁用键盘交互式身份验证
+   KbdInteractiveAuthentication no
+
+   # 启用插入式验证模块（PAM）, 常用于支持多因素认证（MFA）或环境初始化设置
+   UsePAM yes
+
+   # 每个连接允许的最大身份验证尝试次数。一旦失败次数达到此值的一半, 系统将记录额外的失败日志
+   MaxAuthTries 4
+
+   # 限制用户连接后完成身份验证的宽限时间, 超时将自动断开连接
+   LoginGraceTime 10s
+
+   # 显式关闭基于主机的验证
+   HostbasedAuthentication no
+
+   # 禁用 GSSAPI 认证, 减少暴露面
+   GSSAPIAuthentication no
+
+   # 禁用 Kerberos 认证
+   KerberosAuthentication no
+
+   # ==========================================
+   # 3. 密码学与主机密钥加固
+   # ==========================================
+
+   # 限制服务器主机发送指纹时所用密钥类型
+   HostKey /etc/ssh/ssh_host_ed25519_key
+
+   # 限制客户端公钥类型为 ed25519 密钥
+   PubkeyAcceptedAlgorithms ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com
+
+
+   # ==========================================
+   # 4. 会话控制、超时与防 DoS
+   # ==========================================
+
+   # 指定每个网络连接允许的最大并发活动会话数
+   MaxSessions 10
+
+   # 限制最大并发未授权连接数（格式为“起始数:丢弃概率:最大值”）, 用于防范连接洪泛攻击
+   MaxStartups 5:20:10
+
+   # 服务器向客户端发送心跳活动消息的间隔时间（单位：秒）, 用于检测客户端是否在线
+   ClientAliveInterval 60
+
+   # 允许客户端无响应的最大重试次数。达到此上限后, 服务器将主动关闭连接
+   ClientAliveCountMax 3
+
+   # 启用系统的 TCP 保持连接机制, 避免因网络波动导致会话无限期挂起
+   TCPKeepAlive yes
+
+   # 原生防爆破惩罚机制
+   PerSourcePenalties yes
+
+   # ==========================================
+   # 5. 安全转发限制
+   # ==========================================
+
+   # 禁用 X11 转发, 防止图形窗口通道被恶意利用
+   X11Forwarding no
+
+   # 禁用 SSH 代理转发, 防止跳板机上的代理连接被其他特权用户滥用
+   AllowAgentForwarding no
+
+   # 禁用 TCP 端口转发, 防止用户利用该连接进行内网穿透或规避防火墙限制
+   AllowTcpForwarding no
+
+
+   # ==========================================
+   # 6. 系统环境与子系统设置
+   # ==========================================
+
+   # 禁用登录时展示的 MOTD 提示信息
+   PrintMotd no
+
+   # 登录时显示上次登录成功的信息
+   PrintLastLog yes
+
+   # 禁用传输过程中的数据压缩, 防止由于压缩算法引起的侧信道信息泄露
+   Compression no
+
+   # 配置并指定 SFTP 文件传输子系统的可执行程序路径
+   Subsystem sftp /usr/lib/openssh/sftp-server
    ```
 
    - 如果仍然有登录后提示, 可以清空相应文件`> /etc/motd`。
