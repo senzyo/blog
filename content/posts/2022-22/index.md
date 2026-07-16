@@ -16,17 +16,14 @@ summary: " "
 
 ## 测试可用性
 
-以 Google DNS 为例:
-
 ```bash
 # DoH
-curl -i https://dns.google/dns-query?dns=AAABAAABAAAAAAAAB2V4YW1wbGUDY29tAAABAAE
-curl -i https://8.8.8.8/dns-query?dns=AAABAAABAAAAAAAAB2V4YW1wbGUDY29tAAABAAE
-curl -s -H "accept: application/dns-json" "https://dns.google/resolve?name=example.com&type=A" | jq "." | grep data | cut -d '"' -f 4
-curl -s -H "accept: application/dns-json" "https://8.8.8.8/resolve?name=example.com&type=A" | jq "." | grep data | cut -d '"' -f 4
+dig @dns.adguard-dns.com www.example.com +https
+curl -v --doh-url https://dns.adguard-dns.com/dns-query https://www.example.com
+
 # DoT
-dig @dns.google -p 853 +tls +short A example.com
-dig @8.8.8.8 -p 853 +tls +short A example.com
+dig @dns.adguard-dns.com www.example.com +tls
+curl -iv https://dns.adguard-dns.com:853
 ```
 
 ## Public anycast resolvers
