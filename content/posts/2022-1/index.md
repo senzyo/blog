@@ -95,21 +95,26 @@ if (-not $isAdmin) {
 }
 
 Write-Host "${Cyan}[提示]${NC} 正在修改相关 Windows 服务的启动类型..."
+Stop-Service -Name "BITS", "DoSvc", "UsoSvc", "WaaSMedicSvc", "wuauserv" -Force
+
+# 服务名称: BITS, 显示名称: Background Intelligent Transfer Service, 启动类型: 自动
+try {
+    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BITS" -Name "Start" -Value 2 -ErrorAction Stop
+    Start-Service -Name "BITS"
+    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BITS" -Name "Start" -Value 2 -ErrorAction Stop
+    Write-Host "${Green}[成功]${NC} 已修改 BITS 服务为        ${Yellow}自动${NC}"
+} catch {
+    Write-Host "${Red}[错误]${NC} 修改 BITS 服务失败: $_"
+}
 
 # 服务名称: DoSvc, 显示名称: Delivery Optimization, 启动类型: 自动
 try {
     Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\DoSvc" -Name "Start" -Value 2 -ErrorAction Stop
+    Start-Service -Name "DoSvc"
+    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\DoSvc" -Name "Start" -Value 2 -ErrorAction Stop
     Write-Host "${Green}[成功]${NC} 已修改 DoSvc 服务为        ${Yellow}自动${NC}"
 } catch {
     Write-Host "${Red}[错误]${NC} 修改 DoSvc 服务失败: $_"
-}
-
-# 服务名称: wuauserv, 显示名称: Windows Update, 启动类型: 手动
-try {
-    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\wuauserv" -Name "Start" -Value 3 -ErrorAction Stop
-    Write-Host "${Green}[成功]${NC} 已修改 wuauserv 服务为     ${Yellow}手动${NC}"
-} catch {
-    Write-Host "${Red}[错误]${NC} 修改 wuauserv 服务失败: $_"
 }
 
 # 服务名称: UsoSvc, 显示名称: 更新 Orchestrator 服务, 启动类型: 禁用
@@ -135,6 +140,14 @@ try {
     Write-Host "       5. 回到权限窗口, 选中 ${White}Administrators${NC} 组, 勾选下方的 ${White}完全控制${NC} 权限并确定"
     Write-Host "       6. 在右侧窗口中双击 ${White}Start${NC} 键, 将数值数据修改为 ${White}4${NC} (代表禁用), 保存即可"
     Write-Host ""
+}
+
+# 服务名称: wuauserv, 显示名称: Windows Update, 启动类型: 手动
+try {
+    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\wuauserv" -Name "Start" -Value 3 -ErrorAction Stop
+    Write-Host "${Green}[成功]${NC} 已修改 wuauserv 服务为     ${Yellow}手动${NC}"
+} catch {
+    Write-Host "${Red}[错误]${NC} 修改 wuauserv 服务失败: $_"
 }
 
 Write-Host ""
@@ -209,6 +222,9 @@ try {
 
 Write-Host "${Cyan}[提示]${NC} 脚本执行完毕。若要使用“超长暂停更新”, 请在脚本运行后前往: "
 Write-Host "       ${White}系统设置 -> 更新和安全 (Windows 更新) -> (高级选项) 暂停更新${NC} 中选择一个遥远的日期"
+
+Write-Host "${Cyan}[提示]${NC} 各服务状态:"
+Get-Service -Name "BITS", "DoSvc", "wuauserv", "WaaSMedicSvc", "UsoSvc" | Select-Object Name, DisplayName, Status, StartType
 ```
 
 ## 托盘时间显示秒数
