@@ -72,7 +72,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
 
 用 [Windows Update Blocker](https://www.sordum.org/9470/windows-update-blocker-v1-8/) 禁用 Windows 更新会导致无法使用 Microsoft Store。
 
-但这个 PowerShell 脚本可以禁止 Windows 更新但不影响 Microsoft Store, 保存以下内容为 UTF-8 with BOM, CRLF 的 .ps1 文件, 以管理员身份运行:
+但这个 PowerShell 脚本可以禁止 Windows 更新但不影响 Microsoft Store, 以 `UTF-8 with BOM`、`CRLF` 保存以下内容为 `.ps1` 文件, 以管理员身份运行:
 
 ```PowerShell
 $ESC = [char]27
@@ -103,7 +103,8 @@ try {
     Start-Service -Name "BITS"
     Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BITS" -Name "Start" -Value 2 -ErrorAction Stop
     Write-Host "${Green}[成功]${NC} 已修改 BITS 服务为        ${Yellow}自动${NC}"
-} catch {
+}
+catch {
     Write-Host "${Red}[错误]${NC} 修改 BITS 服务失败: $_"
 }
 
@@ -113,7 +114,8 @@ try {
     Start-Service -Name "DoSvc"
     Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\DoSvc" -Name "Start" -Value 2 -ErrorAction Stop
     Write-Host "${Green}[成功]${NC} 已修改 DoSvc 服务为        ${Yellow}自动${NC}"
-} catch {
+}
+catch {
     Write-Host "${Red}[错误]${NC} 修改 DoSvc 服务失败: $_"
 }
 
@@ -121,7 +123,8 @@ try {
 try {
     Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\UsoSvc" -Name "Start" -Value 4 -ErrorAction Stop
     Write-Host "${Green}[成功]${NC} 已修改 UsoSvc 服务为       ${Yellow}禁用${NC}"
-} catch {
+}
+catch {
     Write-Host "${Red}[错误]${NC} 修改 UsoSvc 服务失败: $_"
 }
 
@@ -129,7 +132,8 @@ try {
 try {
     Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" -Name "Start" -Value 4 -ErrorAction Stop
     Write-Host "${Green}[成功]${NC} 已修改 WaaSMedicSvc 服务为 ${Yellow}禁用${NC}"
-} catch {
+}
+catch {
     Write-Host "${Yellow}[警告]${NC} 修改 WaaSMedicSvc 服务失败, 权限不足"
     Write-Host "${Cyan}[提示]${NC} 请按照以下步骤手动修改该服务的启动类型: "
     Write-Host "       1. 按下 ${White}Win + R${NC} 键, 输入 ${White}regedit${NC} 并回车打开注册表编辑器"
@@ -146,7 +150,8 @@ try {
 try {
     Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\wuauserv" -Name "Start" -Value 3 -ErrorAction Stop
     Write-Host "${Green}[成功]${NC} 已修改 wuauserv 服务为     ${Yellow}手动${NC}"
-} catch {
+}
+catch {
     Write-Host "${Red}[错误]${NC} 修改 wuauserv 服务失败: $_"
 }
 
@@ -166,13 +171,16 @@ try {
     # 确定产品版本 (Windows 10 或 Windows 11)
     if ($ProductName -like "*Windows 11*") {
         $ProductVersion = "Windows 11"
-    } elseif ($ProductName -like "*Windows 10*") {
+    }
+    elseif ($ProductName -like "*Windows 10*") {
         $ProductVersion = "Windows 10"
-    } else {
+    }
+    else {
         # 兜底方案：若名称不匹配, 根据内核编译号判断 (22000及以上为 Windows 11)
         if ($OSInfo.CurrentBuild -and [int]$OSInfo.CurrentBuild -ge 22000) {
             $ProductVersion = "Windows 11"
-        } else {
+        }
+        else {
             $ProductVersion = "Windows 10"
         }
     }
@@ -187,7 +195,8 @@ try {
     Set-ItemProperty -Path $RegPath_WU -Name "ProductVersion" -Value $ProductVersion -Type String -Force -ErrorAction Stop
     Set-ItemProperty -Path $RegPath_WU -Name "TargetReleaseVersionInfo" -Value $TargetReleaseVersionInfo -Type String -Force -ErrorAction Stop
     Write-Host "${Green}[成功]${NC} 已锁定当前系统版本, 阻止后续跨大版本升级"
-} catch {
+}
+catch {
     Write-Host "${Red}[错误]${NC} 锁定系统版本失败: $_"
 }
 
@@ -195,7 +204,8 @@ try {
 try {
     Set-ItemProperty -Path $RegPath_WU -Name "ExcludeWUDriversInQualityUpdate" -Value 1 -Type DWord -Force -ErrorAction Stop
     Write-Host "${Green}[成功]${NC} 已配置组策略: Windows 更新时, 不更新驱动程序"
-} catch {
+}
+catch {
     Write-Host "${Red}[错误]${NC} 配置 ExcludeWUDriversInQualityUpdate 失败: $_"
 }
 
@@ -207,7 +217,8 @@ try {
     }
     Set-ItemProperty -Path $RegPath_AU -Name "NoAutoUpdate" -Value 1 -Type DWord -Force -ErrorAction Stop
     Write-Host "${Green}[成功]${NC} 已配置组策略: 阻止后台自动下载和安装 Windows 更新"
-} catch {
+}
+catch {
     Write-Host "${Red}[错误]${NC} 配置 NoAutoUpdate 失败: $_"
 }
 
@@ -216,7 +227,8 @@ $RegPath_Pause = "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings"
 try {
     Set-ItemProperty -Path $RegPath_Pause -Name "FlightSettingsMaxPauseDays" -Value 7000 -Type DWord -Force -ErrorAction Stop
     Write-Host "${Green}[成功]${NC} 已修改注册表: 拓展 Windows 更新最大暂停天数为 7000 天"
-} catch {
+}
+catch {
     Write-Host "${Red}[错误]${NC} 配置 FlightSettingsMaxPauseDays 失败: $_"
 }
 
@@ -225,6 +237,67 @@ Write-Host "       ${White}系统设置 -> 更新和安全 (Windows 更新) -> (
 
 Write-Host "${Cyan}[提示]${NC} 各服务状态:"
 Get-Service -Name "BITS", "DoSvc", "wuauserv", "WaaSMedicSvc", "UsoSvc" | Select-Object Name, DisplayName, Status, StartType
+```
+
+## 关闭微软兼容性遥测
+
+以 `UTF-8 with BOM`、`CRLF` 保存以下内容为 `.ps1` 文件, 以管理员身份运行:
+
+```PowerShell
+$ESC = [char]27
+$Black = "$ESC[90m"
+$Red = "$ESC[91m"       # [错误]
+$Green = "$ESC[92m"     # [成功]
+$Yellow = "$ESC[93m"    # [警告]
+$Blue = "$ESC[94m"
+$Magenta = "$ESC[95m"
+$Cyan = "$ESC[96m"      # [提示]
+$White = "$ESC[97m"
+$NC = "$ESC[0m"         # 无颜色
+
+# 检测是否以管理员身份运行此脚本
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+$isAdmin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $isAdmin) {
+    Write-Host "${Red}[错误]${NC} 请以管理员身份运行此脚本"
+    exit 1
+}
+
+Write-Host "${Cyan}[提示]${NC} 正在终止运行中的遥测进程..."
+Stop-Process -Name "CompatTelRunner" -Force -ErrorAction SilentlyContinue
+Stop-Process -Name "DeviceCensus" -Force -ErrorAction SilentlyContinue
+
+Write-Host "${Cyan}[提示]${NC} 正在停止并禁用遥测服务..."
+$services = @("DiagTrack", "dmwappushservice")
+foreach ($svc in $services) {
+    if (Get-Service -Name $svc -ErrorAction SilentlyContinue) {
+        Stop-Service -Name $svc -Force -ErrorAction SilentlyContinue
+        Set-Service -Name $svc -StartupType Disabled -ErrorAction SilentlyContinue
+        Write-Host "${Green}[成功]${NC} 已禁用: $svc"
+    }
+}
+
+Write-Host "${Cyan}[提示]${NC} 正在禁用相关计划任务..."
+$tasks = @(
+    "\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser",
+    "\Microsoft\Windows\Application Experience\ProgramDataUpdater",
+    "\Microsoft\Windows\Application Experience\StartupAppTask",
+    "\Microsoft\Windows\Application Experience\PcaPatchDbTask",
+    "\Microsoft\Windows\Customer Experience Improvement Program\Consolidator",
+    "\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip"
+)
+
+foreach ($task in $tasks) {
+    $taskPath = Split-Path $task -Parent
+    $taskName = Split-Path $task -Leaf
+    $exist = Get-ScheduledTask -TaskPath "$taskPath\" -TaskName $taskName -ErrorAction SilentlyContinue
+    if ($exist) {
+        Disable-ScheduledTask -TaskPath "$taskPath\" -TaskName $taskName -ErrorAction SilentlyContinue | Out-Null
+        Write-Host "${Green}[成功]${NC} 已禁用: $taskName"
+    }
+}
+
+Write-Host "${Cyan}[提示]${NC} 全部处理完成"
 ```
 
 ## 托盘时间显示秒数

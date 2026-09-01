@@ -20,7 +20,7 @@ Arch 可以直接 `sudo pacman -S aria2`。
 2. 在 `aria2.conf` 中的 `bt-tracker=` 后添加 [Tracker](https://github.com/XIU2/TrackersListCollection) 地址, 建议使用 [all_aria2.txt](https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all_aria2.txt)。
 3. 按照配置文件, 创建需要的空文件 `aria2.session`, 下载 [dht.dat](https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/dht.dat) 和 [dht6.dat](https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/dht.dat)。
 4. 修改 `aria2.conf` 中, 以上各文件的引用路径。
-5. Windows 中, 我一般将 aria2 本体和配置等文件放在一起, 比如 `C:\Users\用户名\Apps\aria2`。
+5. Windows 中, 我一般将 aria2 本体和配置等文件放在一起, 比如 `C:\Users\用户名\Apps\aria2` (即 `$env:USERPROFILE\Apps\aria2`)。
 6. Linux 中, 通过 pacman 安装的 aria2, 其路径是 `/usr/bin/aria2c`。配置等文件一般放在 `$XDG_CONFIG_HOME/aria2/` 中, 比如 `~/.config/aria2/`。
 
 ## Windows
@@ -33,15 +33,13 @@ Arch 可以直接 `sudo pacman -S aria2`。
 
    `更改用户或组`, 输入 `system`, 点击 `检查名称` 按钮, 变为 <u>SYSTEM</u>, 即使用 `SYSTEM` 账户。
 
-    > 如果要使用 `falloc` 的文件预分配方式, 又出现报错 `[WARN] Gaining privilege SeManageVolumePrivilege failed`, 则需要勾选 `使用最高权限运行`。
-
 2. 触发器
 
-    新建, `开始任务` 选择 `登录时` 或 `启动时`, 按需选择 `延迟任务时间`, 确认勾选 `已启用`。
+    新建, `开始任务` 选择 `启动时`, 按需选择 `延迟任务时间`, 确认勾选 `已启用`。
 
 3. 操作
 
-    新建, `操作` 选择 `启动程序`, `程序或脚本` 填写 `aria2c.exe`, `添加参数` 填写 `--conf=aria2.conf`, `起始于` 填写 aria2 工作目录。
+    新建, `操作` 选择 `启动程序`, `程序或脚本` 填写 `aria2c.exe`, `添加参数` 填写 `--conf-path=aria2.conf`, `起始于` 填写 aria2 工作目录, 比如 `C:\Users\用户名\Apps\aria2`。
 
 4. 条件
 
@@ -49,38 +47,25 @@ Arch 可以直接 `sudo pacman -S aria2`。
 
 5. 设置
 
-   1. 仅勾选 `允许按需运行任务`。
-   2. 最下方的 `如果此任务已经运行, 以下规则适用`, 确认选择 `请勿启动新实例`。
+   1. 仅勾选 `允许按需运行任务`, 取消勾选其他项。
+   2. 最下方的 `如果此任务已经运行, 以下规则适用`, 保持默认选择 `请勿启动新实例`。
 
 6. 运行任务, 检查是否正常。
 
 #### 方案二: Windows服务
 
-利用 [winsw](https://github.com/winsw/winsw/releases) 安装 Windows 服务。
+运行 `winget install -e --id mtkennerly.shawl`, 安装完成后，请重新打开一个新的管理员权限 PowerShell 窗口以加载环境变量。
 
-1. 将以下内容保存为 `aria2.xml`, 和 `winsw.exe` 一起放入 aria2 工作目录中。
+或者从 [shawl](https://github.com/mtkennerly/shawl/releases/latest) 下载可执行文件 `shawl.exe` 放入 aria2 工作目录, 比如 `C:\Users\用户名\Apps\aria2`。
 
-    ```xml
-    <service>
-      <id>aria2</id>
-      <name>aria2 Download Service</name>
-      <description>aria2 下载服务</description>
-      <startmode>Automatic</startmode>
-      <workingdirectory>C:\Users\用户名\Apps\aria2</workingdirectory>
-      <executable>aria2c.exe</executable>
-      <arguments>--conf=aria2.conf</arguments>
-      <log mode="none"></log>
-      <onfailure action="restart" delay="5 sec" />
-    </service>
-    ```
+以管理员身份用 PowerShell 运行以下命令:
 
-2. 在 aria2 工作目录中运行以下命令将 aria2 安装为 Windows 服务:
-
-    ```shell
-    winsw.exe install "aria2.xml"
-    ```
-
-3. 运行服务, 检查是否正常。
+```PowerShell
+shawl.exe add --name "Aria2" --pass "0,1" --stop-timeout 5000 --no-log --cwd "$env:USERPROFILE\Apps\aria2" -- "$env:USERPROFILE\Apps\aria2\aria2c.exe" --conf-path="$env:USERPROFILE\Apps\aria2\aria2.conf"
+Set-Service -Name "Aria2" -StartupType Automatic
+Start-Service -Name "Aria2"
+Get-Service -Name "Aria2"
+```
 
 ## Linux
 
