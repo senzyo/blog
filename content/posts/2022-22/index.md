@@ -204,19 +204,19 @@ OpenDNS servers that provide adult content blocking.
 | -------------- | ------------------------------------------------------------ |
 | DNS, IPv4      | `208.67.222.123` and `208.67.220.123`                        |
 | DNSCrypt, IPv4 | Provider: `2.dnscrypt-cert.opendns.com` IP: `208.67.220.123` |
-| DNS-over-HTTPS | `https://familyshield.opendns.com/dns-query`             |
+| DNS-over-HTTPS | `https://familyshield.opendns.com/dns-query`                 |
 | DNS-over-TLS   | `tls://familyshield.opendns.com`                             |
 
 #### Sandbox
 
 Non-filtering OpenDNS servers.
 
-| Protocol       | Address                                     |
-| -------------- | ------------------------------------------- |
-| DNS, IPv4      | `208.67.222.2` and `208.67.220.2`           |
-| DNS, IPv6      | `2620:0:ccc::2` IP: `2620:0:ccd::2`         |
+| Protocol       | Address                                 |
+| -------------- | --------------------------------------- |
+| DNS, IPv4      | `208.67.222.2` and `208.67.220.2`       |
+| DNS, IPv6      | `2620:0:ccc::2` IP: `2620:0:ccd::2`     |
 | DNS-over-HTTPS | `https://sandbox.opendns.com/dns-query` |
-| DNS-over-TLS   | `tls://sandbox.opendns.com`                 |
+| DNS-over-TLS   | `tls://sandbox.opendns.com`             |
 
 :::info
 
@@ -404,14 +404,14 @@ These servers use some logging, self-signed certs or no support for strict mode.
 
 ### DNSPod Public DNS+
 
-[DNSPod Public DNS+](https://www.dnspod.com/) is a privacy-friendly DNS provider with years of experience in domain name resolution services development, it aims to provide users more rapid, accurate and stable recursive resolution service.
+[DNSPod Public DNS](https://www.dnspod.cn/products/publicdns) is a privacy-friendly DNS provider with years of experience in domain name resolution services development, it aims to provide users more rapid, accurate and stable recursive resolution service.
 
-| Protocol       | Address                           |
-| -------------- | --------------------------------- |
-| DNS, IPv4      | `119.29.29.29` and `119.28.28.28` |
-| DNS-over-HTTPS | `https://doh.pub/dns-query`       |
-| DNS-over-HTTPS | `https://dns.pub/dns-query`       |
-| DNS-over-TLS   | `tls://dot.pub`                   |
+| Protocol       | Address                     |
+| -------------- | --------------------------- |
+| DNS, IPv4      | `119.29.29.29`              |
+| DNS, IPv6      | `2402:4e00::`               |
+| DNS-over-HTTPS | `https://doh.pub/dns-query` |
+| DNS-over-TLS   | `tls://dot.pub`             |
 
 ### DNSWatchGO
 
